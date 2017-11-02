@@ -6,7 +6,7 @@
 \setlength{\parindent}{0pt}
 \usepackage{float}
 \usepackage{booktabs}
-\usepackage{amstext}
+\usepackage{amsmath}
 \usepackage{graphicx}
 
 \makeatletter
@@ -210,4 +210,170 @@ of states reached by \texttt{a}
 \paragraph{Generating a Lexical Analyser}
 
 Encode DFA as a 2D table of states (row per state, col per char).
+
+\section{Parsing}
+
+Transforms a stream of tokens to an AST tree based on context free
+grammar of the language.
+
+\subsection{LR (Bottom-Up / Shift-Reduce) Parsing}
+\begin{itemize}
+\item Can be implemented in $O(n)$ time.
+\item Several methods for generating LR parsing tables. States consist of
+LR(k) items of the grammar, vary in number of states and size of lookahead
+sets.
+\end{itemize}
+
+\subsubsection{LR(0) Parsing}
+
+Don't use the current token in order to perform a reduce. E.g the
+rule $\texttt{X}\rightarrow\texttt{ABC}$ has 4 LR(0) items, where
+$\bullet$ indicates how much of the rule we have seen:
+\begin{enumerate}
+\item $\texttt{X}\rightarrow\texttt{\ensuremath{\bullet}ABC}$ 
+\item $\texttt{X}\rightarrow\texttt{A\ensuremath{\bullet}BC}$ 
+\item $\texttt{X}\rightarrow\texttt{AB\ensuremath{\bullet}C}$ 
+\item $\texttt{X}\rightarrow\texttt{ABC\ensuremath{\bullet}}$ 
+\end{enumerate}
+
+\paragraph{LR(0) to Finite Automata}
+
+Given $\texttt{X}\rightarrow\texttt{A\ensuremath{\bullet}BC}$, we
+add the transition:
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.4\linewidth]{img/lr0tonfa}
+\end{figure}
+
+Suppose \texttt{B} is a non-terminal, then for all $\texttt{B}\rightarrow\texttt{\ensuremath{\bullet}D}$,
+we add $\epsilon$ transitions of the form:
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.4\linewidth]{img/lr0tonfa-nonterminal}
+\end{figure}
+
+We then construct a DFA using subset construction.
+
+\paragraph{Finite Automata to Parsing Table}
+\begin{enumerate}
+\item For each terminal transition $\texttt{X}\xrightarrow{\texttt{T}}\texttt{Y}$,
+add $\texttt{P}[\texttt{X},\texttt{T}]=s\texttt{Y}$ (\textbf{shift}
+\texttt{Y}).
+\item For each non-terminal transition $\texttt{X}\xrightarrow{\texttt{N}}\texttt{Y}$,
+add $\texttt{P}[\texttt{X},\texttt{N}]=g\texttt{Y}$ (\textbf{goto}
+\texttt{Y}).
+\item For each state \texttt{X} containing the item $\texttt{R'}\rightarrow\dots\bullet$,
+add $\texttt{P}[\texttt{X},\texttt{\$}]=a$ (\textbf{accept}).
+\item For each state \texttt{X} containing the item $\texttt{R}\rightarrow\dots\bullet$,
+add $\texttt{P}[\texttt{X},\texttt{T}]=rN$ (\textbf{reduce}), for
+every terminal \texttt{T} where $N$ is $R$'s rule number.
+\end{enumerate}
+
+\paragraph{Model of an LR Parser}
+
+Modelled by pushdown automata:
+\begin{itemize}
+\item \emph{Shift} pushes state onto stack and advances token.
+\item \emph{Reduce}:
+\begin{itemize}
+\item removes $L$ tokens from the stack ($L$ is the length of the RHS
+of the rule), 
+\item pushes the state of the \emph{goto} for the LHS of the rule according
+to the state now on the top of the stack,
+\item and generates an AST node for the rule.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Other LR Parsing Methods}
+\begin{itemize}
+\item \emph{FIRST set} for a sequence of non-terminals and terminals $\alpha$
+is the set of all tokens that could start a derivation of $\alpha$,
+including $\epsilon$ if $\alpha$ can derive $\epsilon$.
+\begin{itemize}
+\item A non-terminal \texttt{A} is \emph{nullable} if $A\implies^{*}\epsilon$.
+\end{itemize}
+\item \emph{FOLLOW set} for a non-terminal \texttt{A} is the set of all
+tokens that could immediately follow \texttt{A}, including \texttt{\$}
+if \texttt{A} can end the input.
+\end{itemize}
+
+\paragraph{Different LR Parsers}
+\begin{itemize}
+\item LR(0): A reduce item $\texttt{X}\rightarrow\texttt{A\ensuremath{\bullet}}$
+always causes a reduction.
+\item SLR(1): A reduce item $\texttt{X}\rightarrow\texttt{A\ensuremath{\bullet}}$
+causes a reduction only if the current token is in FOLLOW(\texttt{X}).
+\item LR(1): A reduce item $\texttt{X}\rightarrow\texttt{A\ensuremath{\bullet}},\texttt{t}$
+causes a reduction only if the current token is \texttt{t}.
+\item LALR(1): Combines LR(1) states that differ in the look-ahead token
+only. This can cause spurious reductions before an error is detected.
+\end{itemize}
+
+\subsubsection{Ambiguities}
+
+Grammars which can derive more than 1 parse tree for some input cannot
+be LR($k$) for any $k$.
+
+\paragraph{Shift-Reduce Conflicts}
+
+Consider the grammar:
+
+\begin{alignat*}{2}
+\texttt{S} & \rightarrow & if\texttt{ E }then\texttt{ S }else\texttt{ S}\\
+\texttt{S} & \rightarrow & if\texttt{ E }then\texttt{ S}\\
+\texttt{S} & \rightarrow & id\\
+\texttt{E} & \rightarrow & 0\mid1
+\end{alignat*}
+
+and the statement:
+\[
+if\texttt{ a }then\texttt{ }if\texttt{ b }then\texttt{ c }else\texttt{ d}
+\]
+
+\begin{itemize}
+\item If we shift first, we get: $if\texttt{ a }then\texttt{ }\boxed{if\texttt{ b }then\texttt{ c }else\texttt{ d}}$.
+\item If we reduce first, we get: $if\texttt{ a }then\texttt{ }\boxed{if\texttt{ b }then\texttt{ c}}\texttt{ }else\texttt{ d}$.
+\end{itemize}
+\emph{Solution}: rewrite the grammar:
+\begin{align*}
+\texttt{S} & \rightarrow & \texttt{MatchedS}\\
+\texttt{MatchedS} & \rightarrow & if\texttt{ E }then\texttt{ MatchedS }else\texttt{ MatchedS}\\
+\texttt{MatchedS} & \rightarrow & id
+\end{align*}
+\begin{align*}
+\texttt{S} & \rightarrow & \texttt{UnmatchedS}\\
+\texttt{UnmatchedS} & \rightarrow & if\texttt{ E }then\texttt{ S}\\
+\texttt{UnmatchedS} & \rightarrow & if\texttt{ E }then\texttt{ MatchedS }else\texttt{ UnmatchedS}
+\end{align*}
+
+We now force $else$-parts to become matched as soon as possible.
+
+\paragraph{Reduce-Reduce Conflicts}
+
+Consider the grammar:
+\[
+\texttt{Expr}\rightarrow\texttt{Expr `+' Expr}\mid\texttt{Expr `*' Expr}\mid\texttt{`(' Expr `)'}\mid int
+\]
+
+This is ambiguous because it doesn't define the associativity or precedence
+of \texttt{+} and \texttt{{*}}.
+
+\emph{Solution}: rewrite the grammar:
+\begin{align*}
+\texttt{Expr} & \rightarrow & \texttt{Expr `+' Term}\mid\texttt{Term}\\
+\texttt{Term} & \rightarrow & \texttt{Term `*' Factor}\mid\texttt{Factor}\\
+\texttt{Factor} & \rightarrow & \texttt{`(' Expr `)'}\mid int
+\end{align*}
+
+
+\paragraph{Parse Trees}
+
+Build leaf nodes for each input token (\emph{shift}) and non-leaf
+nodes for each rule (\emph{reduce}).
+
+\paragraph{Abstract Syntax Trees}
+
+Remove unnecessary information from the parse tree - can be constructed
+by a separate parse or by attaching AST construction code directly
+to grammar rules.
 \end{document}
