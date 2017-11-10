@@ -376,4 +376,85 @@ nodes for each rule (\emph{reduce}).
 Remove unnecessary information from the parse tree - can be constructed
 by a separate parse or by attaching AST construction code directly
 to grammar rules.
+
+\subsection{LL (Top-Down) Parsing}
+
+A language is LL($k$) if $k$-token lookahead is sufficient to choose
+between atlernatives of a rule when parsing.
+
+\paragraph{Backus-Naur Form (BNF)}
+
+The rules for a CFG take the form $\texttt{A}\rightarrow\alpha$ where
+\texttt{A} is a rule and $\alpha$ is a possibly empty sequence of
+rules and tokens.
+
+\paragraph{Extended BNF (EBNF)}
+\begin{itemize}
+\item $\left\{ \alpha\right\} $: 0 or more occurrences of $\alpha$. (\emph{Repetition})
+\begin{itemize}
+\item $\left\{ \texttt{E}\right\} $ becomes $\texttt{X}\rightarrow\epsilon\mid\texttt{XE}$
+\end{itemize}
+\item $\left[\alpha\right]$: 0 or 1 occurrence of $\alpha$. (\emph{Optional})
+\begin{itemize}
+\item $\left[\texttt{E}\right]$ becomes $\texttt{X}\rightarrow\epsilon\mid\texttt{E}$
+\end{itemize}
+\item $\left(\alpha\right)$: $\alpha$. (\emph{Grouping})
+\end{itemize}
+
+\paragraph{LL(1)}
+
+A grammar is LL(1) if it:
+\begin{enumerate}
+\item For each distinct pair of alternatives $(\alpha,\beta)$ of a rule
+\texttt{A}, FIRST($\alpha$) and FIRST($\beta$) are disjoint.
+\item For every rule \texttt{A}, if FIRST(\texttt{A}) contains $\epsilon$,
+then FIRST(\texttt{A}) and FOLLOW(\texttt{A}) are disjoint.
+\end{enumerate}
+
+\paragraph{Recursive Descent Parser}
+
+Consists of:
+\begin{itemize}
+\item Set of \emph{parse functions}, one for each rule (which returns AST
+for the rule).
+\item The current \emph{input token}, e.g. as a variable.
+\item A token \emph{match} and advance function.
+\end{itemize}
+
+\paragraph{CFG to LL(1)}
+
+3 common transformations:
+\begin{enumerate}
+\item \emph{Left recursion removal}: E.g.
+\begin{enumerate}
+\item $\texttt{A}\rightarrow\texttt{X}\mid\texttt{AY}$ is rewritten as
+$\texttt{A}\rightarrow\texttt{X}\left\{ \texttt{Y}\right\} $.
+\end{enumerate}
+\item \emph{Substitution}: Replace non-terminal \texttt{A} on LHS of a rule
+with each of the alternatives of \texttt{A}.
+\item \emph{Left factorisation}: E.g.
+\begin{enumerate}
+\item $\texttt{A}\rightarrow\texttt{BC}\mid\texttt{BD}$ is rewritten as
+$\texttt{A}\rightarrow\texttt{B}\left(\texttt{C}\mid\texttt{D}\right)$.
+\item $\texttt{A}\rightarrow\texttt{BC}\mid\texttt{B}$ is rewritten as
+$\texttt{A}\rightarrow\texttt{B}\left[\texttt{C}\right]$.
+\end{enumerate}
+\end{enumerate}
+
+\paragraph{Error Recovery}
+
+We try to:
+\begin{enumerate}
+\item Produce informative messages,
+\item If recovery is attempted, skip as little as possible,
+\item If correction is attempted, ensure corrected program has same syntax
+tree and semantics as original.
+\end{enumerate}
+In panic mode error recovery:
+\begin{itemize}
+\item Each parse function has a set of synchronising tokens (\emph{syncset}).
+\item When an error occurs, we skip ahead, discarding tokens until one of
+the synchronising tokens is seen.
+\end{itemize}
+
 \end{document}
