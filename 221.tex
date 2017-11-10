@@ -457,4 +457,62 @@ In panic mode error recovery:
 the synchronising tokens is seen.
 \end{itemize}
 
+\section{Semantic Checking}
+
+\paragraph{Type Checking in Languages}
+
+Can vary greatly. Languages may support:
+\begin{itemize}
+\item No explicitly typed variables (types inferred).
+\item Dynamically typed variables (types can change).
+\item Overloaded functions and polymorphic typing.
+\item Non-standard assignment-compatibility / type equivalence.
+\item Restrictions on how some types are used.
+\item Implicit type casting.
+\item Identifiers being used to name several kinds of entities.
+\item Multiple sizes for integers and floats.
+\end{itemize}
+
+\subsection{Example Checks}
+
+\paragraph{Symbol Tables}
+
+A dictionary from identifiers to AST nodes or objects holding identifier
+information. Standard implementation:
+\begin{itemize}
+\item \emph{Top-level symbol table} pre-loaded with identifier entries for
+globally visible identifiers, e.g. standard types, constants, functions...
+\item New symbol table for each scope, with dictionaries from identifiers
+to types.
+\end{itemize}
+
+\paragraph{Variable Declaration}
+\begin{enumerate}
+\item Check type is valid, and objects of this type can be declared.
+\item Check variable isn't already defined.
+\item Add variable to symbol table.
+\end{enumerate}
+
+\paragraph{Assignment}
+\begin{enumerate}
+\item Check variable exists.
+\item Check the types are compatible.
+\end{enumerate}
+
+\paragraph{Function Declaration}
+\begin{enumerate}
+\item Check return type is valid, and objects of this type can be returned.
+\item Check the function isn't already defined.
+\item Add function to the symbol table.
+\item Create and link new symbol table.
+\item Check parameter declarations.
+\end{enumerate}
+
+\paragraph{Function Call}
+\begin{enumerate}
+\item Check function exists.
+\item Check length of parameters.
+\item Check parameters.
+\end{enumerate}
+
 \end{document}
