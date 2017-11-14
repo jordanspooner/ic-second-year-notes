@@ -24,7 +24,6 @@
 \usepackage{textcomp}
 \usepackage{listings}
 \lstset{
-  language=haskell,
   tabsize=2,
   basicstyle=\small\ttfamily,
 }
@@ -51,7 +50,7 @@
 
 $E\in\text{SimpleExp}::=n\lvert E+E\lvert E\times E\lvert\dots$
 
-\paragraph{Big-step (Natural)}
+\subsubsection{Big-step (Natural)}
 \begin{itemize}
 \item {\scriptsize{}(B-NUM)} $\begin{array}{c}
 \\
@@ -63,14 +62,14 @@ E_{1}\Downarrow n_{1}\;E_{2}\Downarrow n_{2}\\
 \end{array}$ (where $n_{3}=n_{1}+n_{2}$).
 \end{itemize}
 
-\subparagraph{Properties:}
+\paragraph{Properties:}
 \begin{itemize}
 \item \emph{Determinacy}: For all $E$, $n_{1}$, $n_{2}$, if $E\Downarrow n_{1}$
 and $E\Downarrow n_{2}$ then $n_{1}=n_{2}$.
 \item \emph{Totality}: For all $E$, there exists an $n$ s.t. $E\Downarrow n$.
 \end{itemize}
 
-\paragraph{Small-step (Structural)}
+\subsubsection{Small-step (Structural)}
 \begin{itemize}
 \item {\scriptsize{}(S-LEFT)} $\begin{array}{c}
 E_{1}\rightarrow E_{1}'\\
@@ -86,11 +85,12 @@ E\rightarrow E'\\
 \end{array}$ (where $n_{3}=n_{1}+n_{2}$).
 \item \emph{Reflexie transitive closure}: $E\rightarrow^{*}E'$ if $E=E'$
 or there is a finite sequence $E\rightarrow E_{1}\rightarrow E_{2}\dots\rightarrow E_{k}\rightarrow E'$.
+\item For all $E$ and $n$, $E\Downarrow n$ if and only if $E\rightarrow$
 \item \emph{Normal form}: $E$ is in normal form (irreducable) if there
 is no $E'$ s.t. $E\rightarrow E'$.
 \end{itemize}
 
-\subparagraph{Properties:}
+\paragraph{Properties:}
 \begin{itemize}
 \item \emph{Determinacy}: For all $E_{1}$, $E_{2}$, if $E\rightarrow E_{1}$
 and $E\rightarrow E_{2}$ then $E_{1}=E_{2}$.
@@ -101,7 +101,23 @@ and $E_{2}\rightarrow^{*}E'$.
 such that for all $i$, $E_{i}\rightarrow E_{i+1}$.
 \end{itemize}
 
-\paragraph{States}
+\paragraph{Evaluation path}
+
+Series of small steps made during evaluation.
+
+\paragraph{Derivation tree}
+
+The tree of rule applications required to make a step.
+
+\subsection{While Language}
+
+$B\in\text{Bool}::=\texttt{true}\lvert\texttt{false}\mid E=E\mid E<E\mid\dots\mid B\&B\mid\neg B\dots$
+
+$E\in\text{Exp}::=x\mid n\mid E+E\mid\dots$
+
+$C\in\text{Com}::=\texttt{skip}\mid x:=E\mid\texttt{if }B\texttt{ then }C\texttt{ else }C\mid C;C\mid\texttt{while }B\texttt{ do }C$
+
+\subsubsection{States}
 \begin{itemize}
 \item Partial function from variable numbers s.t. $s(x)$ is defined for
 finitely many $x$. E.g. $s=\left(x\mapsto4,y\mapsto5,z\mapsto6\right)$.
@@ -109,9 +125,185 @@ finitely many $x$. E.g. $s=\left(x\mapsto4,y\mapsto5,z\mapsto6\right)$.
 $E$ w.r.t. state $s$.
 \end{itemize}
 
-\section{Register Machines}
+\subsubsection{Small Step}
 
-\section{Turing Machines}
+\paragraph{Expressions}
+\begin{itemize}
+\item {\scriptsize{}(W-EXP.LEFT)} $\begin{array}{c}
+\left\langle E_{1},s\right\rangle \rightarrow_{e}\left\langle E_{1}',s'\right\rangle \\
+\hline \left\langle E_{1}+E_{2},s\right\rangle \rightarrow_{e}\left\langle E_{1}'+E_{2},s'\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-EXP.RIGHT)} $\begin{array}{c}
+\left\langle E,s\right\rangle \rightarrow_{e}\left\langle E',s'\right\rangle \\
+\hline \left\langle n+E,s\right\rangle \rightarrow_{e}\left\langle n+E',s'\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-EXP.ADD)} $\begin{array}{c}
+\\
+\hline \left\langle x,s\right\rangle \rightarrow_{e}\left\langle n,s\right\rangle 
+\end{array}$ (where $s(x)=n$).
+\item {\scriptsize{}(W-EXP.ADD)} $\begin{array}{c}
+\\
+\hline \left\langle n_{1}+n_{2},s\right\rangle \rightarrow_{e}\left\langle n_{3},s\right\rangle 
+\end{array}$ (where $n_{3}=n_{1}+n_{2}$).
+\end{itemize}
 
-\section{Lambda Calculus}
+\paragraph{Commands}
+\begin{itemize}
+\item {\scriptsize{}(W-ASS.EXP)} $\begin{array}{c}
+\left\langle E,s\right\rangle \rightarrow_{e}\left\langle E',s'\right\rangle \\
+\hline \left\langle x:=E,s\right\rangle \rightarrow_{c}\left\langle x:=E',s'\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-ASS.NUM)} $\begin{array}{c}
+\\
+\hline \left\langle x:=n,s\right\rangle \rightarrow_{c}\left\langle \texttt{skip},s\left[x\mapsto n\right]\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-SEQ.LEFT)} $\begin{array}{c}
+\left\langle C_{1},S\right\rangle \rightarrow_{c}\left\langle C_{1}',s'\right\rangle \\
+\hline \left\langle C_{1};C_{2},S\right\rangle \rightarrow_{c}\left\langle C_{1}';C_{2},s'\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-SEQ.SKIP)} $\begin{array}{c}
+\\
+\hline \left\langle \texttt{skip};C_{2},S\right\rangle \rightarrow_{c}\left\langle C_{2},s'\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-COND.TRUE)} $\begin{array}{c}
+\\
+\hline \left\langle \texttt{if true then }C_{1}\texttt{ else }C_{2},s\right\rangle \rightarrow_{c}\left\langle C_{1},s\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-COND.FALSE)} $\begin{array}{c}
+\\
+\hline \left\langle \texttt{if false then }C_{1}\texttt{ else }C_{2},s\right\rangle \rightarrow_{c}\left\langle C_{2},s\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-COND.BEXP)} 
+\begin{multline*}
+\begin{array}{c}
+\left\langle B,s\right\rangle \rightarrow_{b}\left\langle B',s'\right\rangle \\
+\hline \left\langle \texttt{if }B\texttt{ then }C_{1}\texttt{ else }C_{2},s\right\rangle \rightarrow_{c}\\
+\left\langle \texttt{if }B'\texttt{ then }C_{1}\texttt{ else }C_{2},s'\right\rangle 
+\end{array}
+\end{multline*}
+\item {\scriptsize{}(W-WHILE)} All this rule does is `unfold' the loop once:
+\begin{multline*}
+\begin{array}{c}
+\\
+\hline \left\langle \texttt{while }B\texttt{ do }C,s\right\rangle \rightarrow_{c}\\
+\left\langle \texttt{if }B\texttt{ then }(C;\texttt{while }B\texttt{ do }C)\texttt{ else skip},s\right\rangle 
+\end{array}
+\end{multline*}
+\end{itemize}
+
+\paragraph{Properties}
+\begin{itemize}
+\item Determinacy and confluence still hold.
+\item Note that with \texttt{while}, normalisation no longer holds for small
+step, as a computation may be non-terminating.
+\end{itemize}
+
+\subsubsection{Configurations}
+
+\paragraph{Answer Configuration}
+
+Normal form where no execution is possible. E.g. $\left\langle \texttt{skip},s\right\rangle $.
+
+\paragraph{Stuck Configuration}
+
+Normal form where evaluation is not possible. E.g. $\left\langle y,(x\mapsto3)\right\rangle $.
+
+\paragraph{Normalisation}
+\begin{itemize}
+\item The evaluation relations $\rightarrow_{e}$ and $\rightarrow_{b}$
+are normalising.
+\item The execution relation $\rightarrow_{c}$ is not:
+\begin{itemize}
+\item Consider $\left\langle \texttt{while true do skip},s\right\rangle $.
+\item Assume it takes $n$ steps to evaluate to $\left\langle \texttt{skip},s'\right\rangle $.
+$n$ is well-defined since the semantics is deterministic.
+\item $\left\langle \texttt{while true do skip},s\right\rangle \rightarrow_{c}^{3}\left\langle \texttt{while true do skip},s\right\rangle $.
+\item It must then take $n-3$ steps, which is a contradiction.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Other Properties}
+
+\paragraph{Side Effects and Evaluation Order}
+
+In our language, state may only be changed in assignment commands,
+which cannot be present in expressions or booleans.
+
+Consider a language with the expression \texttt{$\texttt{do }x:=x+1\texttt{ return }x$}:
+\begin{itemize}
+\item This expression has a side effect on the state.
+\item Order of evaluation matters: E.g. for $(\texttt{do }x:=x+1\texttt{ return }x)+(\texttt{do }x:=x\times2\texttt{ return }x)$.
+\end{itemize}
+
+\paragraph{Strictness}
+
+An operation is strict in one of its arguments if that argument always
+need to be evaluated. E.g.
+\begin{itemize}
+\item Addition is strict in both arguments.
+\item \texttt{$\&$} is often a left-strict operator (non-strict in its
+right argument).
+\end{itemize}
+
+\paragraph{Procedure and Method Calls}
+
+Many issues involving strictness and evaluation:
+\begin{itemize}
+\item \emph{Call-by-value}: always evaluate all arguments, left-to-right
+(even if they're never used).
+\item \emph{Call-by-name}: evaluate each argument each time it is used (i.e.
+could be never or possibly multiple times).
+\item \emph{Call-by-need}: evaluate each argument first time is used, but
+remember the result for subsequent uses.
+\end{itemize}
+
+\subsection{Structural Induction}
+
+Technique for reasoning with \emph{structured} and \emph{finite} collections
+of objects.
+
+\subsubsection{Simple Expressions}
+
+\paragraph{Base Case}
+
+Prove that $P(n)$ holds for every number $n$.
+
+\paragraph{Inductive Case 1}
+
+Prove that, for all $E_{1}$and $E_{2}$, $P\left(E_{1}+E_{2}\right)$
+holds assuming the inductive hypotheses that $P\left(E_{1}\right)$
+and $P\left(E_{2}\right)$ hold.
+
+\paragraph{Inductive Case 2}
+
+Prove $P\left(E_{1}\times E_{2}\right)$ similarly.
+
+\subsubsection{Multi-step Reductions}
+
+Simple induction on numbers.
+
+\subsubsection{Commands}
+
+\paragraph{Base Case 1}
+
+Prove that $P(\texttt{skip})$ holds.
+
+\paragraph{Base Case 2}
+
+Prove that, for all $x$ and $E$, $P\left(x:=E\right)$ holds.
+
+\paragraph{Inductive Case 1}
+
+Prove that, for all $B,C_{a},C_{b}$, $P\left(\texttt{if }B\texttt{ then }C_{a}\texttt{ else }C_{b}\right)$
+holds, assuming $P(C_{a})$ and $P(C_{b})$.
+
+\paragraph{Inductive Case 2}
+
+Prove that, for all $C_{a}$and $C_{b}$, $P\left(C_{a};C_{b}\right)$
+holds, assuming, assuming $P(C_{a})$ and $P(C_{b})$.
+
+\paragraph{Inductive Case 3}
+
+Prove that, for all $B$ and $C$, $P\left(\texttt{while }B\texttt{ do }C\right)$
+holds, assuming, assuming $P(C)$.
 \end{document}
