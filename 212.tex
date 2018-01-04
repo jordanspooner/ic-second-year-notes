@@ -411,4 +411,28 @@ Internet Mail Extensions} (MIME) specification.
 
 Allows remote access, but assumes retrieved mail is deleted at the
 server. This is solved by IMAP.
+
+\section{Transport Layer}
+
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{ccc}
+\toprule 
+ & \textbf{\footnotesize{}TCP} & \textbf{\footnotesize{}UDP}\tabularnewline
+ & \textbf{\footnotesize{}Transmission Control Protocol} & \textbf{\footnotesize{}User Datagram Protocol}\tabularnewline
+\midrule
+\emph{\footnotesize{}Type of service} & {\footnotesize{}Reliable connection-oriented} & {\footnotesize{}Unreliable connection-less}\tabularnewline
+\emph{\footnotesize{}Data are called} & {\footnotesize{}Segments} & {\footnotesize{}Datagrams}\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\paragraph{Transmission Control Protocol (TCP)}
+
+Reliable connection-oriented service.
+
+\paragraph{User Datagram Protocol (UDP)}
+
+Unreliable connection-less service.
 \end{document}
