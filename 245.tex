@@ -1,0 +1,74 @@
+\documentclass[twocolumn,english]{article}
+\usepackage[latin9]{inputenc}
+\usepackage[landscape]{geometry}
+\geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
+\setlength{\parskip}{0bp}
+\setlength{\parindent}{0pt}
+\usepackage{amssymb}
+
+\makeatletter
+
+
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amsbsy}
+
+
+
+
+\providecommand{\tabularnewline}{\\}
+
+\setlength{\columnsep}{0.25in}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{listings}
+\lstset{
+  tabsize=2,
+  basicstyle=\small\ttfamily,
+}
+
+
+
+\usepackage{babel}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listing}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{Reference Sheet for C245 Probability and Statistics}
+
+\date{Autumn 2017}
+\maketitle
+
+\section{Probability}
+\begin{itemize}
+\item \emph{Sample space} $S$: Range of possible outcomes of a random experiment.
+\item \emph{Event}: Subset of sample space.
+\begin{itemize}
+\item \emph{Null event}: $\emptyset$.
+\end{itemize}
+\item Events are \emph{mutually exclusive} if $\forall i,j.E_{i}\cap E_{j}=\emptyset$.
+\end{itemize}
+
+\paragraph{The $\sigma$-algebra}
+
+A collection $\mathfrak{S}$ of subsets of $S$ is a $\sigma$-field
+or $\sigma$-algebra if it satisfies:
+\begin{enumerate}
+\item $\emptyset\in\mathfrak{S}$.
+\item Closed under countable union: if $E_{1},E_{2},\dots\in\mathfrak{S}$
+then $\cup_{i=1}^{\infty}E_{i}\in\mathfrak{S}$.
+\item Closed under complements: if $E\in\mathfrak{S}$ then $\overline{E}\in\mathfrak{S}$.
+\end{enumerate}
+\emph{Properties}:
+\begin{enumerate}
+\item $P\left(\emptyset\right)=0$.
+\item $P\left(\overline{E}\right)=1-P\left(E\right)$.
+\item $P\left(E\cup F\right)=P\left(E\right)+P\left(F\right)-P\left(E\cap F\right)$.
+\end{enumerate}
+
+\end{document}
