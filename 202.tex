@@ -1,0 +1,81 @@
+\documentclass[twocolumn,english]{article}
+\usepackage[latin9]{inputenc}
+\usepackage[landscape]{geometry}
+\geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
+\setlength{\parskip}{0bp}
+\setlength{\parindent}{0pt}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+
+\makeatletter
+
+
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amsbsy}
+
+
+
+
+\providecommand{\tabularnewline}{\\}
+
+\setlength{\columnsep}{0.25in}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{listings}
+\lstset{
+  tabsize=2,
+  basicstyle=\small\ttfamily,
+}
+
+
+
+\usepackage{babel}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listing}
+
+\makeatother
+
+\usepackage{babel}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listing}
+
+\begin{document}
+
+\title{Reference Sheet for C202 Algorithms II}
+
+\date{Spring 2017}
+\maketitle
+
+\section{Order of Growth}
+\begin{itemize}
+\item \emph{Asymptotic bound}: $f\left(n\right)$ is order $\Theta\left(g\left(n\right)\right)$
+if there is $c_{1},c_{2},n_{0}>0$ such that $0\leq c_{1}g\left(n\right)\leq f\left(n\right)\leq c_{2}g\left(n\right)$
+for all $n\geq n_{0}$.
+\item \emph{Asymptotic upper bound}: $f\left(n\right)$ is order $O\left(g\left(n\right)\right)$
+if there is $c,n_{0}>0$ such that $0\leq f\left(n\right)\leq cg\left(n\right)$
+for all $n\geq n_{0}$.
+\item \emph{Asymptotic lower bound}: $f\left(n\right)$ is order $\Omega\left(g\left(n\right)\right)$
+if there is $c,n_{0}>0$ such that $0\leq cg\left(n\right)\leq f\left(n\right)$
+for all $n\geq n_{0}$.
+\end{itemize}
+\emph{Note}: \uline{not} average / best / worst case.
+
+\section{Divide and Conquer}
+\begin{enumerate}
+\item \emph{Divide} the problem into smaller sub-problems.
+\item \emph{Conquer} sub-problems by solving recursively (recursive case).
+If size is small enough, can be solved trivially (base case).
+\item \emph{Combine} solutions to sub-problems into final solution.
+\end{enumerate}
+\begin{lstlisting}[language=Python,basicstyle={\footnotesize\ttfamily},tabsize=4,frame=single]
+MERGE-SORT(A, p, r):
+	if p < r:                     # more than one item?
+		q = floor((p + r)/2)      # divide array
+		MERGE-SORT(A, p, q)       # conquer 1st subarray
+		MERGE-SORT(A, q + 1, r)   # conquer 2nd subarray
+		MERGE(A, p, q, r)         # combine subarrays
+\end{lstlisting}
+
+\end{document}
