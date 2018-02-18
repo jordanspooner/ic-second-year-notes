@@ -4,6 +4,7 @@
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{amsmath}
 \usepackage{amssymb}
 
 \makeatletter
@@ -45,6 +46,8 @@
 \maketitle
 
 \section{Probability}
+
+\paragraph{Sample Spaces and Events}
 \begin{itemize}
 \item \emph{Sample space} $S$: Range of possible outcomes of a random experiment.
 \item \emph{Event}: Subset of sample space.
@@ -122,4 +125,135 @@ By Bayes theorem:
 P\left(\theta\mid X\right)=\frac{P\left(X\mid\theta\right)P\left(\theta\right)}{P\left(X\right)}
 \]
 
+\section{Random Variables}
+
+Mapping from sample space to $\mathbb{R}$ (e.g. $X:S\rightarrow\mathbb{R}$).
+\begin{itemize}
+\item \emph{Probability distribution function} $P_{X}\left(x\right)=P\left(X^{-1}\left(x\right)\right)$.
+\item \emph{Cumulative distribution function} $F_{X}\left(x\right)=P_{X}\left(X\leq x\right)$.
+\begin{itemize}
+\item For every real number $x$, $0\leq F_{X}\left(x\right)\leq1$.
+\item $F_{X}$ is monotonic.
+\item $F_{X}\left(-\infty\right)=0$ and $F_{X}\left(\infty\right)=1$.
+\end{itemize}
+\item A random variable is \emph{simple} iff it can only take a finite number
+of possible values.
+\end{itemize}
+
+\subsection{Discrete Random Variables}
+
+TODO
+
+\subsection{Continuous Random Variables}
+
+\subsubsection{Definition}
+
+$X$ is a \emph{continuous random variable} if $\exists f_{X}:\mathbb{R}\rightarrow\mathbb{R}$
+s.t.
+\[
+P_{X}\left(B\right)=\int_{x\in B}f_{X}\left(x\right)\text{d}x
+\]
+\begin{itemize}
+\item $f_{X}$ is the \emph{probability density function}.
+\item The \emph{cumulative distribution function} is
+\[
+F_{X}\left(x\right)=\int_{-\infty}^{x}f_{X}\left(t\right)\text{d}t
+\]
+\item Note that $f_{X}\left(x\right)=F_{X}^{\prime}\left(x\right)$.
+\end{itemize}
+
+\paragraph{Properties of a pdf}
+\begin{enumerate}
+\item For all $x\in\mathbb{R},$ $f_{X}\left(x\right)\geq0$.
+\item $\int_{-\infty}^{\infty}f_{X}\left(x\right)\text{d}x=1$.
+\end{enumerate}
+
+\paragraph{Transformed Random Variables}
+
+E.g. $Y=g\left(X\right)$ for some $g:\mathbb{R}\rightarrow\mathbb{R}$
+where $g$ is \emph{continuous} and \emph{strictly monotonic} (so
+it has an inverse).
+\begin{itemize}
+\item By the chain rule, we get $f_{Y}\left(y\right)=F_{Y}^{\prime}\left(y\right)=f_{X}\left(g^{-1}\left(y\right)\right)\left|g^{-1'}\left(y\right)\right|$.
+\end{itemize}
+
+\subsubsection{Mean, Variance and Quantiles}
+
+\paragraph{Mean $E\left(X\right)$}
+
+\[
+E_{X}\left(X\right)=\int_{-\infty}^{\infty}xf_{X}\left(x\right)\text{d}x
+\]
+
+\[
+E_{X}\left(g\left(X\right)\right)=\int_{-\infty}^{\infty}g\left(x\right)f_{X}\left(x\right)\text{d}x
+\]
+
+Properties:
+\begin{enumerate}
+\item \emph{Linearity}: $E\left(aX+b\right)=aE\left(X\right)+b$.
+\item \emph{Additivity}: $E\left(g\left(X\right)+h\left(X\right)\right)=E\left(g\left(X\right)\right)+E\left(h\left(X\right)\right)$.
+\end{enumerate}
+
+\paragraph{Variance $\text{Var}\left(X\right)$}
+
+\begin{multline*}
+\text{Var}_{X}\left(X\right)=E\left(\left(X-\mu_{X}\right)^{2}\right)\\
+=\int_{-\infty}^{\infty}\left(x-\mu_{X}\right)^{2}f_{X}\left(x\right)\text{d}x\\
+=\int_{-\infty}^{\infty}x^{2}f_{X}\left(x\right)\text{d}x-\mu_{X}^{2}\\
+=E\left(X^{2}\right)-\left(E\left(X\right)\right)^{2}
+\end{multline*}
+\begin{itemize}
+\item $\text{Var}\left(aX+b\right)=a^{2}\text{Var}\left(X\right)$.
+\end{itemize}
+
+\paragraph{Moment Generating Function $M_{X}\left(t\right)$}
+
+\[
+M_{X}\left(t\right)=E\left(e^{tX}\right)=\int_{-\infty}^{\infty}e^{tx}f_{X}\left(x\right)\text{d}x
+\]
+\begin{itemize}
+\item Might not exist.
+\item The $n$th moment is $\left.M_{n}=\frac{\text{d}^{n}M_{X}\left(t\right)}{\text{d}t^{n}}\right\vert _{t=0}$.
+\end{itemize}
+
+\paragraph{Characteristic Function $\phi_{X}\left(t\right)$}
+
+\[
+\phi_{X}\left(t\right)=E\left(e^{itX}\right)=\int_{-\infty}^{\infty}e^{itx}f_{X}\left(x\right)\text{d}x
+\]
+\begin{itemize}
+\item Always exists (Fourier transform of pdf).
+\item The $n$th moment is $\left.M_{n}=\left(-i\right)^{n}\frac{\text{d}^{n}\phi_{X}\left(t\right)}{\text{d}t^{n}}\right\vert _{t=0}$.
+\end{itemize}
+
+\paragraph{Probability Generating Functions}
+
+\[
+M\left(t\right)=G\left(e^{t}\right)\text{ and }\phi\left(t\right)=G\left(e^{it}\right)
+\]
+
+\paragraph{Sum of Independent Random Variables}
+
+For independent random variables $X_{1},X_{2},\dots,X_{n}$, and $S_{n}=\sum_{j=1}^{n}X_{j}$:
+\[
+\phi_{S_{n}}\left(t\right)=\prod_{j=1}^{n}\phi_{X_{j}}\left(t\right)\text{ and }M_{S_{n}}\left(t\right)=\prod_{j=1}^{n}M_{X_{j}}\left(t\right)
+\]
+
+\paragraph{Quantiles}
+
+\[
+Q_{X}\left(\alpha\right)=F_{X}^{-1}\left(\alpha\right)
+\]
+
+E.g. \emph{median} is $F_{X}^{-1}\left(\frac{1}{2}\right)$. I.e.
+the solution to $F_{X}\left(x\right)=\frac{1}{2}$.
+
+\subsubsection{Continuous Distributions}
+
+TODO
+
+\subsection{Joint Random Variables}
+
+TODO
 \end{document}
