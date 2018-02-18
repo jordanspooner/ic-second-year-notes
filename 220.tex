@@ -1,0 +1,139 @@
+\documentclass[twocolumn,english]{article}
+\usepackage[latin9]{inputenc}
+\usepackage[landscape]{geometry}
+\geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
+\setlength{\parskip}{0bp}
+\setlength{\parindent}{0pt}
+\usepackage{amsmath}
+
+\makeatletter
+
+
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amsbsy}
+
+
+
+
+\providecommand{\tabularnewline}{\\}
+
+\setlength{\columnsep}{0.25in}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{listings}
+\lstset{
+  tabsize=2,
+  basicstyle=\small\ttfamily,
+}
+
+
+
+\usepackage{babel}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listing}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{Reference Sheet for C220 Software Engineering Design}
+
+\date{Autumn 2017}
+\maketitle
+
+\section{Operational Semantics}
+
+\subsection{Simple Expressions}
+
+$E\in\text{SimpleExp}::=n\lvert E+E\lvert E\times E\lvert\dots$
+
+\paragraph{Big-step (Natural)}
+\begin{itemize}
+\item {\scriptsize{}(B-NUM)} $\begin{array}{c}
+\\
+\hline n\Downarrow n
+\end{array}$.
+\item {\scriptsize{}(B-ADD)} $\begin{array}{c}
+E_{1}\Downarrow n_{1}\;E_{2}\Downarrow n_{2}\\
+\hline E_{1}+E_{2}\Downarrow n_{3}
+\end{array}$ (where $n_{3}=n_{1}+n_{2}$).
+\end{itemize}
+
+\subparagraph{Properties:}
+\begin{itemize}
+\item \emph{Determinacy}: For all $E$, $n_{1}$, $n_{2}$, if $E\Downarrow n_{1}$
+and $E\Downarrow n_{2}$ then $n_{1}=n_{2}$.
+\item \emph{Totality}: For all $E$, there exists an $n$ s.t. $E\Downarrow n$.
+\end{itemize}
+
+\paragraph{Small-step (Structural)}
+\begin{itemize}
+\item {\scriptsize{}(S-LEFT)} $\begin{array}{c}
+E_{1}\rightarrow E_{1}'\\
+\hline E_{1}+E_{2}\rightarrow E_{1}'+E_{2}
+\end{array}$.
+\item {\scriptsize{}(S-RIGHT)} $\begin{array}{c}
+E\rightarrow E'\\
+\hline n+E\rightarrow n+E'
+\end{array}$.
+\item {\scriptsize{}(S-ADD)} $\begin{array}{c}
+\\
+\hline n_{1}+n_{2}\rightarrow n_{3}
+\end{array}$ (where $n_{3}=n_{1}+n_{2}$).
+\item \emph{Reflexie transitive closure}: $E\rightarrow^{*}E'$ if $E=E'$
+or there is a finite sequence $E\rightarrow E_{1}\rightarrow E_{2}\dots\rightarrow E_{k}\rightarrow E'$.
+\item \emph{Normal form}: $E$ is in normal form (irreducable) if there
+is no $E'$ s.t. $E\rightarrow E'$.
+\end{itemize}
+
+\subparagraph{Properties:}
+\begin{itemize}
+\item \emph{Determinacy}: For all $E_{1}$, $E_{2}$, if $E\rightarrow E_{1}$
+and $E\rightarrow E_{2}$ then $E_{1}=E_{2}$.
+\item \emph{Confluence}: For all $E$, $E_{1}$, $E_{2}$, if $E\rightarrow^{*}E_{1}$
+and $E\rightarrow^{*}E$ then there exists $E'$ s.t. $E_{1}\rightarrow^{*}E'$
+and $E_{2}\rightarrow^{*}E'$.
+\item \emph{Strong normalisation}: No infinite sequence of expressions $E_{1},E_{2},E_{3}$
+such that for all $i$, $E_{i}\rightarrow E_{i+1}$.
+\end{itemize}
+
+\paragraph{States}
+\begin{itemize}
+\item Partial function from variable numbers s.t. $s(x)$ is defined for
+finitely many $x$. E.g. $s=\left(x\mapsto4,y\mapsto5,z\mapsto6\right)$.
+\item \emph{Configuration} $\left\langle E,s\right\rangle $ means evaluate
+$E$ w.r.t. state $s$.
+\end{itemize}
+
+\subparagraph{Rules}
+\begin{itemize}
+\item {\scriptsize{}(W-EXP.LEFT)} $\begin{array}{c}
+\left\langle E_{1},s\right\rangle \rightarrow_{e}\left\langle E_{1}',s'\right\rangle \\
+\hline \left\langle E_{1}+E_{2},s\right\rangle \rightarrow_{e}\left\langle E_{1}'+E_{2},s'\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-EXP.RIGHT)} $\begin{array}{c}
+\left\langle E,s\right\rangle \rightarrow_{e}\left\langle E',s'\right\rangle \\
+\hline \left\langle n+E,s\right\rangle \rightarrow_{e}\left\langle n+E',s'\right\rangle 
+\end{array}$.
+\item {\scriptsize{}(W-EXP.ADD)} $\begin{array}{c}
+\\
+\hline \left\langle x,s\right\rangle \rightarrow_{e}\left\langle n,s\right\rangle 
+\end{array}$ (where $s(x)=n$).
+\item {\scriptsize{}(W-EXP.ADD)} $\begin{array}{c}
+\\
+\hline \left\langle n_{1}+n_{2},s\right\rangle \rightarrow_{e}\left\langle n_{3},s\right\rangle 
+\end{array}$ (where $n_{3}=n_{1}+n_{2}$).
+\end{itemize}
+Derivation tree
+
+Evaluation path
+
+\section{Register Machines}
+
+\section{Turing Machines}
+
+\section{Lambda Calculus}
+\end{document}
