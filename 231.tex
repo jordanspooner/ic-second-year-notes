@@ -1,0 +1,179 @@
+\documentclass[twocolumn,english]{article}
+\usepackage[latin9]{inputenc}
+\usepackage[landscape]{geometry}
+\geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
+\setlength{\parskip}{0bp}
+\setlength{\parindent}{0pt}
+
+\makeatletter
+
+
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amsbsy}
+
+
+
+
+\providecommand{\tabularnewline}{\\}
+
+\setlength{\columnsep}{0.25in}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{listings}
+\lstset{
+  tabsize=2,
+  basicstyle=\small\ttfamily,
+}
+
+
+
+\usepackage{babel}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listing}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{Reference Sheet for CO231 Artificial Intelligence}
+
+\date{Autumn 2017}
+\maketitle
+
+\section{Search}
+
+\paragraph{Requirements}
+\begin{enumerate}
+\item \emph{Observable}: current state is known.
+\item \emph{Discrete}: finitely many next states from each state.
+\item \emph{Deterministic}: each action has exactly one outcome.
+\item \emph{Known}: possible actions and next states known.
+\end{enumerate}
+
+\paragraph{Formal Definition}
+\begin{enumerate}
+\item Initial state (\emph{start}).
+\item Transition model between states (\emph{graph}).
+\item Goal tests (set of \emph{goal} states).
+\item Path cost (sum of positive step costs).
+\end{enumerate}
+%
+\begin{enumerate}
+\item Solution is \emph{path} from initial state to a goal state.
+\item Optimal solution has lowest cost.
+\end{enumerate}
+
+\paragraph{Algorithms}
+
+Generate a search tree:
+\begin{enumerate}
+\item Initialise the tree with initial state as root.
+\item Repeat:
+\begin{enumerate}
+\item If frontier of tree is empty then fail.
+\item Choose and remove leaf node $L$ from frontier.
+\item If $L$ is a goal state, then return solution.
+\item Add $L$ to seen states.
+\item Expand $L$ (if not seen), adding resulting nodes to frontier.
+\end{enumerate}
+\end{enumerate}
+
+\paragraph{Uninformed / Blind Search}
+
+Choose next unexpanded node using:
+\begin{enumerate}
+\item \emph{Breadth first search}: choose shallowest node.
+\item \emph{Uniform cost search}: choose node with lowest path cost.
+\item \emph{Depth first search}: choose deepest node.
+\item \emph{Depth limited search}: DFS with depth limit $l$.
+\item \emph{Iterative deepening search}: depth limited search with increasing
+$l$.
+\end{enumerate}
+Variants:
+\begin{enumerate}
+\item \emph{Backtracking search}: only generate one node when expanded,
+remember what to generate next.
+\item \emph{Bi-directional search}: Two simultaneous searches from start
+to goal and goal to start.
+\end{enumerate}
+
+\paragraph{Properties of Uninformed Search}
+
+TODO
+
+\paragraph{Informed Search}
+
+Use a cost estimate to choose node with least-estimated path cost.
+TODO.
+
+\section{Planning}
+
+\paragraph{Requirements}
+
+Observable, discrete, deterministic, known.
+
+\paragraph{STRIPS Language for Planning}
+\begin{enumerate}
+\item \emph{States} - conjunctions of ground atoms.
+\item \emph{Goals} - conjunctions of literals - possibly containing variables
+- implicitly existentially quantified.
+\item \emph{Operators}:
+\begin{enumerate}
+\item Action description.
+\item \emph{Precondition} - conjunction of literals.
+\item \emph{Postcondition} (\emph{Effect}) - conjunction of literals. Every
+variable in effect must appear in pre-condition.
+\end{enumerate}
+\item \emph{Actions} - fully instantiated operators.
+\end{enumerate}
+
+\paragraph{Execution of an Action}
+
+New State = Current state - negation of negative fluents in effects
++ positive fluents in effects
+
+\paragraph{Assumptions}
+\begin{itemize}
+\item Fluents not mentioned in a state are false.
+\item Fluents do not change unless they are explicitly changed by an action.
+\item Time is implicit.
+\end{itemize}
+
+\paragraph{Planning as Search}
+\begin{enumerate}
+\item \emph{Progression planning} (forward) - blind search with the graph
+obtained from the specification of the planning problem.
+\begin{enumerate}
+\item \emph{Problem}: Large search spaces with many irrelevant actions.
+\item \emph{Solution}: Relax the problem, add extra edges e.g. by ignoring
+preconditions and effects not in goal.
+\end{enumerate}
+\item \emph{Regression planning} (backward) - blind search backwards from
+the goal.
+\begin{enumerate}
+\item \emph{Problem}: Non-interleaved regression planning is incomplete
+\end{enumerate}
+\end{enumerate}
+
+\paragraph{Graph-Plan Algorithm}
+\begin{itemize}
+\item \emph{Level $S_{i}$}:
+\begin{itemize}
+\item $i=0$: Start state + literals that could hold at the start.
+\item $i>0$: all literals that could hold at $S_{i}$, depending on actions
+at $A_{i-1}$.
+\end{itemize}
+\item \emph{Level $A_{i}$}:
+\begin{itemize}
+\item Each action in $A_{i}$ connected to its precondition in $S_{i}$
+and effect at $S_{i+1}$.
+\item No-op actions: no change.
+\end{itemize}
+\item Mutual exclusions:
+\item Levelling off:
+\end{itemize}
+
+\end{document}
