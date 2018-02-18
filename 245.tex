@@ -59,16 +59,67 @@
 A collection $\mathfrak{S}$ of subsets of $S$ is a $\sigma$-field
 or $\sigma$-algebra if it satisfies:
 \begin{enumerate}
-\item $\emptyset\in\mathfrak{S}$.
+\item Nonempty: $S\in\mathfrak{S}$.
+\item Closed under complements: if $E\in\mathfrak{S}$ then $\overline{E}\in\mathfrak{S}$.
 \item Closed under countable union: if $E_{1},E_{2},\dots\in\mathfrak{S}$
 then $\cup_{i=1}^{\infty}E_{i}\in\mathfrak{S}$.
-\item Closed under complements: if $E\in\mathfrak{S}$ then $\overline{E}\in\mathfrak{S}$.
+\end{enumerate}
+\emph{Axioms}:
+\begin{enumerate}
+\item For any $E$ in $\mathfrak{S}$, $0\leq P\left(E\right)\leq1$.
+\item $P\left(S\right)=1$.
+\item Countably additive: $P\left(\cup_{i}E_{i}\right)=\sum_{i}P\left(E_{i}\right)$.
 \end{enumerate}
 \emph{Properties}:
 \begin{enumerate}
-\item $P\left(\emptyset\right)=0$.
 \item $P\left(\overline{E}\right)=1-P\left(E\right)$.
-\item $P\left(E\cup F\right)=P\left(E\right)+P\left(F\right)-P\left(E\cap F\right)$.
+\item $P\left(\emptyset\right)=0$.
+\item For any events $E$ and $F$, $P\left(E\cup F\right)=P\left(E\right)+P\left(F\right)-P\left(E\cap F\right)$.
 \end{enumerate}
+
+\paragraph{Independence}
+\begin{itemize}
+\item Events $E$ and $F$ are independent iff $P\left(E\cap F\right)=P\left(E\right)P\left(F\right)$.
+\item If $E$ and $F$ are independent, $\overline{E}$ and $F$ are also
+independent.
+\end{itemize}
+
+\paragraph{Conditional Probability}
+\begin{enumerate}
+\item $P\left(E\mid F\right)$ is called a \emph{conditional} probability.
+\item $P\left(E\cap F\right)$ is called a \emph{joint} probability.
+\item $P\left(E\right)$ is called a \emph{marginal} probability.
+\end{enumerate}
+\[
+P\left(E\mid F\right)=\frac{P\left(E\cap F\right)}{P\left(F\right)}
+\]
+\begin{itemize}
+\item Events $E_{1}$ and $E_{2}$ are \emph{conditionally independent}
+given $F$ iff $P\left(E_{1}\cap E_{2}\mid F\right)=P\left(E_{1}\mid F\right)P\left(E_{2}\mid F\right)$.
+\item \emph{Bayes theorem} (easily derived from definition above) states:
+\[
+P\left(E\mid F\right)=\frac{P\left(E\right)P(F\mid E)}{P\left(F\right)}
+\]
+\item For a set of events $\left\{ F_{1},F_{2},\dots\right\} $ which form
+a partition of $S$, the \emph{partition rule} (derived from $E=E\cap S$)
+states:
+\[
+P\left(E\right)=\sum_{i}P\left(E\mid F_{i}\right)P\left(F_{i}\right)
+\]
+\end{itemize}
+
+\paragraph{Likelihood and Posterior Probability}
+
+For parameters $\theta$ and evidence $X$:
+\begin{enumerate}
+\item \emph{Likelihood function} is $P\left(X\mid\theta\right)$.
+\item \emph{Posterior probability} is $P\left(\theta\mid X\right)$.
+\item \emph{Prior probability} is $P\left(\theta\right)$.
+\end{enumerate}
+By Bayes theorem:
+
+\[
+P\left(\theta\mid X\right)=\frac{P\left(X\mid\theta\right)P\left(\theta\right)}{P\left(X\right)}
+\]
 
 \end{document}
