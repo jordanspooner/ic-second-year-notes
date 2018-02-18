@@ -45,9 +45,7 @@
 \date{Autumn 2017}
 \maketitle
 
-\section{Linear Maps on $\mathbb{R}^{n}$ and $\mathbb{C}^{n}$}
-
-\paragraph{The $\mathbb{R}^{n}$ and $\mathbb{C}^{n}$ Vector Spaces}
+\section{The $\mathbb{R}^{n}$ and $\mathbb{C}^{n}$ Vector Spaces}
 \begin{itemize}
 \item \emph{Convex combination}: triangle $a\boldsymbol{u}+b\boldsymbol{v}+c\boldsymbol{w}$
 with vertices $\boldsymbol{u},\boldsymbol{v},\boldsymbol{w}$ and
@@ -67,7 +65,67 @@ be represented by the real matrix $\boldsymbol{A}\in\mathbb{R}^{m\times n}$:
 \item For all $\boldsymbol{v},\boldsymbol{w}\in\mathbb{R}^{n}$, $\boldsymbol{A}(\boldsymbol{v}+\boldsymbol{w})=\boldsymbol{Av}+\boldsymbol{Aw}$.
 \item For all $\boldsymbol{v}\in\mathbb{R}^{n},c\in\mathbb{R}$, $\boldsymbol{A}(c\boldsymbol{v})=c\left(\boldsymbol{Av}\right)$.
 \end{itemize}
-\item Extends to $\mathbb{C}^{n}$.
+\item Extends simply to $\mathbb{C}^{n}$.
+\end{itemize}
+
+\section{Norms}
+
+\subsection{Vector Norms}
+
+A vector norm on $\mathbb{R}^{n}$ is a real-valued map 
+\[
+\left\Vert \cdot\right\Vert :\mathbb{R}^{n}\rightarrow\mathbb{R}
+\]
+which satisfies:
+\begin{enumerate}
+\item For any non-zero vector $\boldsymbol{x}\in\mathbb{R}^{n}$, $\left\Vert \boldsymbol{x}\right\Vert >0$.
+\item For any scalar $\lambda$ and $\boldsymbol{x}\in\mathbb{R}^{n}$,
+$\left\Vert \lambda\boldsymbol{x}\right\Vert =\left|\lambda\right|\left\Vert \boldsymbol{x}\right\Vert $
+\item For two vectors $\boldsymbol{x},\boldsymbol{y}\in\mathbb{R}^{n}$,
+$\left\Vert \boldsymbol{x}+\boldsymbol{y}\right\Vert \leq\left\Vert \boldsymbol{x}\right\Vert +\left\Vert \boldsymbol{y}\right\Vert $.
+\end{enumerate}
+
+\paragraph{The $l_{p}$ Norms}
+
+\[
+\left\Vert \boldsymbol{v}\right\Vert _{p}=\left(\sum_{i=1}^{n}\left|\boldsymbol{v}_{i}\right|^{p}\right)^{1/p}
+\]
+
+\paragraph{Properties}
+\begin{itemize}
+\item For any vector $\boldsymbol{x}$, $\left\Vert \boldsymbol{x}\right\Vert _{\infty}\leq\left\Vert \boldsymbol{x}\right\Vert _{2}\leq\left\Vert \boldsymbol{x}\right\Vert _{1}$.
+\end{itemize}
+
+\subsection{Cauchy-Schwartz Inequality}
+
+\[
+\left|\left\langle u,v\right\rangle \right|\leq\left\Vert \boldsymbol{u}\right\Vert \left\Vert \boldsymbol{v}\right\Vert 
+\]
+
+\paragraph{Proof}
+\begin{itemize}
+\item Consider $\lambda\boldsymbol{u}+\boldsymbol{v}$.
+\item Since the length of any vector is non-negative, $0\leq\left(\lambda\boldsymbol{u}+\boldsymbol{v}\right)\left(\lambda\boldsymbol{u}+\boldsymbol{v}\right)$.
+\item Therefore $\lambda=\frac{\left\langle u,v\right\rangle }{\left\Vert \boldsymbol{u}\right\Vert ^{2}}$.
+\end{itemize}
+
+\subsection{Matrix Norms}
+
+A matrix norm on $\mathbb{R}^{m\times n}$ is a real-valued map.
+
+\section{Linear Independence}
+
+For $\boldsymbol{a_{i}}\in\mathbb{R}^{m}$, with $i=1,\dots,k$, the
+$\boldsymbol{a_{i}}$s are linearly independent if whenever $\boldsymbol{x_{i}}\in\mathbb{R}$,
+we have $\sum_{i=1}^{k}\boldsymbol{x_{i}}\boldsymbol{a_{i}}=0$, then
+$\boldsymbol{x_{i}}=0$ for $i=1,\dots,k$\@.
+
+\paragraph{Methods for Determining Linear Independence}
+
+Columns of $\boldsymbol{A}$ are linearly independent if:
+\begin{itemize}
+\item Calculate determinant. Find $\det\left(\boldsymbol{A}\right)\neq0$.
+\item Solve $\boldsymbol{Ax}=0$. Find $\boldsymbol{x}=0$.
 \end{itemize}
 
 \end{document}
