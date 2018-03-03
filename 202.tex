@@ -4,6 +4,7 @@
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{amsmath}
 \PassOptionsToPackage{normalem}{ulem}
 \usepackage{ulem}
 
@@ -69,6 +70,43 @@ for all $n\geq n_{0}$.
 If size is small enough, can be solved trivially (base case).
 \item \emph{Combine} solutions to sub-problems into final solution.
 \end{enumerate}
+
+\subsubsection*{Recurrences}
+
+Equations that describe functions in terms of its value on smaller
+inputs. Assuming:
+\begin{enumerate}
+\item Trivial problems $n\leq c$ solved in constant time.
+\item Division yields $a$ sub-problems, each of size $1/b$.
+\item Divide takes time $D\left(n\right)$ and combine $C\left(n\right)$.
+\end{enumerate}
+\[
+T\left(n\right)=\begin{cases}
+\Theta\left(1\right) & n\leq c\\
+aT\left(\frac{n}{b}\right)+D\left(n\right)+C\left(n\right) & \text{otherwise}
+\end{cases}
+\]
+
+\paragraph{Solving Recurrences}
+\begin{enumerate}
+\item \emph{Substitution}: guess and use induction to prove.
+\begin{enumerate}
+\item \emph{Use strong induction}. Try assuming it holds for $n/b$.
+\item \emph{Strengthen inductive hypothesis}. Subtracting lower order terms
+can help (e.g. prove $T\left(n\right)\leq cn^{2}-kn$ instead of $T\left(n\right)\leq cn^{2}$).
+\end{enumerate}
+\item \emph{Recursion Tree}: Convert recurrence into a tree whose nodes
+are costs at different levels.
+\item \emph{Master Method}: For $T\left(n\right)=aT\left(n/b\right)+\Theta(n^{d})$:
+\begin{enumerate}
+\item If $d<\log_{b}a$, then $T\left(n\right)=\Theta\left(n^{\log_{b}a}\right)$.
+\item If $d=\log_{b}a$, then $T\left(n\right)=\Theta\left(n^{d}\lg n\right)$.
+\item If $d>\log_{b}a$, then $T\left(n\right)=\Theta\left(n^{d}\right)$.
+\end{enumerate}
+\end{enumerate}
+
+\subsubsection*{Example: Merge Sort}
+
 \begin{lstlisting}[language=Python,basicstyle={\footnotesize\ttfamily},tabsize=4,frame=single]
 MERGE-SORT(A, p, r):
 	if p < r:                     # more than one item?
@@ -77,5 +115,37 @@ MERGE-SORT(A, p, r):
 		MERGE-SORT(A, q + 1, r)   # conquer 2nd subarray
 		MERGE(A, p, q, r)         # combine subarrays
 \end{lstlisting}
+
+The \emph{combine} step:
+
+\begin{lstlisting}[language=Python,basicstyle={\footnotesize\ttfamily},tabsize=4,frame=single]
+MERGE(A, p, q, r):
+n1 = q - p+1                      # length of 1st subarray
+n2 = r - q                        # length of 2nd subarray
+let L[1..n1+1] and R[1..n2+1] be new arrays
+for i = 1 to n1:
+	L[i] = A[p+i - 1]             # copy values to 1st array
+for j = 1 to n2:
+	R[j] = A[q+j]                 # copy values to 2nd array
+L[n1+1] = inf                     # set sentinel
+R[n2+1] = inf                     # set sentinel
+i = 1
+j = 1
+for k = p to r:                   # merge subarrays
+	if L[i] <= R[j]:
+		A[k] = L[i]
+		i = i+1
+	else:
+		A[k] = R[j]
+		j = j+1
+\end{lstlisting}
+
+Takes time:
+\[
+T\left(n\right)=\begin{cases}
+\Theta\left(1\right) & n=1\\
+2T\left(\left\lfloor \frac{n}{2}\right\rfloor \right)+\Theta\left(n\right) & n>1
+\end{cases}
+\]
 
 \end{document}
