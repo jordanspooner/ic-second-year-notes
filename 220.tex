@@ -43,5 +43,51 @@
 \date{Autumn 2017}
 \maketitle
 
-\section{}
+\section{Test-Driven Development}
+
+\paragraph{Four Elements of Simple Design}
+
+In order of importance:
+\begin{enumerate}
+\item Behaves correctly.
+\item Minimises duplication.
+\item Maximises clarity.
+\item Has fewer elements.
+\end{enumerate}
+
+\paragraph{TDD Cycle}
+\begin{enumerate}
+\item Write a failing test (API design).
+\item Code to pass test (internals design).
+\item Refactor (structural design).
+\end{enumerate}
+
+\paragraph{Refactoring}
+
+Process of improving the design of a piece of code, without changing
+its functionality.
+\begin{itemize}
+\item Should be applied \emph{little and often} to continuously improve
+design.
+\item Only refactor in a \emph{green state}. Tests ensure that behaviour
+is preserved.
+\item Should be \emph{automated} to be done quickly and reliably.
+\item Small transformations are \emph{combined} to achieve larger refactorings.
+\end{itemize}
+
+\paragraph{Example Transformations}
+\begin{enumerate}
+\item \emph{Compose (extract) method}: Break down method into chunks to
+make it shorter. Allows us to give a name for a concept and increase
+level of abstraction. Try to keep a constant level of abstraction.
+\item \emph{Inline variable}: Instead of using a temporary variable, inline
+its usages. Reduces number of elements in method.
+\item \emph{Extract to common class}: First work to make duplication exactly
+the same. Then refactor it, e.g. to another object. Reduces duplication.
+\end{enumerate}
+
+\paragraph{Technical Debt}
+
+Features are been added quickly, in an inelegant way. When not fixed
+quickly, \emph{technical debt} builds up.
 \end{document}
