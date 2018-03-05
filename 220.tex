@@ -4,6 +4,7 @@
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{color}
 \usepackage{float}
 \usepackage{graphicx}
 
@@ -50,16 +51,6 @@
 
 \section{Test-Driven Development}
 
-\paragraph{Four Elements of Simple Design}
-
-In order of importance:
-\begin{enumerate}
-\item Behaves correctly.
-\item Minimises duplication.
-\item Maximises clarity.
-\item Has fewer elements.
-\end{enumerate}
-
 \paragraph{TDD Cycle}
 \begin{enumerate}
 \item Write a failing test (API design).
@@ -96,28 +87,18 @@ the same. Then refactor it, e.g. to another object. Reduces duplication.
 Features are been added quickly, in an inelegant way. When not fixed
 quickly, \emph{technical debt} builds up.
 
-\section{Mock Objects}
+\paragraph{Mock Objects}
 
-\subsubsection*{UML Sequence Diagrams}
-
-\begin{figure}[H]
-\centering{}\includegraphics[width=0.5\columnwidth]{img/uml}
-\end{figure}
-
-\subsubsection*{Mock Objects}
-
-\begin{lstlisting}[language=Java,basicstyle={\footnotesize\ttfamily}]
+\begin{lstlisting}[language=Java,basicstyle={\footnotesize\ttfamily},commentstyle={\color{gray}\itshape}]
 public class TestObjectTest {
   // Set up mockery
   @Rule public JUnityRuleMockery context = new JUnitRuleMockery();
 
   // Set up test constants
   final Order EXAMPLE_PARAM = new ...;
-  ...
 
   // Set up mock objects
   CalledObject calledObject = context.mock(CalledObject.class);
-  ...
 
   // Set up object to test
   TestObject testObject = new TestObject(calledObject, ...)
@@ -150,9 +131,48 @@ public class TestObjectTest {
     // Make assertions
     assertThat(testObject.getSomeValue(), is(x));
   }
+}
 \end{lstlisting}
 
-\section{Tell Don't Ask}
+\section{UML Diagrams}
+
+\subsubsection*{UML Class Diagrams}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.35\columnwidth]{img/uml-class}
+\end{figure}
+
+\subsubsection*{UML Object Diagrams}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.4\columnwidth]{img/uml-object}
+\end{figure}
+
+\subsubsection*{UML Sequence Diagrams}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.5\columnwidth]{img/uml-sequence.png}
+\end{figure}
+
+\section{Object Oriented Design}
+
+\paragraph{Four Elements of Simple Design}
+
+In order of importance:
+\begin{enumerate}
+\item Behaves correctly.
+\item Minimises duplication.
+\item Maximises clarity.
+\item Has fewer elements.
+\end{enumerate}
+
+\paragraph{Bad Design}
+\begin{itemize}
+\item \emph{Rigidity}: software is hard to change.
+\item \emph{Fragility}: when we change one part, other parts break unexpectedly.
+\item \emph{Immobility}: it is hard to reuse elements of the code in other
+applications.
+\end{itemize}
 
 \paragraph{Commands vs. Queries}
 \begin{itemize}
@@ -164,18 +184,51 @@ can do something with it). Should return value, but not have side
 effects on state of invoked object.
 \end{itemize}
 
-\paragraph{Law of Demeter}
-
-\emph{Only talk to your immediate friends}. Implementations that depend
-on pieces of the system further away result in tight coupling.
-\begin{itemize}
-\item \emph{Fragility}: when we change one part, other parts break unexpectedly.
-\item \emph{Immobility}: it is hard to reuse elements of the code in other
-applications.
-\end{itemize}
-
 \paragraph{Tell Don't Ask}
 
 Objects send messages, requesting actions, but do not expect return
 values. Only queries return values.
+
+\paragraph{Law of Demeter}
+
+\emph{Only talk to your immediate friends}. Implementations that depend
+on pieces of the system further away result in tight coupling.
+
+Avoid \emph{train wrecks}: \texttt{getX().getY().getZ().doSomething()}.
+
+\paragraph{Visibility}
+\begin{itemize}
+\item \emph{Encapsulation}: ensure object's behaviour is only affected through
+its API. Implementation and state of objects should be encapsulated.
+Reduces fragility.
+\item \emph{Information hiding}: conceal how an object implements functionality.
+Increases abstraction, chunking up program into concepts.
+\end{itemize}
+\emph{Key idea}: Make things \texttt{private} unless they should exposed
+as an API for other objects (and generally avoid \texttt{protected}).
+
+\paragraph{Coupling and Cohesion}
+\begin{itemize}
+\item \emph{Coupling}: How dependent two classes are towards each other.
+Reducing coupling reduces fragility and allows reuse.
+\item \emph{Cohesion}: An object should have one basic responsibility. Increasing
+cohesion makes objects easier to reason about and reuse.
+\end{itemize}
+
+\section{Design Patterns}
+
+\subsubsection*{Null Object Pattern}
+
+\begin{lstlisting}[language=Java,basicstyle={\footnotesize\ttfamily},commentstyle={\color{gray}\itshape}]
+interface Track {
+  public void play ();
+}
+
+class NullTrack implements  Track  {
+  public void play () {
+    // do nothing
+  }
+} 
+\end{lstlisting}
+
 \end{document}
