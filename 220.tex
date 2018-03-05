@@ -87,25 +87,23 @@ the same. Then refactor it, e.g. to another object. Reduces duplication.
 Features are been added quickly, in an inelegant way. When not fixed
 quickly, \emph{technical debt} builds up.
 
-\paragraph{Mock Objects}
+\subsubsection*{JUnit and JMock}
 
 \begin{lstlisting}[language=Java,basicstyle={\footnotesize\ttfamily},commentstyle={\color{gray}\itshape}]
 public class TestObjectTest {
-  // Set up mockery
+  // Set up mockery, constants, mock objects and tested object
   @Rule public JUnityRuleMockery context = new JUnitRuleMockery();
 
-  // Set up test constants
   final Order EXAMPLE_PARAM = new ...;
 
-  // Set up mock objects
   CalledObject calledObject = context.mock(CalledObject.class);
+  ...
 
-  // Set up object to test
   TestObject testObject = new TestObject(calledObject, ...)
 
   @Test
   public void doesSomethingSpecific() {
-    // Set up exceptions / return values
+    // Set up local variables for exceptions / return values
     SomeException exception = new SomeException();
 
     // Set up expectations
@@ -151,7 +149,7 @@ public class TestObjectTest {
 \subsubsection*{UML Sequence Diagrams}
 
 \begin{figure}[H]
-\centering{}\includegraphics[width=0.5\columnwidth]{img/uml-sequence.png}
+\centering{}\includegraphics[width=0.5\columnwidth]{img/uml-sequence}
 \end{figure}
 
 \section{Object Oriented Design}
