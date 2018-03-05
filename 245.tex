@@ -395,9 +395,21 @@ by checking that the second derivative satisfies
 The MLE is not necessarily unbiased, but it is consistent and efficient,
 if an efficient estimator exists.
 
-\paragraph{Uncertainty}
+\paragraph{Confidence Intervals}
 
-Confidence intervals - todo
+The $100\left(1-\alpha\right)\%$ confidence interval for $\mu$ is
+given by:
+\[
+\left[\overline{x}-z_{1-\frac{\alpha}{2}}\frac{\sigma}{\sqrt{n}},\overline{x}+z_{1-\frac{\alpha}{2}}\frac{\sigma}{\sqrt{n}}\right]
+\]
+\begin{itemize}
+\item \emph{Normal distribution with known variance}: confidence interval
+above is exact.
+\item \emph{Other distributions}: confidence interval above is an approximate,
+by CLT.
+\item \emph{Normal distribution with unknown variance}: need to use bias-corrected
+variance: exact CI is given by $\left[\overline{x}-t_{n-1,1-\frac{\alpha}{2}}\frac{S}{\sqrt{n-1}},\overline{x}+t_{n-1,1-\frac{\alpha}{2}}\frac{S}{\sqrt{n-1}}\right]$.
+\end{itemize}
 
 \section{Hypothesis Testing}
 
