@@ -4,6 +4,8 @@
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{float}
+\usepackage{graphicx}
 
 \makeatletter
 
@@ -36,6 +38,9 @@
 \makeatother
 
 \usepackage{babel}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listing}
+
 \begin{document}
 
 \title{Reference Sheet for C220 Software Engineering Design}
@@ -90,4 +95,87 @@ the same. Then refactor it, e.g. to another object. Reduces duplication.
 
 Features are been added quickly, in an inelegant way. When not fixed
 quickly, \emph{technical debt} builds up.
+
+\section{Mock Objects}
+
+\subsubsection*{UML Sequence Diagrams}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.5\columnwidth]{img/uml}
+\end{figure}
+
+\subsubsection*{Mock Objects}
+
+\begin{lstlisting}[language=Java,basicstyle={\footnotesize\ttfamily}]
+public class TestObjectTest {
+  // Set up mockery
+  @Rule public JUnityRuleMockery context = new JUnitRuleMockery();
+
+  // Set up test constants
+  final Order EXAMPLE_PARAM = new ...;
+  ...
+
+  // Set up mock objects
+  CalledObject calledObject = context.mock(CalledObject.class);
+  ...
+
+  // Set up object to test
+  TestObject testObject = new TestObject(calledObject, ...)
+
+  @Test
+  public void doesSomethingSpecific() {
+    // Set up exceptions / return values
+    SomeException exception = new SomeException();
+
+    // Set up expectations
+    context.checking(new Expectations() {{
+      // Ignore: ignoring / allowing
+      ignoring(unimportantMockObject);
+      allowing(someMockObject).someMethod(with(any(ParamType.class)));
+                               will(throwException(exception));
+
+      // Expect: exactly(n) / atLeast(n) / atMost(n)
+      exactly(1).of(anotherMockObject).someOtherMethod(exception);
+      exactly(1).of(anotherMockObject).anotherMethod(EXAMPLE_PARAM);
+                                       will(returnValue(x));
+
+      // Don't expect: never
+      never(aDifferentMockObject).aDifferentMethod();
+    }});
+    
+    // Set up triggers
+    testObject.testedMethod(EXAMPLE_PARAM, ...);
+    testObject.anotherTestedMethod();
+
+    // Make assertions
+    assertThat(testObject.getSomeValue(), is(x));
+  }
+\end{lstlisting}
+
+\section{Tell Don't Ask}
+
+\paragraph{Commands vs. Queries}
+\begin{itemize}
+\item \emph{Commands}:\emph{ Ask another object to do something for us}.
+Don't care how it's done, don't expect return value. Changes state
+of invoked object.
+\item \emph{Queries}:\emph{ Ask another object to tell us a value} (so we
+can do something with it). Should return value, but not have side
+effects on state of invoked object.
+\end{itemize}
+
+\paragraph{Law of Demeter}
+
+\emph{Only talk to your immediate friends}. Implementations that depend
+on pieces of the system further away result in tight coupling.
+\begin{itemize}
+\item \emph{Fragility}: when we change one part, other parts break unexpectedly.
+\item \emph{Immobility}: it is hard to reuse elements of the code in other
+applications.
+\end{itemize}
+
+\paragraph{Tell Don't Ask}
+
+Objects send messages, requesting actions, but do not expect return
+values. Only queries return values.
 \end{document}
