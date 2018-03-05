@@ -251,9 +251,155 @@ the solution to $F_{X}\left(x\right)=\frac{1}{2}$.
 
 \subsubsection{Continuous Distributions}
 
-TODO
+\paragraph{Uniform $\text{U}\left(a,b\right)$}
+\begin{itemize}
+\item $f\left(x\right)=\begin{cases}
+\frac{1}{b-a} & a<x<b\\
+0 & \text{otherwise}
+\end{cases}$.
+\item $F\left(x\right)=\begin{cases}
+0 & x\leq a\\
+\frac{x-a}{b-a} & a<x<b\\
+0 & x\geq b
+\end{cases}$.
+\item $\mu=\frac{a+b}{2}$.
+\item $\sigma^{2}=\frac{\left(b-a\right)^{2}}{12}$.
+\end{itemize}
+
+\paragraph{Exponential $\text{Exp}\left(\lambda\right)$}
+\begin{itemize}
+\item $f\left(x\right)=\lambda e^{-\lambda x}$ for $x\geq0$.
+\item $F\left(x\right)=1-e^{-\lambda x}$ for $x\geq0$.
+\item $\mu=\frac{1}{\lambda}$.
+\item $\sigma^{2}=\frac{1}{\lambda^{2}}$.
+\item \emph{Memoryless}: $P\left(X>x\right)=e^{-\lambda x}$ and $P\left(X>x+s\mid X>s\right)=e^{-\lambda x}$.
+\item If the number of events is distributed by $N\sim\text{Poi}\left(\lambda\right)$
+then the time between consecutive events is distributed by $T\sim\text{Exp}\left(\lambda\right)$.
+\end{itemize}
+
+\paragraph{Normal $\text{N}\left(\mu,\sigma^{2}\right)$}
+\begin{itemize}
+\item $f\left(x\right)=\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}$.
+\item $F\left(x\right)=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^{x}e^{-\frac{\left(t-\mu\right)^{2}}{2\sigma^{2}}}dt$.
+\end{itemize}
+\emph{Standard Normal}:
+\begin{itemize}
+\item $Z\sim\text{N}\left(0,1\right)$.
+\item $f\left(z\right)$ is written as $\phi\left(z\right)$ and $F\left(z\right)$
+as $\Phi\left(z\right)$.
+\item $\phi\left(-z\right)=\phi\left(z\right)$ and $\Phi\left(z\right)=1-\Phi\left(-z\right)$.
+\end{itemize}
+\emph{Standardising Normal RVs}:
+\begin{itemize}
+\item $X\sim\text{N}\left(\mu,\sigma^{2}\right)\implies\frac{X-\mu}{\sigma}\sim\text{N}\left(0,1\right)$.
+\end{itemize}
+\emph{Central Limit Theorem}:
+\begin{itemize}
+\item For $\overline{X}=\frac{\sum_{i=1}^{n}X_{i}}{n}$ where $X_{1},X_{2},\dots,X_{n}$
+are independent and identically distributed random variables, $\lim_{n\rightarrow\infty}\frac{\overline{X}-\mu}{\sigma/\sqrt{n}}\sim\text{N}\left(0,1\right)$.
+\item I.e. for large $n$, $\overline{X}\sim N\left(\mu,\frac{\sigma^{2}}{n}\right)$.
+\item For large $n$, $\text{Binomial}\left(n,p\right)\approx\text{N}\left(np,np\left(1-p\right)\right)$
+\end{itemize}
+\emph{Log-Normal Distribution}:
+\begin{itemize}
+\item $Y$ is said to follow a log-normal distribution if $Y=e^{X}$ and
+$X\sim\text{N}\left(\mu,\sigma^{2}\right)$.
+\end{itemize}
 
 \subsection{Joint Random Variables}
+
+TODO
+
+\section{Estimation}
+
+For $\underline{X}=\left(X_{1},\dots,X_{n}\right)$ representing $n$
+iid data samples from a population with distribution $P_{X}$, we
+observe $\underline{x}=\left(x_{1},\dots,x_{n}\right)$.
+
+\paragraph{Statistic}
+
+A random variable:
+
+\[
+T=T\left(X_{1},\dots,X_{n}\right)=T\left(\underline{X}\right)
+\]
+
+Observed statistic is $t=t\left(\underline{x}\right)$.
+
+\paragraph{Estimator}
+
+A statistic $T\left(\underline{X}\right)$ when used to approximate
+parameters of the distribution $P_{X\mid\theta}\left(x\mid\theta\right)$.
+An \emph{estimate} is the realised value for the estimator for a particular
+sample $t\left(\underline{x}\right)$.
+
+\paragraph{Bias}
+
+Of an estimator $T$ for a parameter $\theta$:
+
+\[
+\text{bias}\left(T\right)=E\left(T\mid\theta\right)-\theta
+\]
+\begin{itemize}
+\item \emph{Unbiased} if bias is 0.
+\item Sample mean $\overline{x}$ is an unbiased estimate for population
+mean $\mu$.
+\item Biased-corrected sample variance $S_{n-1}^{2}=\frac{n}{n-1}S^{2}$
+is an unbiased estimate for $\sigma^{2}$.
+\end{itemize}
+
+\paragraph{Efficiency}
+
+For two unbiased estimators, $\hat{T}$ and $\tilde{T}$, $\hat{T}$
+is more efficient than $\tilde{T}$ if:
+\begin{enumerate}
+\item For all $\theta$, $\text{Var}_{\hat{T}\mid\theta}\left(\hat{T}\mid\theta\right)\leq\text{Var}_{\tilde{T}\mid\theta}\left(\tilde{T}\mid\theta\right)$,
+and
+\item There is some $\theta$ with $\text{Var}_{\hat{T}\mid\theta}\left(\hat{T}\mid\theta\right)<\text{Var}_{\tilde{T}\mid\theta}\left(\tilde{T}\mid\theta\right)$.
+\end{enumerate}
+$\hat{T}$ is efficient if it is more efficient that any other possible
+estimator.
+
+\paragraph{Consistency}
+
+An estimator $T$ is consistent if
+\[
+\forall\epsilon>0\qquad P\left(\left|T-\theta\right|>\epsilon\right)\rightarrow0\text{ as }n\rightarrow\infty
+\]
+
+If $T$ is unbiased and $\lim_{n\rightarrow\infty}\text{Var}\left(T\right)=0$
+then $T$ is consistent.
+
+\paragraph{Maximum Likelihood Estimation}
+\begin{enumerate}
+\item Find the likelihood function $L\left(\theta\right)$ where:
+\[
+L\left(\theta\mid\underline{x}\right)=\prod_{i=1}^{n}p_{X\mid\theta}\left(x_{i}\right)\text{ or }\prod_{i=1}^{n}f_{X\mid\theta}\left(x_{i}\right)
+\]
+\item Take the natural log of the likelihood $l\left(\theta\mid\underline{x}\right)$,
+and collect terms involving $\theta$:
+\[
+l\left(\theta\mid\underline{x}\right)=\sum_{i=1}^{n}\log\left(p_{X\mid\theta}\left(x_{i}\right)\right)\text{ or }\sum_{i=1}^{n}\log\left(f_{X\mid\theta}\left(x_{i}\right)\right)
+\]
+\item Find the value of $\theta$ for which log-likelihood is maximised:
+usually find the $\hat{\theta}$ that solves
+\[
+\frac{\delta}{\delta\theta}l\left(\hat{\theta}\right)=\frac{\delta}{\delta\theta}\log\left(L\left(\hat{\theta}\right)\right)=0
+\]
+\item Ensure that the estimate $\hat{\theta}$ corresponds to a maximum
+by checking that the second derivative satisfies
+\[
+\frac{\delta^{2}}{\delta\theta^{2}}l\left(\hat{\theta}\right)<0
+\]
+\end{enumerate}
+The MLE is not necessarily unbiased, but it is consistent and efficient,
+if an efficient estimator exists.
+
+\paragraph{Uncertainty}
+
+Confidence intervals - todo
+
+\section{Hypothesis Testing}
 
 TODO
 \end{document}
