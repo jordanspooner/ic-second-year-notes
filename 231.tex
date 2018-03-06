@@ -7,7 +7,8 @@
 \usepackage{array}
 \usepackage{float}
 \usepackage{booktabs}
-\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{graphicx}
 
 \makeatletter
 
@@ -314,6 +315,9 @@ variable in effect must appear in pre-condition.
 \end{enumerate}
 \item \emph{Actions} - fully instantiated operators.
 \end{enumerate}
+\[
+\text{Precondition}\xrightarrow{\text{Action}}\text{Postcondition}
+\]
 
 \paragraph{Execution of an Action}
 
@@ -343,7 +347,11 @@ the goal.
 \end{enumerate}
 \end{enumerate}
 
-\paragraph{Graph-Plan Algorithm}
+\subsubsection*{Graph-Plan Algorithm}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.9\columnwidth]{img/graph-plan}
+\end{figure}
 \begin{itemize}
 \item \emph{Level $S_{i}$}:
 \begin{itemize}
@@ -357,8 +365,26 @@ at $A_{i-1}$.
 and effect at $S_{i+1}$.
 \item No-op actions: no change.
 \end{itemize}
-\item Mutual exclusions:
+\item Mutual exclusions between actions when:
+\begin{itemize}
+\item Actions have \emph{inconsistent effects}.
+\item \emph{Interference}: effect of one action = $\lnot$ precondition
+of the other.
+\item \emph{Competing needs}: mutually exclusive pre-conditions.
+\end{itemize}
+\item Mutual exclusions between literals when:
+\begin{itemize}
+\item They are \emph{complementary}.
+\item \emph{Inconsistent support}: Each possible pair of actions achieving
+them are mutex.
+\end{itemize}
 \item Levelling off:
+\begin{itemize}
+\item When two consecutive levels are identical.
+\end{itemize}
 \end{itemize}
 
+\paragraph{Extracting the Plan}
+
+Once goal is non-mutex in $S_{i}$, search backwards to extract plan.
 \end{document}
