@@ -120,24 +120,24 @@ The \emph{combine} step:
 
 \begin{lstlisting}[language=Python,basicstyle={\footnotesize\ttfamily},tabsize=4,frame=single]
 MERGE(A, p, q, r):
-n1 = q - p+1                      # length of 1st subarray
+n1 = q - p + 1                    # length of 1st subarray
 n2 = r - q                        # length of 2nd subarray
-let L[1..n1+1] and R[1..n2+1] be new arrays
+let L[1..n1 + 1] and R[1..n2 + 1] be new arrays
 for i = 1 to n1:
-	L[i] = A[p+i - 1]             # copy values to 1st array
+	L[i] = A[p + i - 1]           # copy values to 1st array
 for j = 1 to n2:
-	R[j] = A[q+j]                 # copy values to 2nd array
-L[n1+1] = inf                     # set sentinel
-R[n2+1] = inf                     # set sentinel
+	R[j] = A[q + j]               # copy values to 2nd array
+L[n1 + 1] = inf                   # set sentinel
+R[n2 + 1] = inf                   # set sentinel
 i = 1
 j = 1
 for k = p to r:                   # merge subarrays
 	if L[i] <= R[j]:
 		A[k] = L[i]
-		i = i+1
+		i = i + 1
 	else:
 		A[k] = R[j]
-		j = j+1
+		j = j + 1
 \end{lstlisting}
 
 Takes time:
@@ -145,6 +145,129 @@ Takes time:
 T\left(n\right)=\begin{cases}
 \Theta\left(1\right) & n=1\\
 2T\left(\left\lfloor \frac{n}{2}\right\rfloor \right)+\Theta\left(n\right) & n>1
+\end{cases}=\Theta\left(n\lg n\right)
+\]
+
+\section{Dynamic Programming}
+\begin{itemize}
+\item \emph{Optimal substructure}: Good when optimal solution contains optimal
+solution to sub-problems.
+\item \emph{Overlapping sub-problems}: Combines solutions to overlapping
+sub-problems.
+\item Saves its answer in a table to avoid re-computation.
+\end{itemize}
+
+\paragraph{Developing a DP Algorithm}
+\begin{enumerate}
+\item Characterise the structure of an optimal solution.
+\item Recursively define the value of an optimal solution.
+\item Compute the value of an optimal solution, in a bottom-up fashion.
+\item Construct an optimal solution from computed information.
+\end{enumerate}
+
+\paragraph{Top-Down with Memoisation vs. Bottom-Up}
+\begin{itemize}
+\item Bottom-up is more efficient by a constant factor because there is
+no overhead for recursive calls.
+\item Bottom-up may benefit from optimal memory access.
+\item Top-down can avoid computing solutions of sub-problems that are not
+required.
+\item Top-down is `more natural.
+\end{itemize}
+
+\paragraph{Recording the Solution}
+
+Keep an additional array to record which sub-problem was used.
+
+\paragraph{Example 1: Rod Cutting}
+\begin{itemize}
+\item A rod of length $i$ is worth $p_{i}$.
+\item The maximum revenue, $r_{n}=\max_{1\leq i\leq n}\left(p_{i}+r_{n-i}\right)$.
+\end{itemize}
+\begin{lstlisting}[language=Python,basicstyle={\footnotesize\ttfamily},tabsize=4,frame=single]
+#### Top-Down with Memoisation
+MEMOIZED-CUT-ROD(p, n):
+	let r[0..n] be a new array
+	for i = 0 to n:
+		r[i] = -inf
+	return MEMOIZED-CUT-ROD-AUX(p, n, r)
+
+MEMOIZED-CUT-ROD-AUX(n, p, r):
+	if r[n] >= 0
+		return r[n]
+	if n == 0:
+		q = 0
+	else:
+		q = -inf
+		for q = 1 to n
+			q = max(q, p[i] + MEMOIZED-CUT-ROD-AUX(p, n - i, r)
+	r[n] = q
+	return q
+
+#### Bottom-Up
+BOTTOM-UP-CUT-ROD(p, n):
+	let r[0..n] be a new array
+	r[0] = 0
+	for j = 1 to n:
+		q = -inf
+		for i = 1 to j:
+			q = max(q, p[i] + r[j - i])
+		r[j] = q
+	return r[n]
+\end{lstlisting}
+
+\paragraph{Example 2: Longest Common Subsequence}
+
+\subparagraph{Step 1: Find optimal structure.}
+
+For $X=\left\langle x_{1},\dots,x_{m}\right\rangle $, $Y=\left\langle y_{1},\dots,y_{n}\right\rangle $
+and $Z=\left\langle z_{1},\dots,z_{k}\right\rangle $, where $Z$
+is the LCS of $X$ and $Y$:
+\begin{enumerate}
+\item If $x_{1}=y_{1}$, then $z_{1}=x_{1}=z_{1}$ and $Z_{2..k}$ is LCS
+of $X_{2..m}$ and $Y_{2..n}$.
+\item If $x_{1}\neq y_{1}$, then $z_{1}\neq x_{1}$ implies that $Z$ is
+LCS of $X_{2..m}$ and $Y$.
+\item If $x_{1}\neq y_{1}$, then $z_{1}\neq y_{1}$ implies that $Z$ is
+LCS of $X$ and $Y_{2..n}$.
+\end{enumerate}
+
+\subparagraph{Step 2: Define recursive solution.}
+
+Where $l\left(i,j\right)$ is the length of an LCS of sequences $X_{i..m}$
+and $Y_{j..n}$:
+
+\[
+l\left(i,j\right)=\begin{cases}
+0 & \text{if \ensuremath{i=m} or \ensuremath{j=n} (base case)}\\
+l\left(i+1,j+1\right)+1 & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}=y_{j}}(case 1)}\\
+\max\begin{cases}
+l(i+1,j) & \text{(case 2)}\\
+l\left(i,j+1\right) & \text{(case 3)}
+\end{cases} & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}\neq y_{j}})}
+\end{cases}
+\]
+
+\subparagraph{Steps 3 and 4: Compute value and construct solution.}
+
+\paragraph{Example 3: Levenshtein Distance}
+
+\subparagraph{Step 2}
+
+Where $d\left(i,j\right)$ is the LCS distance of sequences~$X_{i..m}$
+and $Y_{j..m}$:
+\[
+d\left(i,j\right)=\begin{cases}
+\min\left(i,j\right) & \text{if \ensuremath{i=m} or \ensuremath{j=m} (base case)}\\
+\max\begin{cases}
+d\left(i+1,j\right) & \text{(delete)}\\
+d\left(i,j+1\right) & \text{(insert)}\\
+d(i+1,j+1) & \text{(replace)}
+\end{cases} & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}=y_{j}}}\\
+\max\begin{cases}
+d\left(i+1,j\right) & \text{(delete)}\\
+d\left(i,j+1\right) & \text{(insert)}
+\end{cases} & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}\neq y_{j}}}
 \end{cases}
 \]
 
