@@ -150,11 +150,16 @@ T\left(n\right)=\begin{cases}
 
 \section{Dynamic Programming}
 \begin{itemize}
-\item \emph{Optimal substructure}: Good when optimal solution contains optimal
-solution to sub-problems.
-\item \emph{Overlapping sub-problems}: Combines solutions to overlapping
-sub-problems.
+\item Combines solutions to overlapping sub-problems.
 \item Saves its answer in a table to avoid re-computation.
+\end{itemize}
+
+\paragraph{Requirements}
+\begin{itemize}
+\item \emph{Optimal substructure}: Optimal solution contains optimal solution
+to sub-problems.
+\item \emph{Overlapping sub-problems}: Solution combines solutions to overlapping
+sub-problems.
 \end{itemize}
 
 \paragraph{Developing a DP Algorithm}
@@ -252,8 +257,6 @@ l\left(i,j+1\right) & \text{(case 3)}
 
 \paragraph{Example 3: Levenshtein Distance}
 
-\subparagraph{Step 2}
-
 Where $d\left(i,j\right)$ is the LCS distance of sequences~$X_{i..m}$
 and $Y_{j..m}$:
 \[
@@ -271,4 +274,54 @@ d\left(i,j+1\right) & \text{(insert)}
 \end{cases}
 \]
 
+\section{Greedy Algorithms}
+\begin{itemize}
+\item Applied to optimisation problems.
+\item When there is a choice, always make the choice that looks best at
+the moment.
+\end{itemize}
+
+\paragraph{Requirements}
+\begin{enumerate}
+\item \emph{Optimal substructure}: Optimal solution contains optimal solutions
+to sub-problems.
+\item \emph{Greedy-choice property}: Globally optimal solution obtained
+through locally optimal choices.
+\end{enumerate}
+
+\paragraph{Developing a Greedy Algorithm}
+\begin{enumerate}
+\item Demonstrate optimal substructure.
+\item Cast the problem as one in which making a choice only leaves one sub-problem
+to solve.
+\item Prove the optimality of the solution when making greedy choices.
+\end{enumerate}
+
+\paragraph{Example 1: Activity Selection Problem}
+
+Given a set of proposed activities, $S=\left\{ a_{1},a_{2},\dots,a_{n}\right\} $,
+each $a_{i}$ having a start time $s_{i}$ and finish time $f_{i}$,
+which all use the same resource, find maximum number of mutually compatible
+activities.
+\begin{enumerate}
+\item \emph{Greedy choice}: choose the activity $a_{k}$ with earliest finish
+time.
+\item Solve the sub-problem with $S_{k}=\left\{ a_{i}\in S\text{ such that }s_{i}\geq f_{k}\right\} $.
+\end{enumerate}
+\begin{lstlisting}[language=Python,basicstyle={\footnotesize\ttfamily},tabsize=4,frame=single]
+# Assuming activities are ordered by finish time
+ACTIVITY-SELECTOR(s, f):
+	n = len(s)
+	A = [s[0]]
+	k = 1
+	for m = 2 to n:
+		if s[m] >= f[k]:
+			A = A + [s[m]]
+			k = m
+	return A
+\end{lstlisting}
+
+\paragraph{Example 2: Fractional Knapsack Problem}
+
+\emph{Greedy choice}: choose item with maximum value per unit weight.
 \end{document}
