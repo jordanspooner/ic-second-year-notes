@@ -257,19 +257,19 @@ l\left(i,j+1\right) & \text{(case 3)}
 
 \paragraph{Example 3: Levenshtein Distance}
 
-Where $d\left(i,j\right)$ is the LCS distance of sequences~$X_{i..m}$
-and $Y_{j..m}$:
+Where $d\left(i,j\right)$ is the edit distance of sequences~$X_{i..m}$
+and $Y_{j..n}$:
 \[
 d\left(i,j\right)=\begin{cases}
-\min\left(i,j\right) & \text{if \ensuremath{i=m} or \ensuremath{j=m} (base case)}\\
+\left|i-j\right| & \text{if \ensuremath{i=m} or \ensuremath{j=n} (base case)}\\
 \max\begin{cases}
-d\left(i+1,j\right) & \text{(delete)}\\
-d\left(i,j+1\right) & \text{(insert)}\\
-d(i+1,j+1) & \text{(replace)}
+d\left(i+1,j\right)+1 & \text{(delete)}\\
+d\left(i,j+1\right)+1 & \text{(insert)}\\
+d(i+1,j+1)+1 & \text{(replace)}
 \end{cases} & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}=y_{j}}}\\
 \max\begin{cases}
-d\left(i+1,j\right) & \text{(delete)}\\
-d\left(i,j+1\right) & \text{(insert)}
+d\left(i+1,j\right)+1 & \text{(delete)}\\
+d\left(i,j+1\right)+1 & \text{(insert)}
 \end{cases} & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}\neq y_{j}}}
 \end{cases}
 \]
