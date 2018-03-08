@@ -8,6 +8,7 @@
 \usepackage{float}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{graphicx}
 
 \makeatletter
@@ -91,7 +92,7 @@ Generate a search tree:
 To add \emph{loop checking}, each seen $L$ is added to an explored
 set and only expanded if not already seen.
 
-\paragraph{Uninformed / Blind Search}
+\subsection{Uninformed / Blind Search}
 
 Choose next unexpanded node using:
 \begin{enumerate}
@@ -102,14 +103,16 @@ Choose next unexpanded node using:
 \item \emph{Iterative deepening search}: depth limited search with increasing
 $l$.
 \end{enumerate}
-Variants:
+
+\paragraph{Variants}
 \begin{enumerate}
 \item \emph{Backtracking search}: only generate one node when expanded,
 remember what to generate next.
 \item \emph{Bi-directional search}: Two simultaneous searches from start
 to goal and goal to start.
 \end{enumerate}
-Properties:
+
+\paragraph{Properties}
 \begin{enumerate}
 \item \emph{Completeness:} do we always find a solution if one exists?
 \item \emph{Time complexity}: number of nodes expanded.
@@ -153,7 +156,7 @@ Where:
 \item $s\left(l\right)$ is the size of the state space up to depth $l$.
 \end{itemize}
 
-\paragraph{Informed / Heuristic-Based Search}
+\subsection{Informed / Heuristic-Based Search}
 
 Use a cost estimate to choose node with least-estimated path cost.
 \begin{enumerate}
@@ -161,9 +164,12 @@ Use a cost estimate to choose node with least-estimated path cost.
 \item \emph{A{*} search}: $\text{cost estimate}=\text{actual cost to node}+\text{heuristic on this node}$.
 \item \emph{Local search}: e.g. genetic algorithms, simulated annealing.
 \end{enumerate}
-Properties of heuristic functions (where $g\left(n,m\right)$ is the
-actual cost of reaching $m$ from $n$ and $h\left(n\right)$ is the
-heuristic applied to $n$:
+
+\paragraph{Heuristic Functions}
+
+Required properties (where $g\left(n,m\right)$ is the actual cost
+of reaching $m$ from $n$ and $h\left(n\right)$ is the heuristic
+function applied to $n$):
 \begin{enumerate}
 \item \emph{Consistent} / \emph{Monotonic}: $h\left(n\right)\leq g\left(n,n'\right)+h\left(n'\right)$
 for any $n'$ successor of $n$. (Doesn't overestimate actual cost
@@ -176,7 +182,8 @@ overestimate actual cost to goal).
 \item Often admissible / consistent heuristics come from a relaxed version
 of the search problem (more edges).
 \end{itemize}
-Properties:
+
+\paragraph{Properties}
 
 \begin{table}[H]
 \centering{}%
@@ -195,7 +202,7 @@ Properties:
 
 A{*} is optimally efficient but often runs out of space.
 
-\paragraph{Adversarial Search}
+\subsection{Adversarial Search}
 
 Used for:
 \begin{itemize}
@@ -217,7 +224,8 @@ Optimal strategies for perfect-information, deterministic games:
 \item Minimax.
 \item Alpha-beta pruning.
 \end{enumerate}
-Minimax:
+
+\paragraph{Minimax}
 
 \texttt{}
 \begin{table}[H]
@@ -230,7 +238,7 @@ then return $\min_{a=\texttt{ACTIONS}\left(s\right)}\texttt{MINIMAX}\left(\textt
 \texttt{\small{}$\qquad$return $\texttt{UTILITY}\left(s\right)$}
 \end{table}
 
-Alpha-beta pruning:
+\paragraph{Alpha-beta pruning}
 \begin{itemize}
 \item $\alpha$ is the minimum value that \texttt{MAX} is guaranteed to
 achieve so far (minimiser's best guaranteed score).
@@ -272,7 +280,8 @@ $v$}~\\
 do better than the best they could do in a different move, then we
 shouldn't consider it.
 \end{itemize}
-Properties:
+
+\paragraph{Properties}
 
 \begin{table}[H]
 \centering{}%
@@ -289,7 +298,7 @@ complexity.}}\tabularnewline
 \end{tabular}
 \end{table}
 
-Limited Resources:
+\paragraph{Limited Resources}
 \begin{itemize}
 \item Cutoff-test instead of \texttt{TERMINAL}.
 \item Evaluation instead of \texttt{UTILITY}.
@@ -331,7 +340,7 @@ New State = Current state - negation of negative fluents in effects
 \item Time is implicit.
 \end{itemize}
 
-\paragraph{Planning as Search}
+\subsection{Planning as Search}
 \begin{enumerate}
 \item \emph{Progression planning} (forward) - blind search with the graph
 obtained from the specification of the planning problem.
@@ -347,7 +356,7 @@ the goal.
 \end{enumerate}
 \end{enumerate}
 
-\subsubsection*{Graph-Plan Algorithm}
+\subsection{Graph-Plan Algorithm}
 
 \begin{figure}[H]
 \centering{}\includegraphics[width=0.9\columnwidth]{img/graph-plan}
@@ -366,25 +375,330 @@ and effect at $S_{i+1}$.
 \item No-op actions: no change.
 \end{itemize}
 \item Mutual exclusions between actions when:
-\begin{itemize}
+\begin{enumerate}
 \item Actions have \emph{inconsistent effects}.
 \item \emph{Interference}: effect of one action = $\lnot$ precondition
 of the other.
 \item \emph{Competing needs}: mutually exclusive pre-conditions.
-\end{itemize}
+\end{enumerate}
 \item Mutual exclusions between literals when:
-\begin{itemize}
+\begin{enumerate}
 \item They are \emph{complementary}.
 \item \emph{Inconsistent support}: Each possible pair of actions achieving
 them are mutex.
-\end{itemize}
-\item Levelling off:
-\begin{itemize}
-\item When two consecutive levels are identical.
-\end{itemize}
+\end{enumerate}
+\item Levels off: when two consecutive levels are identical.
 \end{itemize}
 
 \paragraph{Extracting the Plan}
 
 Once goal is non-mutex in $S_{i}$, search backwards to extract plan.
+
+\section{Knowledge Representation and Automated Reasoning}
+\begin{enumerate}
+\item Find a representation for the problem.
+\item Compute output using automatic reasoning.
+\item Output mapped into solution to the problem.
+\end{enumerate}
+
+\paragraph{Clausal Form}
+
+Resolution works with conjunctions of clauses:
+\[
+\lnot p_{1}\lor\dots\lor\lnot p_{m}\lor q_{1}\lor\dots\lor q_{n}
+\]
+
+where each $p_{i}$ and $q_{j}$ is an atom.
+\begin{itemize}
+\item If $m=n=0$: called the empty clause ($\square$).
+\item Every clause can be written as an implication $p_{1}\land\dots\land p_{m}\rightarrow q_{1}\lor\dots\lor q_{n}$.
+\item Every propositional logic formula can be written as a conjunction
+of clauses (conjunctive normal form).
+\item Every first-order logic sentence can be written as a conjunction of
+clauses (universal qualification + conjunctive normal form + Skolemisation).
+\end{itemize}
+
+\subsection{Unification}
+
+\paragraph{Universal Instantiation}
+
+Combines two clauses:
+\[
+\dfrac{\forall v\alpha}{\alpha\left\{ v/g\right\} }
+\]
+for any variable $v$ and term $g$.
+\begin{itemize}
+\item $\sigma=\left\{ v/g\right\} $ is a \emph{substitution}. $\alpha\sigma$
+means the formula obtained from $\alpha$ by applying $\sigma$.
+\end{itemize}
+
+\paragraph{Unification}
+
+A substitution $\sigma$ unifies atomic sentences $p$ and $q$ if
+$p\sigma=q\sigma$.
+\begin{itemize}
+\item E.g. $p=\text{Knows}\left(\text{John},x\right)$, $\text{Knows}\left(y,\text{OJ}\right)$,
+$\sigma=\left\{ x/\text{OJ},y/\text{John}\right\} $.
+\end{itemize}
+
+\paragraph{Most General Unifier}
+
+$\theta$ is a most general unifier of formulas $\alpha$ and $\beta$
+if:
+\begin{enumerate}
+\item $\theta$ unifies formulas $\alpha$ and $\beta$.
+\item If $\sigma$ is any other unifier of $\alpha$ and $\beta$, then
+$\alpha\sigma$ is an instance of $\alpha\theta$ (i.e. $\alpha\sigma=\left(\alpha\theta\right)\sigma'$
+for some $\sigma'$).
+\end{enumerate}
+
+\subsection{Resolution}
+
+\subsubsection{Propositional Logic}
+
+\paragraph{Resolution Inference Rule}
+
+Combines two clauses:
+\[
+\dfrac{\alpha\lor\beta,\lnot\beta\lor\gamma}{\alpha\lor\gamma}
+\]
+
+Applied repeatedly until $\square$ is derived.
+
+\paragraph{Completeness of Resolution}
+\begin{itemize}
+\item If conjunction of propositional clauses is unjustifiable, we will
+end up with $\square$.
+\item To prove a goal $P$ is entailed by a set of sentences $S$ ($S\vDash P$):
+\begin{enumerate}
+\item Compute CNF of $S$ and $\lnot P$.
+\item Apply resolution to results of step 1 to obtain $\square$.
+\end{enumerate}
+\end{itemize}
+
+\subsubsection{First-Order Logic}
+
+\paragraph{Resolution Inference Rule}
+
+\[
+\dfrac{\alpha\lor\beta,\lnot\beta'\lor\gamma}{\left(\alpha\lor\gamma\right)\theta}\text{ where \ensuremath{\theta} is a mgu of \ensuremath{\beta} and \ensuremath{\beta'}}
+\]
+
+Full version:
+\[
+\dfrac{\alpha^{1}\lor\dots\lor a^{j-1}\lor a^{j}\lor a^{j+1}\lor\dots\lor\alpha^{m},\beta^{1}\lor\dots\lor\beta^{k-1}\lor\beta^{k}\lor\beta^{k+1}\lor\dots\lor\beta^{n}}{\left(\alpha^{1}\lor\dots\lor a^{j-1}\lor a^{j+1}\lor\dots\lor\alpha^{m},\beta^{1}\lor\dots\lor\beta^{k-1}\lor\beta^{k+1}\lor\dots\lor\beta^{n}\right)\theta}
+\]
+where $\theta$ is a mgu of $\alpha^{j}$ and $\lnot\beta^{k}$.
+
+\subsection{GMP / SLD Resolution}
+
+\paragraph{Definite Clauses}
+
+Clauses of the form (for atoms $p,q_{1},\dots,q_{n}$)
+\[
+p\leftarrow q_{1},q_{2},\dots,q_{n}
+\]
+\begin{itemize}
+\item $p$ is the \emph{head} and $q_{1},\dots,q_{n}$ the \emph{body} of
+the clause.
+\item If $n=0$, $p$ is a \emph{fact}.
+\item A set of definite clauses is a \emph{logic program}.
+\item A \emph{Horn clause} is a definite clause or $\leftarrow q_{1},\dots,q_{n}$.
+\end{itemize}
+
+\paragraph{Generalised Modus Ponens
+\[
+\dfrac{p'_{1},p'_{2},\dots,p'_{n},\left(q\leftarrow p_{1},p_{2},\dots,p_{n}\right)}{q\theta}
+\]
+}
+
+where $p'_{i}\theta=p_{i}\theta$.
+
+\paragraph{SLD Resolution}
+
+\[
+\dfrac{\overbrace{\lnot\alpha^{1}\lor\dots\lor\lnot\alpha^{j}\lor\dots\lor\lnot\alpha^{m}}^{\text{Goal}},\overbrace{\alpha\lor\lnot\beta^{1}\lor\dots\lor\lnot\beta^{n}}^{\text{Definite Clause}}}{\left(\lnot\alpha^{1}\lor\dots\lor\lnot\beta^{1}\lor\dots\lor\lnot\beta^{n}\lor\dots\lor\lnot a^{m}\right)\theta}
+\]
+where $\theta$ is a mgu of $\alpha^{j}$ and $\alpha$.
+
+\paragraph{Alternative View SLD Resolution}
+
+\begin{align*}
+\: & \leftarrow L_{1},\dots,L_{j-1},B,L_{j+1},\dots,L_{n}\\
+\theta_{i} & \mid\text{match \ensuremath{B} with \ensuremath{B'\leftarrow M_{1},\dots,M_{k}} since \ensuremath{B\theta_{i}=B'\theta_{i}}}\\
+\: & \leftarrow\left(L_{1},\dots,L_{j-1},M_{1},\dots,M_{k},L_{j+1},\dots,L_{n}\right)\theta_{i}
+\end{align*}
+\begin{itemize}
+\item Answer is computed from composition of all mgus.
+\item Sub-goal $B$ can be chosen in any way.
+\item There are many choices for the matching clause.
+\end{itemize}
+
+\subsection{Forward and Backward Chaining}
+
+To prove that $S\vDash P$:
+\begin{enumerate}
+\item Compute the CNF $S'$ of $S$.
+\item Compute the CNF $NP'$ of $\lnot P$.
+\item If $S'$ is a set of definite clauses (logic program) and $NP'$ is
+a Horn clause $\leftarrow q_{1},\dots,q_{n}$, then apply GMP to derive
+$q_{1},\dots,q_{n}$ from $S'$.
+\end{enumerate}
+
+\paragraph{Forward Chaining (Bottom-Up Computation)}
+\begin{enumerate}
+\item Split $S'$ into facts $E$ and definite clauses (rules) $Pr$.
+\item Apply the rules in $Pr$ to the facts in $E$ using GMP to derive
+implied facts $E'$.
+\item Add $E'$ to $E$.
+\item Repeat until no new facts are generated.
+\item Succeed iff $q_{1},\dots,q_{n}$ are in $E$.
+\end{enumerate}
+Likely to produce a lot of irrelevant facts.
+
+\paragraph{Backward Chaining (Top-Down / Goal-Directed Computation)}
+
+Start with goals $q_{1},\dots,q_{n}$ and $\theta=\{\}$. To solve
+a goal $G$ wrt $\theta$:
+\begin{enumerate}
+\item If there is a matching fact $G'$ in $S'$, add mgu $\sigma$ to $\theta$
+($G\sigma=G'\sigma$).
+\item For each rule $G'\leftarrow G_{1},\dots,G_{m}$ in $S'$ whose head
+$G'$ matches $G$ via mgu $\sigma'$, solve goals $G_{1}\sigma',\dots,G_{m}\sigma'$
+wrt to $\theta+\left\{ \sigma'\right\} $.
+\item Repeat until there are no goals to solve, return $\theta$.
+\end{enumerate}
+
+\subsection{Semantics of Definite Clauses}
+\begin{itemize}
+\item \emph{Herbrand universe}: set of all ground terms that can be constructed
+from constant and function symbols in $S$.
+\item Each set of definite clauses $S$ can be can be equated to the set
+of all its ground instances over the underlying Herbrand universe.
+\end{itemize}
+
+\paragraph{Classical Models}
+
+Interpretations of $S$:
+\begin{itemize}
+\item Mappings from ground terms of $S$ to elements of some domain $D$.
+\end{itemize}
+Models of $S$:
+\begin{itemize}
+\item Interpretations of $S$ in which every clause of $S$ is true.
+\end{itemize}
+
+\paragraph{Herbrand Models}
+
+Models where ground terms denote themselves (i.e. domain is Herbrand
+universe of $S$).
+\begin{itemize}
+\item $S$ has a model iff $S$ has a (minimal) Herbrand model.
+\end{itemize}
+
+\paragraph{Immediate Consequence Operator $T_{s}$}
+\begin{itemize}
+\item \emph{Herbrand Base} $HB$: Set of all ground atoms constructed from
+predicate symbols in $S$ over the Herbrand universe of $S$.
+\item Given $X\subseteq HB$, $T_{s}\left(X\right)=\left\{ a\in HB\mid a\leftarrow b_{1},\dots,b_{m}\in S,\left\{ b_{1},\dots,b_{m}\right\} \subseteq X\right\} $.
+\item Least fixed point, given by $T_{s}\uparrow^{\omega}=\cup_{i=0}^{\infty}T_{s}\left(\emptyset\right)$,
+which is the minimal Herbrand model of S.
+\end{itemize}
+
+\subsection{SLD Resolution is Complete}
+
+If $S\vDash P\sigma$ (i.e. $P\sigma$ belongs to the minimal Herbrand
+model of $S$), then there exists and SLD-refutation of $P$ to obtain
+$\square$ with answer $\theta$ and a substitution of $\xi$ such
+that $P\sigma=P\theta\xi$.
+
+\subparagraph{Example}
+
+\begin{align*}
+ & S=\left\{ P\left(x,y\right)\leftarrow Q\left(x\right),Q\left(1\right)\leftarrow,R\left(2\right)\leftarrow\right\} \\
+ & \leftarrow P\left(x,y\right)\\
+ & \leftarrow Q\left(x\right)\\
+ & \square\theta=\left\{ x/1\right\} 
+\end{align*}
+
+$P\left(1,2\right)$ belongs to the minimal Herbrand model of $S=\left\{ Q\left(1\right),R\left(2\right),P\left(1,1\right),P\left(1,2\right)\right\} $
+with $\xi=\left\{ y/2\right\} $.
+
+\section{Non-monotonic Reasoning}
+
+\paragraph{Non-monotonic Logics}
+
+In the absence of information to the contrary, results follow by default.
+
+E.g.
+\begin{align*}
+ & \text{BIRDS}=\text{flies}\left(X\right)\leftarrow,\lnot\text{penguin}\left(X\right),\lnot\text{wounded}\left(X\right),\dots\\
+ & \text{BIRDS}\cup\left\{ \text{bird}\left(\text{tweety}\right)\right\} \vDash^{*}\text{flies}\left(\text{tweety}\right)\\
+ & \text{BIRDS}\cup\left\{ \text{bird}\left(\text{tweety}\right)\right\} \cup\left\{ \text{penguin}\left(\text{tweety}\right)\right\} \not\vDash^{*}\text{flies}\left(\text{tweety}\right)
+\end{align*}
+
+\paragraph{Closed World Assumption}
+
+If $\alpha$ is not present in some $DB$, then assume $\lnot\alpha$.
+
+\paragraph{Negation as Failure}
+
+$\lnot B$ succeeds when all attempts to prove $B$ fail.
+
+\subsection{SLDNF}
+
+Derivation steps:
+\begin{itemize}
+\item Select any positive literal $L_{j}=B$ from the current goal:
+\end{itemize}
+\begin{align*}
+\: & \leftarrow L_{1},\dots,L_{j-1},B,L_{j+1},\dots,L_{n}\\
+\theta_{i} & \mid\text{match \ensuremath{B} with \ensuremath{B'\leftarrow M_{1},\dots,M_{k}} since \ensuremath{B\theta_{i}=B'\theta_{i}}}\\
+\: & \leftarrow\left(L_{1},\dots,L_{j-1},M_{1},\dots,M_{k},L_{j+1},\dots,L_{n}\right)\theta_{i}
+\end{align*}
+\begin{itemize}
+\item Select any (\emph{safe} / non-ground) negative literal $L_{j}=\text{not }B$
+from the current goal:
+\end{itemize}
+\begin{align*}
+\: & \leftarrow L_{1},\dots,L_{j-1},\text{not }B,L_{j+1},\dots,L_{n}\\
+\theta_{i}=\{\} & \mid\text{all ways of computing goal \ensuremath{B} must fail (finitely)}\\
+\: & \leftarrow\left(L_{1},\dots,L_{j-1},L_{j+1},\dots,L_{n}\right)\theta_{i}
+\end{align*}
+
+\paragraph{Properties}
+
+Consider
+\begin{align*}
+ & p\left(X\right)\leftarrow q\left(X\right),\text{not }r\left(X\right)\\
+ & q\left(a\right)\\
+ & r\left(b\right)
+\end{align*}
+\begin{itemize}
+\item \emph{Non-monotonic}: $S\vdash_{\text{SLDNF}}p\left(a\right)$ but
+$S\cup\left\{ r\left(a\right)\right\} \not\vdash_{\text{SLDNF}}p\left(a\right)$.
+\item Builds in a kind of \emph{CWA}: $S\cup\left\{ r\left(a\right)\right\} \vdash_{\text{SLDNF}}\lnot p\left(a\right)$.
+\end{itemize}
+
+\paragraph{Credulous vs. Sceptical Reasoning}
+
+Assume Quakers are pacifists and republicans are not. Nixon is a Quaker
+and a Republican. Is Nixon a pacifist or not?
+\begin{itemize}
+\item \emph{Sceptical / cautious reasoning}: No.
+\item \emph{Credulous / brave reasoning}: Yes, to both.
+\end{itemize}
+
+\subsection{Semantics for Normal Logic Programs}
+
+\emph{Problem}: $T_{S}$ is no longer guaranteed to be continuous.
+
+\paragraph{Completion Semantics}
+\begin{enumerate}
+\item Rewrite all rules in $S$ as rules of the form
+\[
+p\left(\overrightarrow{X}\right)\leftarrow\overrightarrow{X}
+\]
+\end{enumerate}
+
 \end{document}
