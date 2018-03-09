@@ -54,7 +54,6 @@
 \centering{}\includegraphics[width=0.7\linewidth]{img/compiler}
 \end{figure}
 
-
 \section{Lexical Analysis}
 
 Transforms a stream of characters into tokens.
@@ -112,7 +111,6 @@ $\epsilon$ & {\footnotesize{}Empty string}\tabularnewline
 \end{tabular}
 \end{table}
 
-
 \subsection{Rules}
 
 \paragraph{Regular Expression Rules}
@@ -147,7 +145,6 @@ Either hand-crafted, or use lexical analyser generator (e.g. Flex).
 \par\end{centering}
 \centering{}\includegraphics[width=0.75\linewidth]{img/lex}
 \end{figure}
-
 
 \subsection{Finite Automata}
 \begin{itemize}
@@ -191,7 +188,6 @@ of a regex:
 \par\end{centering}
 \centering{}\includegraphics[width=0.5\linewidth]{img/repeat}
 \end{figure}
-
 
 \paragraph{Subset Construction}
 \begin{itemize}
@@ -334,7 +330,6 @@ and the statement:
 \[
 if\texttt{ a }then\texttt{ }if\texttt{ b }then\texttt{ c }else\texttt{ d}
 \]
-
 \begin{itemize}
 \item If we shift first, we get: $if\texttt{ a }then\texttt{ }\boxed{if\texttt{ b }then\texttt{ c }else\texttt{ d}}$.
 \item If we reduce first, we get: $if\texttt{ a }then\texttt{ }\boxed{if\texttt{ b }then\texttt{ c}}\texttt{ }else\texttt{ d}$.
@@ -369,7 +364,6 @@ of \texttt{+} and \texttt{{*}}.
 \texttt{Term} & \rightarrow & \texttt{Term `*' Factor}\mid\texttt{Factor}\\
 \texttt{Factor} & \rightarrow & \texttt{`(' Expr `)'}\mid int
 \end{align*}
-
 
 \paragraph{Parse Trees}
 

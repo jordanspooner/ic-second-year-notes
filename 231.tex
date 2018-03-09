@@ -645,6 +645,15 @@ If $\alpha$ is not present in some $DB$, then assume $\lnot\alpha$.
 
 $\lnot B$ succeeds when all attempts to prove $B$ fail.
 
+\paragraph{Credulous vs. Sceptical Reasoning}
+
+Assume Quakers are pacifists and republicans are not. Nixon is a Quaker
+and a Republican. Is Nixon a pacifist or not?
+\begin{itemize}
+\item \emph{Sceptical / cautious reasoning}: No.
+\item \emph{Credulous / brave reasoning}: Yes, to both.
+\end{itemize}
+
 \subsection{SLDNF}
 
 Derivation steps:
@@ -680,25 +689,64 @@ $S\cup\left\{ r\left(a\right)\right\} \not\vdash_{\text{SLDNF}}p\left(a\right)$.
 \item Builds in a kind of \emph{CWA}: $S\cup\left\{ r\left(a\right)\right\} \vdash_{\text{SLDNF}}\lnot p\left(a\right)$.
 \end{itemize}
 
-\paragraph{Credulous vs. Sceptical Reasoning}
-
-Assume Quakers are pacifists and republicans are not. Nixon is a Quaker
-and a Republican. Is Nixon a pacifist or not?
-\begin{itemize}
-\item \emph{Sceptical / cautious reasoning}: No.
-\item \emph{Credulous / brave reasoning}: Yes, to both.
-\end{itemize}
-
 \subsection{Semantics for Normal Logic Programs}
 
-\emph{Problem}: $T_{S}$ is no longer guaranteed to be continuous.
+\subsubsection{Completion Semantics}
 
-\paragraph{Completion Semantics}
+The \emph{completion} of $S$ is found by:
 \begin{enumerate}
 \item Rewrite all rules in $S$ as rules of the form
 \[
-p\left(\overrightarrow{X}\right)\leftarrow\overrightarrow{X}
+p\left(\overrightarrow{X}\right)\leftarrow\overrightarrow{X}=\overrightarrow{t},\text{body}
 \]
+so $p\left(X,3\right)\leftarrow q\left(X\right),\text{not }r\left(3\right)$
+becomes $p\left(X,Y\right)\leftarrow Y=3\land q\left(X\right)\land\lnot r\left(3\right)$
+\item Combine all rules with the same head so 
+\[
+p\left(\overrightarrow{X}\right)\leftarrow\overrightarrow{X}=\overrightarrow{t}_{1},\text{body}_{1},\dots,p\left(\overrightarrow{X}\right)\leftarrow\overrightarrow{X}=\overrightarrow{t}_{n},\text{body}_{n}
+\]
+becomes
+\[
+p\left(\overrightarrow{X}\right)\leftrightarrow\overrightarrow{X}=\overrightarrow{t}_{1},\text{body}_{1}\lor\dots\lor p\left(\overrightarrow{X}\right)\leftarrow\overrightarrow{X}=\overrightarrow{t}_{n},\text{body}_{n}
+\]
+\item If some $q\left(\underline{\;}\right)$ is not the head of any rule
+in $S$, add $q\left(\overrightarrow{X}\right)\leftrightarrow\text{false}$.
+\item Add Clark's Equality Theory:
+\begin{enumerate}
+\item $f\left(\overrightarrow{t}\right)\neq g\left(\overrightarrow{s}\right)$
+for all pairs of distinct terms in the Herbrand universe of $S$.
+\item $X=X,X=Y\rightarrow Y=X,X=Y\land Y=Z\rightarrow X=Z$.
+\item $\overrightarrow{X}=\overrightarrow{Y}\rightarrow p\left(\overrightarrow{X}\right)=p\left(\overrightarrow{Y}\right)$
+for all predicate symbols $p$ in $S$.
+\item $\overrightarrow{X}\neq t\left[\overrightarrow{X}\right]$ for all
+terms $t$ where $\overrightarrow{X}$ occurs.
+\end{enumerate}
 \end{enumerate}
 
+\paragraph{Soundness of SLDNF}
+\begin{itemize}
+\item If there is a SLDNF-refutation of $P$ from $S$ with answer $\theta$
+then $\text{Completion}\left(S\right)\vDash P\theta$.
+\item If there is a \emph{finitely-failed} SLDNF-refutation of $P$ from
+$S$ then $\text{Completion}\left(S\right)\vDash\lnot P$.
+\end{itemize}
+
+\subsubsection{Well-Founded Model Semantics}
+
+$\left(\text{In},\text{Out}\right)$ such that:
+\begin{enumerate}
+\item $\text{In}\subseteq HB$.
+\item $\text{Out}\subseteq HB^{\text{not}}=\left\{ \text{not }a\mid a\in HB\right\} $
+\end{enumerate}
+\rule[0.5ex]{0.25\columnwidth}{0.5pt}
+\begin{itemize}
+\item Atoms in $HB-\left(\text{In}\cup\left\{ a\mid\text{not }a\in\text{Out}\right\} \right)$
+are `undecided'.
+\item For $S=\left\{ p\leftarrow\text{not }p\right\} $, the well-founded
+model is $\left(\{\},\{\}\right)$ so $p$ is undecided.
+\end{itemize}
+
+\subsubsection{Stable Model Semantics}
+
+Given a normal logic program $S$ and 
 \end{document}

@@ -97,6 +97,8 @@ and $E\rightarrow E_{2}$ then $E_{1}=E_{2}$.
 \item \emph{Confluence}: For all $E$, $E_{1}$, $E_{2}$, if $E\rightarrow^{*}E_{1}$
 and $E\rightarrow^{*}E$ then there exists $E'$ s.t. $E_{1}\rightarrow^{*}E'$
 and $E_{2}\rightarrow^{*}E'$.
+\item \emph{Unique answer}: If $E\rightarrow^{*}n_{1}$ and $E\rightarrow^{*}n_{2}$
+then $n_{1}=n_{2}$.
 \item \emph{Strong normalisation}: No infinite sequence of expressions $E_{1},E_{2},E_{3}$
 such that for all $i$, $E_{i}\rightarrow E_{i+1}$.
 \end{itemize}
@@ -193,7 +195,7 @@ $E$ w.r.t. state $s$.
 
 \paragraph{Properties}
 \begin{itemize}
-\item Determinacy and confluence still hold.
+\item Determinacy, confluence and unique answer still hold.
 \item Note that with \texttt{while}, normalisation no longer holds for small
 step, as a computation may be non-terminating.
 \end{itemize}
@@ -257,6 +259,12 @@ could be never or possibly multiple times).
 remember the result for subsequent uses.
 \end{itemize}
 
+\subsubsection{Big Step}
+
+\[
+\forall C,s,s'.\left\langle C,s\right\rangle \Downarrow_{e}\left\langle s'\right\rangle \iff\left\langle C,s\right\rangle \rightarrow_{e}^{*}\left\langle \texttt{skip},s'\right\rangle 
+\]
+
 \subsection{Structural Induction}
 
 Technique for reasoning with \emph{structured} and \emph{finite} collections
@@ -280,7 +288,15 @@ Prove $P\left(E_{1}\times E_{2}\right)$ similarly.
 
 \subsubsection{Multi-step Reductions}
 
-Simple induction on numbers.
+Simple induction on numbers. If $P\left(r\right)$ is that $E\rightarrow^{r}E'$:
+
+\paragraph{Base Case}
+
+Prove that $P\left(0\right)$ holds.
+
+\paragraph{Inductive Case}
+
+Prove that, for all $k$, $P\left(k+1\right)$ holds, assuming $P\left(k\right)$.
 
 \subsubsection{Commands}
 

@@ -229,12 +229,12 @@ For $X=\left\langle x_{1},\dots,x_{m}\right\rangle $, $Y=\left\langle y_{1},\dot
 and $Z=\left\langle z_{1},\dots,z_{k}\right\rangle $, where $Z$
 is the LCS of $X$ and $Y$:
 \begin{enumerate}
-\item If $x_{1}=y_{1}$, then $z_{1}=x_{1}=z_{1}$ and $Z_{2..k}$ is LCS
-of $X_{2..m}$ and $Y_{2..n}$.
-\item If $x_{1}\neq y_{1}$, then $z_{1}\neq x_{1}$ implies that $Z$ is
-LCS of $X_{2..m}$ and $Y$.
-\item If $x_{1}\neq y_{1}$, then $z_{1}\neq y_{1}$ implies that $Z$ is
-LCS of $X$ and $Y_{2..n}$.
+\item If $x_{m}=y_{n}$, then $z_{k}=x_{m}=y_{n}$ and $Z_{k-1}$ is LCS
+of $X_{m-1}$ and $Y_{n-1}$.
+\item If $x_{m}\neq y_{n}$, then $z_{k}\neq x_{m}$ implies that $Z$ is
+LCS of $X_{m-1}$ and $Y$.
+\item If $x_{m}\neq y_{n}$, then $z_{k}\neq y_{n}$ implies that $Z$ is
+LCS of $X$ and $Y_{n-1}$.
 \end{enumerate}
 
 \subparagraph{Step 2: Define recursive solution.}
@@ -245,10 +245,10 @@ and $Y_{j..n}$:
 \[
 l\left(i,j\right)=\begin{cases}
 0 & \text{if \ensuremath{i=m} or \ensuremath{j=n} (base case)}\\
-l\left(i+1,j+1\right)+1 & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}=y_{j}}(case 1)}\\
+l\left(i-1,j-1\right)+1 & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}=y_{j}} (case 1)}\\
 \max\begin{cases}
-l(i+1,j) & \text{(case 2)}\\
-l\left(i,j+1\right) & \text{(case 3)}
+l(i-1,j) & \text{(case 2)}\\
+l\left(i,j-1\right) & \text{(case 3)}
 \end{cases} & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}\neq y_{j}})}
 \end{cases}
 \]
@@ -261,15 +261,15 @@ Where $d\left(i,j\right)$ is the edit distance of sequences~$X_{i..m}$
 and $Y_{j..n}$:
 \[
 d\left(i,j\right)=\begin{cases}
-\left|i-j\right| & \text{if \ensuremath{i=m} or \ensuremath{j=n} (base case)}\\
-\max\begin{cases}
-d\left(i+1,j\right)+1 & \text{(delete)}\\
-d\left(i,j+1\right)+1 & \text{(insert)}\\
-d(i+1,j+1)+1 & \text{(replace)}
+\max\left(i,j\right) & \text{if \ensuremath{i=0} or \ensuremath{j=0} (base case)}\\
+\min\begin{cases}
+d\left(i-1,j\right)+1 & \text{(delete)}\\
+d\left(i,j-1\right)+1 & \text{(insert)}\\
+d(i-1,j-1)+1 & \text{(replace)}
 \end{cases} & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}=y_{j}}}\\
-\max\begin{cases}
-d\left(i+1,j\right)+1 & \text{(delete)}\\
-d\left(i,j+1\right)+1 & \text{(insert)}
+\min\begin{cases}
+d\left(i-1,j\right)+1 & \text{(delete)}\\
+d\left(i,j-1\right)+1 & \text{(insert)}
 \end{cases} & \text{if \ensuremath{i<m}, \ensuremath{j<n} and \ensuremath{x_{i}\neq y_{j}}}
 \end{cases}
 \]
