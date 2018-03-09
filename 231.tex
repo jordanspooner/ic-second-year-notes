@@ -748,5 +748,17 @@ model is $\left(\{\},\{\}\right)$ so $p$ is undecided.
 
 \subsubsection{Stable Model Semantics}
 
-Given a normal logic program $S$ and 
+Given a normal logic program $S$ and $X\subseteq HB$, the reduce
+of $S$ by $X$, $S^{X}$ is obtained by:
+\begin{enumerate}
+\item Eliminate all rules with $\text{not }p$ in the body, for every $p\in X$.
+\item Eliminate all negative literals from the body of all remaining rules.
+\end{enumerate}
+$X\subseteq HB$ is a \emph{stable model} of $S$ iff the least Herbrand
+model of $S^{X}$ is $X$. 
+\begin{itemize}
+\item \emph{Credulous reasoning}: whatever holds in some stable model.
+\item \emph{Sceptical reasoning}: whatever holds in all stable models.
+\end{itemize}
+
 \end{document}
