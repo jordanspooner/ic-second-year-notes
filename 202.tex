@@ -324,4 +324,93 @@ ACTIVITY-SELECTOR(s, f):
 \paragraph{Example 2: Fractional Knapsack Problem}
 
 \emph{Greedy choice}: choose item with maximum value per unit weight.
+
+\section{Randomised Algorithms}
+
+\paragraph{Strategies}
+\begin{enumerate}
+\item Randomise the \emph{input} (e.g. random permutations \textemdash{}
+hiring problem).
+\item Randomise the \emph{computation} (e.g. random choices \textemdash{}
+quicksort / BST insert).
+\end{enumerate}
+
+\paragraph{Benefits}
+\begin{enumerate}
+\item Help avoid pathologic inputs.
+\item Yield good expected running time.
+\item Allow dealing with large input domains.
+\end{enumerate}
+
+\paragraph{Example 1: Hiring Problem}
+
+Randomise the input to reduce the chance of worst-case.
+
+\paragraph{Example 2: Quicksort}
+\begin{enumerate}
+\item \emph{Divide}: partition the array \texttt{A{[}p..r{]}} into \texttt{A{[}p..q-1{]}}
+and \texttt{A{[}q+1..r{]}} with all elements less than or equal to
+and greater than or equal to \texttt{A{[}q{]}} respectively.
+\item \emph{Conquer}: sort the two subarrays recursively using quicksort.
+\end{enumerate}
+Running time depends on whether partitioning is balanced or unbalanced:
+\begin{itemize}
+\item \emph{Balanced}: runs asymptotically as fast as merge sort.
+\[
+T\left(n\right)=2T\left(n/2\right)+\Theta\left(n\right)=\Theta\left(n\lg n\right)
+\]
+\item \emph{Unbalanced}: can run asymptotically as fast as insertion sort.
+\[
+T\left(n\right)=T\left(n-1\right)+T\left(0\right)+\Theta\left(n\right)=\Theta\left(n^{2}\right)
+\]
+\end{itemize}
+Possible solution:
+\begin{itemize}
+\item Select pivot using random sampling (or median of 3 randomly selected
+samples).
+\end{itemize}
+
+\paragraph{Example 3: Binary Search Trees}
+\begin{itemize}
+\item \emph{BST property}: For every node $y$ in the left subtree of $x$,
+$y.\text{key}\leq x.\text{key}$ and every node $z$ in the right
+subtree of $x$, $y.\text{key}\geq z.\text{key}$.
+\item Insert and search have complexity $O\left(h\right)$ where $h$ is
+the height of the tree.
+\end{itemize}
+Expected height of randomly built BST with $n$ keys is $O\left(\lg n\right)$.
+Try to achieve by:
+\begin{itemize}
+\item Randomly permute input (if known in advance).
+\item Recursively choose to insert at the root (by using rotations) with
+probability $1/\text{size}$ or as a leaf.
+\end{itemize}
+
+\paragraph{Example 4: Skip Lists}
+\begin{itemize}
+\item Maintain a hierarchy of linked sublists.
+\item Good for fast \emph{search of ordered sequence}.
+\end{itemize}
+Not feasible to maintain ideal skip-list as we need to reorganise
+after each insert. Solution:
+\begin{itemize}
+\item An element in layer $i$ appears with some probability in layer $i+1$.
+\end{itemize}
+
+\paragraph{Example 5: Find a Zero Bit}
+
+From an array of 0 and 1 bits. Possible generate and test algorithms:
+\begin{itemize}
+\item \emph{Las Vegas Algorithm}: choose an index randomly until you find
+a 0.
+\begin{itemize}
+\item Always correct but unbounded resources.
+\end{itemize}
+\item \emph{Monte Carlo Algorithm}: choose up to $k$ random indices attempting
+to find a 0.
+\begin{itemize}
+\item Not always correct but bounded resources.
+\end{itemize}
+\end{itemize}
+
 \end{document}
