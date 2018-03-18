@@ -413,4 +413,59 @@ to find a 0.
 \end{itemize}
 \end{itemize}
 
+\section{Visualising Algorithms}
+
+\subsection{Random Sampling}
+
+\subsubsection*{Uniform Sampling}
+
+\begin{lstlisting}[language=Python,basicstyle={\footnotesize\ttfamily},tabsize=4,frame=single]
+UNIFORM-SAMPLE(width, height):
+	x = RANDOM-REAL(0, 1) * width
+	y = RANDOM-REAL(0, 1) * height
+	return (x, y)
+\end{lstlisting}
+
+\subsubsection*{Best-Candidate Sampling}
+
+\begin{lstlisting}[language=Python,basicstyle={\footnotesize\ttfamily},tabsize=4,frame=single]
+BEST-CANDIDATE-SAMPLE(width, height, samples, n):
+	best_candidate = (0, 0)
+	best_distance  = 0
+	for i = 1 to n:
+		c = UNIFORM-SAMPLE(width, height)
+		d = DISTANCE(FIND-CLOSEST(samples, c), c)
+		if d > best_distance
+			best_distance = d
+			best_candidate = c
+return best_candidate
+\end{lstlisting}
+
+\subsubsection*{Poisson-Disc Sampling}
+\begin{itemize}
+\item Use a grid (each to contain a maximum of one sample) to speed up searches.
+\item Select a first sample randomly and make it \emph{active}.
+\item Choose an \emph{active} sample and generate up $k$ points between
+radius $r$ and $2r$ from the sample.
+\begin{itemize}
+\item If a point is ever found further than $r$ from all other samples
+(check using the grid), choose it and make it \emph{active}.
+\item Otherwise, make this point not \emph{active}.
+\end{itemize}
+\end{itemize}
+
+\subsection{Random Shuffling}
+
+Want to find \emph{unbiased} algorithm (every permutation equally
+likely).
+
+\subsubsection*{Fisher-Yates Shuffling}
+
+\begin{lstlisting}[language=Python,basicstyle={\footnotesize\ttfamily},tabsize=4,frame=single]
+FISHER-YATES-SHUFFLE(A):
+for i = n down to 2:
+	j = RANDOM(1, i)   # make sure i is included
+	SWAP(A[i], A[j])
+\end{lstlisting}
+
 \end{document}
