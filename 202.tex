@@ -1,14 +1,42 @@
+\RequirePackage{fix-cm}
+\RequirePackage{fixltx2e}
 \documentclass[twocolumn,english]{article}
+\usepackage[T1]{fontenc}
 \usepackage[latin9]{inputenc}
 \usepackage[landscape]{geometry}
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{algorithm2e}
 \usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
 \PassOptionsToPackage{normalem}{ulem}
 \usepackage{ulem}
 
 \makeatletter
+
+\providecommand{\tabularnewline}{\\}
+
+ % used for custom paragraph shapes
+ \IfFileExists{candleshape.def}{%
+  \input{candleshape.def}}{}
+ \IfFileExists{dropshape.def}{%
+  \input{dropshape.def}}{}
+ \IfFileExists{TeXshape.def}{%
+  \input{TeXshape.def}}{}
+ \IfFileExists{triangleshapes.def}{%
+  \input{triangleshapes.def}}{}
+
+\newlength{\lyxlabelwidth}      % auxiliary length 
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
 
 
 
@@ -177,7 +205,7 @@ no overhead for recursive calls.
 \item Bottom-up may benefit from optimal memory access.
 \item Top-down can avoid computing solutions of sub-problems that are not
 required.
-\item Top-down is `more natural.
+\item Top-down is `more natural'.
 \end{itemize}
 
 \paragraph{Recording the Solution}
@@ -468,4 +496,312 @@ for i = n down to 2:
 	SWAP(A[i], A[j])
 \end{lstlisting}
 
+\section{String Matching}
+
+For text $T\left[1..n\right]$, attempt to find a pattern $P\left[1..m\right]$
+with $m\leq n$.
+
+\paragraph{Definitions}
+\begin{itemize}
+\item $P$ occurs in $T$ with \emph{shift} $s$ if $T\left[s+j\right]=P\left[j\right]$
+for $1\leq j\leq m$.
+\item $w\sqsubset x$ if $w$ is a prefix of $x$.
+\item $w\sqsupset x$ if $w$ is a suffix of $x$.
+\item The prefix $P\left[1..k\right]$ of a pattern $P\left[1..m\right]$
+is denoted $P_{k}$.
+\end{itemize}
+If $x$ and $y$ are suffixes of $z$:
+\begin{itemize}
+\item If $\left|x\right|\leq\left|y\right|$, then $x$ is a suffix of $y$.
+\item If $\left|x\right|\geq\left|y\right|$, then $y$ is a suffix of $x$.
+\item If $\left|x\right|=\left|y\right|$, then $x=y$.
+\end{itemize}
+
+\subsection{Knuth-Morris-Pratt Matching}
+\begin{itemize}
+\item \emph{Key Idea}: Go through $T$ character by character, use a prefix
+function
+\[
+\pi\left[q\right]=\max\left(k\text{ such that }k<q\text{ and }P_{k}\text{ is a suffix of }P_{q}\right)
+\]
+Example:
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{cccccccc}
+\toprule 
+$i$ & 1 & 2 & 3 & 4 & 5 & 6 & 7\tabularnewline
+\midrule
+$P\left[i\right]$ & \texttt{a} & \texttt{b} & \texttt{a} & \texttt{b} & \texttt{a} & \texttt{c} & \texttt{a}\tabularnewline
+$\pi\left[i\right]$ & 0 & 0 & 1 & 2 & 3 & 0 & 1\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+\item \texttt{PREFIX-FUNCTION} takes $O\left(m\right)$ and \texttt{KMP-MATCHER}
+$O\left(n\right)$ time.
+\end{itemize}
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.8\linewidth]{img/kmp-matching}
+\end{figure}
+
+\subsection{Boyer-Moor Matching}
+\begin{itemize}
+\item Start matching from the right of $P$. When matching breaks, shift
+$P$ as far right as possible, maximising skipped comparisons.
+\item \emph{Bad character rule}: Current character ($\beta$) in $T$ doesn't
+match current character in $P$.
+\begin{itemize}
+\item If $\beta$ not in $P$, shift $P$ so that it skips $\beta$.
+\item If $\beta$ is in $P$, shift $P$ so it aligns that the right-most
+$\beta$ in $P$.
+\begin{table}[H]
+\centering{}For $P=\texttt{ababaca}$: %
+\begin{tabular}{cccc}
+\toprule 
+$c$ & \texttt{a} & \texttt{b} & \texttt{c}\tabularnewline
+\midrule
+$\text{bcr}\left[c\right]$ & \texttt{7} & 4 & 6\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+\end{itemize}
+\item \emph{Good suffix rule}: A suffix of $P$ has been matched in $T$
+up to a bad character in $T$.
+\begin{itemize}
+\item If the match occurs somewhere else in $P$, shift to align it with
+the right-most occurrence in $P$.
+\item If the match occurs nowhere else in the pattern, skip the pattern.
+\item If the prefix of $P$ matches the suffix of the match, align the prefix
+of $P$ with the suffix of the match.
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{ccccccccc}
+\toprule 
+$i$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\tabularnewline
+\midrule
+$P\left[i\right]$ & \texttt{a} & \texttt{b} & \texttt{a} & \texttt{b} & \texttt{a} & \texttt{c} & \texttt{a} & $\epsilon$\tabularnewline
+$\text{gsr}\left[i\right]$ & 6 & 6 & 6 & 6 & 6 & 2 & 1 & $\slash$\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{ccccccc}
+\toprule 
+$i$ & 1 & 2 & 3 & 4 & 5 & 6\tabularnewline
+\midrule
+$P\left[i\right]$ & \texttt{c} & \texttt{a} & \texttt{b} & \texttt{a} & \texttt{b} & $\epsilon$\tabularnewline
+$\text{gsr}\left[i\right]$ & 5 & 5 & 2 & 5 & 1 & $\slash$\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+\end{itemize}
+\item \texttt{BCR-TABLE} and \texttt{GSR-TABLE} take $O\left(m\right)$
+and \texttt{BM-MATCHER} $O\left(mn\right)$ time.
+\end{itemize}
+
+\section{Radix Search}
+
+Examine keys one piece at a time, rather than a full comparison.
+
+\paragraph{Digital Search Trees}
+
+Exactly the same as BSTs except left/right branching is not based
+on full comparisons, but selected bits of keys.
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.625\linewidth]{img/dst}
+\end{figure}
+\begin{itemize}
+\item Still compares whole keys.
+\item Maximum depth is the maximum key length ($b$).
+\item Keys with similar prefixes degrade performance.
+\end{itemize}
+
+\paragraph{Binary Search Tries}
+
+Keys are only stored at the leaf nodes.
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\linewidth]{img/bst}
+\end{figure}
+\begin{itemize}
+\item Don't compare the full key until a leaf is reached.
+\item For $n$ keys, average search requires $\lg n$ comparisons and $b$
+in worst case.
+\item One-way branching creates extra unnecessary nodes in the trie.
+\item Two different types of nodes means implementation is complex.
+\end{itemize}
+
+\paragraph{Patricia Tries}
+\begin{itemize}
+\item Each node includes the index of the bit to be tested.
+\item Uses pointers up the tree instead of NULLs.
+\end{itemize}
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.5\linewidth]{img/pt}
+\end{figure}
+\begin{itemize}
+\item Only has $n$ nodes.
+\item Only requires about $\lg n$ bit comparisons.
+\end{itemize}
+
+\paragraph{Multiway Search Tries}
+
+Examine $r$ bits at a time, using nodes with $R=2^{r}$ links.
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\linewidth]{img/multiwayst}
+\end{figure}
+\begin{itemize}
+\item Requires $O\left(\log_{R}n\right)$ comparisons.
+\item Increased number of links leads to wasted space.
+\end{itemize}
+
+\paragraph{Existence Tries}
+
+Special purpose multiway trie whose keys are data (i.e. a set).
+\begin{itemize}
+\item Keys are distinct and no key is prefix of another.
+\item Keys are of fixed length or have a termination digit.
+\end{itemize}
+
+\paragraph{Ternary Search Tries}
+
+Each node has three links (less than, equal to, greater than).
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.625\linewidth]{img/tst}
+\end{figure}
+\begin{itemize}
+\item Works well for non-randomness in key structure (e.g. URLs).
+\item Search misses tend to be efficient.
+\item Good for suffix trees.
+\end{itemize}
+
+\paragraph{Optimised TSTs}
+\begin{itemize}
+\item \emph{Wide head}: create table of $R$ TSTs.
+\item \emph{Compact tails}: store keys at leaves.
+\end{itemize}
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.7\linewidth]{img/opt-tst}
+\end{figure}
+
+\section{Graph Algorithms}
+\begin{itemize}
+\item A graph $G=\left(V,E\right)$ can be represented as an adjacency-list
+or matrix.
+\item A tree:
+\begin{itemize}
+\item Has $V-1$ edges and no cycles.
+\item Has $V-1$ edges and is connected.
+\item Is connected, but removing any edge disconnects it.
+\item Is acyclic, but adding any edge creates a cycle.
+\item Exactly one simple path connects any pair of vertices.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Breadth First Search}
+
+Uses a queue, builds breadth-first trees, computes shortest paths.
+
+\paragraph{Depth First Search}
+
+Uses natural recursion, produces parenthesis structure.
+
+\paragraph{Parenthesis Theorem}
+
+For any two vertices $u$ and $v$, one holds:
+\begin{enumerate}
+\item $\left[u.d,u.f\right]$ and $\left[v.d,v.f\right]$ are completely
+disjoint; neither $u$ nor $v$ is descendant of the other in the
+depth-first forest.
+\item $\left[u.d,u.f\right]$ is entirely contained within $\left[v.d,v.f\right]$;
+$u$ is a descendant of $v$ in a depth-first tree.
+\item $\left[u.d,u.f\right]$ and $\left[v.d,v.f\right]$ are completely
+disjoint; $v$ is a descendant of $u$ in a depth-first tree.
+\end{enumerate}
+
+\paragraph{Topological Sort}
+
+Sort vertices by finish time of DFS.
+
+\subsection{Spanning Tree}
+\begin{enumerate}
+\item A tree $T$.
+\item Includes all vertices $V$ of $G=\left(V,E\right)$.
+\item $T\subseteq E$.
+\end{enumerate}
+
+\paragraph{Kruskal Algorithm}
+
+Choose the edge of lowest weight.
+
+\subsection{Shortest Path}
+
+\paragraph{Dijkstra Algorithm}
+
+Choose the vertex with minimum distance, record predecessors.
+\begin{itemize}
+\item Doesn't work for negative weights.
+\item Time complexity: $O\left(\left|V\right|\log\left|V\right|+\left|E\right|\right)$
+using min-priority queue.
+\end{itemize}
+
+\paragraph{Bellmann-Ford Algorithm}
+
+Esentially Djisktra's algorithm applied $n$ times ($n$ is the number
+of nodes).
+\begin{itemize}
+\item Need to check for negative-weight cycles at end.
+\item Time complexity: $O\left(\left|V\right|\left|E\right|\right)$.
+\end{itemize}
+
+\paragraph{Floyd-Warshall Algorithm
+\[
+D_{ij}^{\left(k\right)}=\protect\begin{cases}
+w_{ij} & k=0\protect\\
+\min\left(D_{ij}^{\left(k-1\right)},D_{ik}^{\left(k-1\right)}+D_{kj}^{\left(k-1\right)}\right) & k\geq1
+\protect\end{cases}
+\]
+}
+\begin{itemize}
+\item Time complexity: $O\left(\left|V\right|^{3}\right)$.
+\end{itemize}
+
+\paragraph{Johnson's Algorithm}
+
+Better for sparse graphs.
+\begin{enumerate}
+\item Add a new node $q$ connected to all other nodes with a zero-weight
+edge.
+\item Use Bellman-Ford, starting from $q$ to get a minimum weight $h\left(v\right)$
+for each node.
+\item Reweight the edges in the original graph \textemdash{} $w'\left(u,v\right)=w\left(u,v\right)+h\left(u\right)-h\left(v\right)$.
+\item Use Dijsktra algorithm.
+\end{enumerate}
+
+\subsection{Maximum Flow}
+\begin{itemize}
+\item Remove anti-parallel edges using auxiliary vertices.
+\item Deal with multiples sources and sinks by introducing supersources
+/ supersinks.
+\end{itemize}
+
+\paragraph{Constraints}
+\begin{itemize}
+\item \emph{Capacity constraint}: for all edges, flow must be less weight.
+\item \emph{Flow conservation}: for all non-source/sink vertices, flow in
+= flow out.
+\end{itemize}
+
+\paragraph{Ford-Fulkerson Method}
+
+While there exists an augmenting path $p$ in the residual network,
+augment flow $f$ along $p$.
+
+\paragraph{Cuts}
+
+If $f$ is the maximum flow $G$ $\left|f\right|=c\left(S,T\right)$
+for some minimum cut $\left(S,T\right)$ in $G$.
 \end{document}
