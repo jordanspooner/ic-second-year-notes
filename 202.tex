@@ -341,8 +341,8 @@ time.
 ACTIVITY-SELECTOR(s, f):
 	n = len(s)
 	A = [s[0]]
-	k = 1
-	for m = 2 to n:
+	k = 0
+	for m = 1 to n - 1:
 		if s[m] >= f[k]:
 			A = A + [s[m]]
 			k = m
