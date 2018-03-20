@@ -761,4 +761,107 @@ model of $S^{X}$ is $X$.
 \item \emph{Sceptical reasoning}: whatever holds in all stable models.
 \end{itemize}
 
+\section{Applications of KRR}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\columnwidth]{img/krr-applications}
+\end{figure}
+
+\paragraph{Ontologies}
+
+Explicit, formal specification of a conceptualisation.
+\begin{itemize}
+\item \emph{Concepts of the domain} e.g. classes such as professors, students,
+courses.
+\item \emph{Relationships between these terms} e.g. all professors are staff
+members.
+\end{itemize}
+Allow for a shared understanding of a domain (\emph{semantic interoperability}).
+
+\paragraph{Resource Description Framework (RDF)}
+
+Statements of the form object-attribute-value which assert properties
+of objects.
+\begin{itemize}
+\item \emph{Triples}: (a, P, b) e.g. (introAI, isTaughtBy, ft).
+\item \emph{Classes}: type(a, C).
+\item \emph{Class hierarchies}: subClassOf(C, D).
+\item \emph{Property hierarchies}: subPropertyOf(P, Q).
+\end{itemize}
+
+\section{Intelligent Agents and Problem Solving}
+
+\paragraph{Intelligent Agent}
+
+An agent that enacts on its environment, based on \emph{observations},
+\emph{prior knowledge}, \emph{goals/preferences}, its \emph{abilities}
+and sometimes \emph{past experience}.
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\columnwidth]{img/representation}
+\end{figure}
+
+\paragraph{Representation / Knowledge Schema}
+
+Form of knowledge used in an agent.
+
+\paragraph{Representation}
+
+Internal representation / formalisation of knowledge. Should be:
+\begin{itemize}
+\item \emph{Rich enough to express knowledge} needed to solve the problem.
+\item \emph{Close to the problem}: declarative, compact and easy to maintain.
+\item \emph{Amenable to efficient computation}: able to trade of accuracy
+and computation time.
+\item \emph{Learnable}: can be automatically acquired from people, past
+experience, data.
+\end{itemize}
+
+\paragraph{Knowledge Base}
+
+Representation of all the knowledge that is stored in an agent.
+
+\paragraph{Solutions}
+\begin{itemize}
+\item \emph{Optimal}: best solutions according to some criteria.
+\item \emph{Satisficing}: good enough according to some notion of an adequate
+solution.
+\item \emph{Approximately optimal}: close enough to the optimal solution.
+\item \emph{Probable}: likely to be a solution.
+\end{itemize}
+
+\paragraph{From Problem to Representation}
+\begin{itemize}
+\item What level of abstraction?
+\begin{itemize}
+\item High-level description is harder for a machine to comprehend. May
+abstract away important details.
+\item Low-level description can be more accurate and predictive. But more
+difficult to reason with \textemdash{} more steps / actions to choose
+from.
+\item Multiple levels of abstraction can solve these problems.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Reasoning}
+
+Process made by a computational agent when searching for ways to determine
+how to complete its task.
+\begin{itemize}
+\item \emph{Offline}: background knowledge needed to solve task is precomputed.
+\item \emph{Online}: agents sense the environment to collect and use this
+data along with background knowledge, to decide at execution time
+what action to take.
+\end{itemize}
+
+\paragraph{Key Decisions}
+\begin{enumerate}
+\item \emph{Model of the environment}: can be expressed in terms of states
+/ features / individuals and relationships between them.
+\item \emph{Uncertainty}: on state (partially observable state) / effects
+of actions.
+\item \emph{Preferences}: trade-off between desirability of various outcomes.
+\item \emph{Number of agents}: may be adversarial / cooperative.
+\end{enumerate}
+
 \end{document}
