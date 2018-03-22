@@ -229,6 +229,38 @@ Core parts should be stable. Parts at the edges, e.g. UI, don't need
 to be.
 \end{itemize}
 
+\paragraph{Cyclomatic Complexity}
+\begin{itemize}
+\item Counts nodes and edges in the control flow of a program (number of
+possible different executions).
+\item Gives lower bound on number of tests required.
+\end{itemize}
+
+\paragraph{WILT}
+
+Whitespace Integrated over Lines of Text is strongly correlated with
+cyclomatic complexity.
+
+\paragraph{ABC Metrics}
+
+Counts occurrences of:
+\begin{itemize}
+\item \uline{A}ssignments
+\item \uline{B}ranches
+\item \uline{C}onditions
+\end{itemize}
+\emph{Flog} is an ABC metric tailored to Ruby. \emph{Flay} identifies
+duplication.
+
+\paragraph{Lifeline}
+
+Graph complexity over time.
+
+\paragraph{Turbulence}
+
+Number of commits made to each file, compared against complexity of
+code.
+
 \section{Design Patterns}
 
 \subsection{Null Object Pattern}
