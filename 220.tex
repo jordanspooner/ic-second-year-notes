@@ -6,7 +6,10 @@
 \setlength{\parindent}{0pt}
 \usepackage{color}
 \usepackage{float}
+\usepackage{amstext}
 \usepackage{graphicx}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
 
 \makeatletter
 
@@ -213,20 +216,98 @@ Reducing coupling reduces fragility and allows reuse.
 cohesion makes objects easier to reason about and reuse.
 \end{itemize}
 
+\section{Metrics}
+
+\paragraph{Coupling}
+\begin{itemize}
+\item \emph{Afferent coupling}: How many other classes use (\uline{a}rrive
+at) this class (measures \emph{responsibility}).
+\item \emph{Efferent coupling}: How many classes are used by (\uline{e}xit)
+this class (measures \emph{independence}).
+\item \emph{Instability}: $\text{Ce}/\left(\text{Ce}+\text{Ca}\right)$.
+Core parts should be stable. Parts at the edges, e.g. UI, don't need
+to be.
+\end{itemize}
+
 \section{Design Patterns}
 
-\subsubsection*{Null Object Pattern}
+\subsection{Null Object Pattern}
+
+\paragraph{Problem}
+
+Checking for null is ugly.
+
+\paragraph{Solution}
+
+Use an interface and add a Null Object class that does nothing.
+
+\subsubsection*{Example}
 
 \begin{lstlisting}[language=Java,basicstyle={\footnotesize\ttfamily},commentstyle={\color{gray}\itshape}]
 interface Track {
   public void play ();
 }
 
-class NullTrack implements  Track  {
+class NullTrack implements Track {
   public void play () {
     // do nothing
   }
 } 
 \end{lstlisting}
 
+\subsection{Template Method Pattern}
+
+\paragraph{Problem}
+
+Requirements change over time, sometimes we need to adapt a small
+part of an algorithm.
+
+\paragraph{Solution}
+
+Extend via inheritance.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.5\columnwidth]{img/template-method}
+\end{figure}
+
+\paragraph{Benefits}
+\begin{itemize}
+\item Follows \emph{Hollywood Principle }(don't call us, we'll call you):
+Concrete classes only define methods that are called when the superclass
+needs them (they don't call up).
+\item Follows \emph{Open-Closed Principle}: You should be able to extend
+a class's behaviour without modifying it.
+\begin{itemize}
+\item Change behaviour by adding new code, rather than changing existing
+code.
+\item \emph{Separate things that change from things that stay the same}.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Drawbacks}
+
+Immobility caused by coupling.
+
+\subsection{Strategy Pattern}
+
+\paragraph{Problem}
+
+Requirements change over time, sometimes we need to adapt a small
+part of an algorithm.
+
+\paragraph{Solution}
+
+Extend via delegation.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\columnwidth]{img/strategy}
+\end{figure}
+
+\paragraph{Benefits}
+
+Does the same as the template method but with looser coupling.
 \end{document}
