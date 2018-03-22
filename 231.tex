@@ -395,15 +395,132 @@ them are mutex.
 Once goal is non-mutex in $S_{i}$, search backwards to extract plan.
 
 \section{Knowledge Representation and Automated Reasoning}
+
+\subsection{Intelligent Agents}
+
+An agent that enacts on its environment, based on \emph{observations},
+\emph{prior knowledge}, \emph{goals/preferences}, its \emph{abilities}
+and sometimes \emph{past experience}.
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\columnwidth]{img/representation}
+\end{figure}
 \begin{enumerate}
 \item Find a representation for the problem.
 \item Compute output using automatic reasoning.
 \item Output mapped into solution to the problem.
 \end{enumerate}
 
+\paragraph{Key Decisions}
+\begin{enumerate}
+\item \emph{Model of the environment}: can be expressed in terms of states
+/ features / individuals and relationships between them.
+\item \emph{Uncertainty}: on state (partially observable state) / effects
+of actions.
+\item \emph{Preferences}: trade-off between desirability of various outcomes.
+\item \emph{Number of agents}: may be adversarial / cooperative.
+\end{enumerate}
+
+\subsection{Representation}
+
+\paragraph{Representation / Knowledge Schema}
+
+Form of knowledge used in an agent.
+
+\paragraph{Representation}
+
+Internal representation / formalisation of knowledge. Should be:
+\begin{itemize}
+\item \emph{Rich enough to express knowledge} needed to solve the problem.
+\item \emph{Close to the problem}: declarative, compact and easy to maintain.
+\item \emph{Amenable to efficient computation}: able to trade of accuracy
+and computation time.
+\item \emph{Learnable}: can be automatically acquired from people, past
+experience, data.
+\end{itemize}
+
+\paragraph{Knowledge Base}
+
+Representation of all the knowledge that is stored in an agent.
+
+\paragraph{From Problem to Representation}
+\begin{itemize}
+\item What level of abstraction?
+\begin{itemize}
+\item High-level description is harder for a machine to comprehend. May
+abstract away important details.
+\item Low-level description can be more accurate and predictive. But more
+difficult to reason with \textemdash{} more steps / actions to choose
+from.
+\item Multiple levels of abstraction can solve these problems.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Solutions}
+\begin{itemize}
+\item \emph{Optimal}: best solutions according to some criteria.
+\item \emph{Satisficing}: good enough according to some notion of an adequate
+solution.
+\item \emph{Approximately optimal}: close enough to the optimal solution.
+\item \emph{Probable}: likely to be a solution.
+\end{itemize}
+
+\subsection{Reasoning}
+
+\paragraph{Reasoning}
+
+Process made by a computational agent when searching for ways to determine
+how to complete its task.
+\begin{itemize}
+\item \emph{Offline}: background knowledge needed to solve task is precomputed.
+\item \emph{Online}: agents sense the environment to collect and use this
+data along with background knowledge, to decide at execution time
+what action to take.
+\end{itemize}
+
+\paragraph{Three Forms of Knowledge Inference}
+\begin{enumerate}
+\item \emph{Deductive}: reasoning from the general to reach the particular
+(what necessarily follows from the given?).
+\item \emph{Inductive}: reasoning from the specifics to reach the general
+(how can we generalise observations?).
+\item \emph{Abductive}: reasoning from observations to explanations (what
+causal relationships are there between knowledge and observations?).
+\end{enumerate}
+
+\subsection{Applying KRR}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\columnwidth]{img/krr-applications}
+\end{figure}
+
+\paragraph{Ontologies}
+
+Explicit, formal specification of a conceptualisation.
+\begin{itemize}
+\item \emph{Concepts of the domain} e.g. classes such as professors, students,
+courses.
+\item \emph{Relationships between these terms} e.g. all professors are staff
+members.
+\end{itemize}
+Allow for a shared understanding of a domain (\emph{semantic interoperability}).
+
+\paragraph{Resource Description Framework (RDF)}
+
+Statements of the form object-attribute-value which assert properties
+of objects.
+\begin{itemize}
+\item \emph{Triples}: (a, P, b) e.g. (introAI, isTaughtBy, ft).
+\item \emph{Classes}: type(a, C).
+\item \emph{Class hierarchies}: subClassOf(C, D).
+\item \emph{Property hierarchies}: subPropertyOf(P, Q).
+\end{itemize}
+
+\section{Deductive Reasoning}
+
 \paragraph{Clausal Form}
 
-Resolution works with conjunctions of clauses:
+Resolution works with sets / conjunctions of clauses:
 \[
 \lnot p_{1}\lor\dots\lor\lnot p_{m}\lor q_{1}\lor\dots\lor q_{n}
 \]
@@ -418,6 +535,29 @@ of clauses (conjunctive normal form).
 clauses (universal qualification + conjunctive normal form + Skolemisation).
 \end{itemize}
 
+\paragraph{Reaching Clausal Form}
+\begin{itemize}
+\item Change implication to disjunction: $p\rightarrow q$ goes to $\lnot p\lor q$.
+\item Push negation inwards using: $\lnot\left(p\lor q\right)\equiv\lnot p\land\lnot q$
+and $\lnot\left(p\land q\right)\equiv\lnot p\lor\lnot q$.
+\item (First-order) Push negation inwards using $\lnot\exists Xp\left(X\right)\equiv\forall X\lnot p\left(X\right)$
+and $\lnot\forall Xp\left(X\right)\equiv\exists X\lnot p\left(X\right)$.
+\item (First-order) Remove existential quantifier in $\exists YF\left[Y\right]$
+by:
+\begin{itemize}
+\item If the subformula is not in the scope of any universal quantifier,
+replace $Y$ with a new Skolem constant: e.g. $\exists Yp\left(Y\right)\implies p\left(c\right)$.
+\item If the subformula occurs in the scope of universal quantifiers for
+$X_{1},X_{2},\dots,X_{n}$, replace $Y$ with a new Skolem term $sk\left(X_{1},X_{2},\dots X_{n}\right)$:
+e.g. $\forall X\exists Yp\left(X,Y\right)\implies p\left(X,f\left(X\right)\right)$.
+\end{itemize}
+\item (First-order) Move all universal quantifiers to the front of the sentence
+using: $\forall X\varphi_{1}\left(X\right)\land\varphi_{2}$ is equivalent
+to $\forall X\left(\varphi_{1}\left(X\right)\land\varphi_{2}\right)$
+after appropriately renaming variables if $X$ occurs in $\varphi_{2}$.
+\item Distribute $\lor$ over $\land$ using: $p\lor\left(q\land s\right)\equiv\left(p\lor q\right)\land\left(p\lor s\right)$.
+\end{itemize}
+
 \subsection{Unification}
 
 \paragraph{Universal Instantiation}
@@ -430,6 +570,7 @@ for any variable $v$ and term $g$.
 \begin{itemize}
 \item $\sigma=\left\{ v/g\right\} $ is a \emph{substitution}. $\alpha\sigma$
 means the formula obtained from $\alpha$ by applying $\sigma$.
+\item $a'$ is an \emph{instance} of $a$ if $a=a\sigma$ for some $\sigma$.
 \end{itemize}
 
 \paragraph{Unification}
@@ -465,7 +606,11 @@ Combines two clauses:
 
 Applied repeatedly until $\square$ is derived.
 
-\paragraph{Completeness of Resolution}
+\paragraph{Soundness of Resolution}
+
+If $S\vdash P$ by resolution, then $S\vDash P$.
+
+\paragraph{Refutation Completeness of Resolution}
 \begin{itemize}
 \item If conjunction of propositional clauses is unjustifiable, we will
 end up with $\square$.
@@ -484,13 +629,21 @@ end up with $\square$.
 \dfrac{\alpha\lor\beta,\lnot\beta'\lor\gamma}{\left(\alpha\lor\gamma\right)\theta}\text{ where \ensuremath{\theta} is a mgu of \ensuremath{\beta} and \ensuremath{\beta'}}
 \]
 
-Full version:
+after appropriately renaming variables to be distinct. Full version:
 \[
 \dfrac{\alpha^{1}\lor\dots\lor a^{j-1}\lor a^{j}\lor a^{j+1}\lor\dots\lor\alpha^{m},\beta^{1}\lor\dots\lor\beta^{k-1}\lor\beta^{k}\lor\beta^{k+1}\lor\dots\lor\beta^{n}}{\left(\alpha^{1}\lor\dots\lor a^{j-1}\lor a^{j+1}\lor\dots\lor\alpha^{m},\beta^{1}\lor\dots\lor\beta^{k-1}\lor\beta^{k+1}\lor\dots\lor\beta^{n}\right)\theta}
 \]
 where $\theta$ is a mgu of $\alpha^{j}$ and $\lnot\beta^{k}$.
 
-\subsection{GMP / SLD Resolution}
+\subsubsection{Generalised Modus Ponens
+\[
+\dfrac{p'_{1},p'_{2},\dots,p'_{n},\left(q\leftarrow p_{1},p_{2},\dots,p_{n}\right)}{q\theta}
+\]
+}
+
+where $p'_{i}\theta=p_{i}\theta$.
+
+\subsection{SLD Resolution}
 
 \paragraph{Definite Clauses}
 
@@ -502,22 +655,17 @@ p\leftarrow q_{1},q_{2},\dots,q_{n}
 \item $p$ is the \emph{head} and $q_{1},\dots,q_{n}$ the \emph{body} of
 the clause.
 \item If $n=0$, $p$ is a \emph{fact}.
-\item A set of definite clauses is a \emph{logic program}.
-\item A \emph{Horn clause} is a definite clause or $\leftarrow q_{1},\dots,q_{n}$.
+\item A set of definite clauses is a \emph{logic program} / \emph{knowledge
+base}.
+\item A \emph{Horn clause} / \emph{denial} is a definite clause or $\leftarrow q_{1},\dots,q_{n}$.
 \end{itemize}
-
-\paragraph{Generalised Modus Ponens
-\[
-\dfrac{p'_{1},p'_{2},\dots,p'_{n},\left(q\leftarrow p_{1},p_{2},\dots,p_{n}\right)}{q\theta}
-\]
-}
-
-where $p'_{i}\theta=p_{i}\theta$.
 
 \paragraph{SLD Resolution}
 
+Linear Resolution for Definite clauses with Selection function
+
 \[
-\dfrac{\overbrace{\lnot\alpha^{1}\lor\dots\lor\lnot\alpha^{j}\lor\dots\lor\lnot\alpha^{m}}^{\text{Goal}},\overbrace{\alpha\lor\lnot\beta^{1}\lor\dots\lor\lnot\beta^{n}}^{\text{Definite Clause}}}{\left(\lnot\alpha^{1}\lor\dots\lor\lnot\beta^{1}\lor\dots\lor\lnot\beta^{n}\lor\dots\lor\lnot a^{m}\right)\theta}
+\dfrac{\overbrace{\lnot\alpha^{1}\lor\dots\lor\lnot\alpha^{j}\lor\dots\lor\lnot\alpha^{m}}^{\text{Goal (denial)}},\overbrace{\alpha\lor\lnot\beta^{1}\lor\dots\lor\lnot\beta^{n}}^{\text{Definite Clause}}}{\left(\lnot\alpha^{1}\lor\dots\lor\lnot\beta^{1}\lor\dots\lor\lnot\beta^{n}\lor\dots\lor\lnot a^{m}\right)\theta}
 \]
 where $\theta$ is a mgu of $\alpha^{j}$ and $\alpha$.
 
@@ -531,7 +679,7 @@ where $\theta$ is a mgu of $\alpha^{j}$ and $\alpha$.
 \begin{itemize}
 \item Answer is computed from composition of all mgus.
 \item Sub-goal $B$ can be chosen in any way.
-\item There are many choices for the matching clause.
+\item There may be many choices for the matching clause. Forms a SLD tree.
 \end{itemize}
 
 \subsection{Forward and Backward Chaining}
@@ -624,7 +772,9 @@ that $P\sigma=P\theta\xi$.
 $P\left(1,2\right)$ belongs to the minimal Herbrand model of $S=\left\{ Q\left(1\right),R\left(2\right),P\left(1,1\right),P\left(1,2\right)\right\} $
 with $\xi=\left\{ y/2\right\} $.
 
-\section{Non-monotonic Reasoning}
+\section{Deductive Reasoning with NAF}
+
+\subsection{Non-monotonic Reasoning}
 
 \paragraph{Non-monotonic Logics}
 
@@ -643,7 +793,7 @@ If $\alpha$ is not present in some $DB$, then assume $\lnot\alpha$.
 
 \paragraph{Negation as Failure}
 
-$\lnot B$ succeeds when all attempts to prove $B$ fail.
+$\lnot B$ succeeds when all attempts to prove $B$ fail (finitely).
 
 \paragraph{Credulous vs. Sceptical Reasoning}
 
@@ -666,8 +816,8 @@ Derivation steps:
 \: & \leftarrow\left(L_{1},\dots,L_{j-1},M_{1},\dots,M_{k},L_{j+1},\dots,L_{n}\right)\theta_{i}
 \end{align*}
 \begin{itemize}
-\item Select any (\emph{safe} / non-ground) negative literal $L_{j}=\text{not }B$
-from the current goal:
+\item Select any (\emph{safe} / \emph{ground} - otherwise will \emph{flounder})
+negative literal $L_{j}=\text{not }B$ from the current goal:
 \end{itemize}
 \begin{align*}
 \: & \leftarrow L_{1},\dots,L_{j-1},\text{not }B,L_{j+1},\dots,L_{n}\\
@@ -761,107 +911,144 @@ model of $S^{X}$ is $X$.
 \item \emph{Sceptical reasoning}: whatever holds in all stable models.
 \end{itemize}
 
-\section{Applications of KRR}
+\section{Abductive Reasoning}
 
-\begin{figure}[H]
-\centering{}\includegraphics[width=0.75\columnwidth]{img/krr-applications}
-\end{figure}
-
-\paragraph{Ontologies}
-
-Explicit, formal specification of a conceptualisation.
+$\left(KB,A,IC\right)$ is an \emph{abductive logic program} where:
 \begin{itemize}
-\item \emph{Concepts of the domain} e.g. classes such as professors, students,
-courses.
-\item \emph{Relationships between these terms} e.g. all professors are staff
-members.
-\end{itemize}
-Allow for a shared understanding of a domain (\emph{semantic interoperability}).
-
-\paragraph{Resource Description Framework (RDF)}
-
-Statements of the form object-attribute-value which assert properties
-of objects.
-\begin{itemize}
-\item \emph{Triples}: (a, P, b) e.g. (introAI, isTaughtBy, ft).
-\item \emph{Classes}: type(a, C).
-\item \emph{Class hierarchies}: subClassOf(C, D).
-\item \emph{Property hierarchies}: subPropertyOf(P, Q).
+\item $KB$ is the theory (a set of normal clauses).
+\item $A$ is the set of aducibles in $BK$ (ground undefined literals).
+\item $IC$ is a set of integrity constraints (denials).
+\item $G$ is the goal / observation.
 \end{itemize}
 
-\section{Intelligent Agents and Problem Solving}
+\paragraph{Properties of Explanations}
 
-\paragraph{Intelligent Agent}
-
-An agent that enacts on its environment, based on \emph{observations},
-\emph{prior knowledge}, \emph{goals/preferences}, its \emph{abilities}
-and sometimes \emph{past experience}.
-
-\begin{figure}[H]
-\centering{}\includegraphics[width=0.6\columnwidth]{img/representation}
-\end{figure}
-
-\paragraph{Representation / Knowledge Schema}
-
-Form of knowledge used in an agent.
-
-\paragraph{Representation}
-
-Internal representation / formalisation of knowledge. Should be:
-\begin{itemize}
-\item \emph{Rich enough to express knowledge} needed to solve the problem.
-\item \emph{Close to the problem}: declarative, compact and easy to maintain.
-\item \emph{Amenable to efficient computation}: able to trade of accuracy
-and computation time.
-\item \emph{Learnable}: can be automatically acquired from people, past
-experience, data.
-\end{itemize}
-
-\paragraph{Knowledge Base}
-
-Representation of all the knowledge that is stored in an agent.
-
-\paragraph{Solutions}
-\begin{itemize}
-\item \emph{Optimal}: best solutions according to some criteria.
-\item \emph{Satisficing}: good enough according to some notion of an adequate
-solution.
-\item \emph{Approximately optimal}: close enough to the optimal solution.
-\item \emph{Probable}: likely to be a solution.
-\end{itemize}
-
-\paragraph{From Problem to Representation}
-\begin{itemize}
-\item What level of abstraction?
-\begin{itemize}
-\item High-level description is harder for a machine to comprehend. May
-abstract away important details.
-\item Low-level description can be more accurate and predictive. But more
-difficult to reason with \textemdash{} more steps / actions to choose
-from.
-\item Multiple levels of abstraction can solve these problems.
-\end{itemize}
-\end{itemize}
-
-\paragraph{Reasoning}
-
-Process made by a computational agent when searching for ways to determine
-how to complete its task.
-\begin{itemize}
-\item \emph{Offline}: background knowledge needed to solve task is precomputed.
-\item \emph{Online}: agents sense the environment to collect and use this
-data along with background knowledge, to decide at execution time
-what action to take.
-\end{itemize}
-
-\paragraph{Key Decisions}
+An \emph{abductive solution} is a set $\Delta$ of ground literals
+that are:
 \begin{enumerate}
-\item \emph{Model of the environment}: can be expressed in terms of states
-/ features / individuals and relationships between them.
-\item \emph{Uncertainty}: on state (partially observable state) / effects
-of actions.
-\item \emph{Preferences}: trade-off between desirability of various outcomes.
-\item \emph{Number of agents}: may be adversarial / cooperative.
+\item \emph{Basic}: should be restricted to \emph{aducibles} (ground literals
+with predicates that are not defined in the theory).
+\item \emph{Minimal}: should not be subsumed by other explanations.
+\item \emph{Consistent}: with the given theory, including integrity constraints.
 \end{enumerate}
+Formally:
+\begin{enumerate}
+\item $\Delta\subseteq A$: belongs to aducibles.
+\item $KB\cup\Delta\vDash G$: provides missing information needed to solve
+goal.
+\item $KB\cup\Delta\not\vDash\bot$: consistent with knowledge base.
+\item $KB\cup\Delta\vDash IC$: satisfies integrity constraints.
+\end{enumerate}
+
+\subsection{Abduction by Extending SLDNF}
+
+\paragraph{Abductive Derivation}
+\begin{itemize}
+\item Perform SLDNF but maintain an accumulator $\Delta$ to which unproved
+sub-goals are added as assumptions.
+\item Order in which literals appear in a clause only influences order in
+which aducibles are added to explanation (not the explanation itself).
+\end{itemize}
+
+\paragraph{Consistency Derivation (Special Cases)}
+\begin{itemize}
+\item \emph{Integrity constraints}: making an assumption on aducibles in
+integrity constraints requires checking the satisfiability of these
+integrity constraints.
+\begin{itemize}
+\item Resolve assumed literal with all relevant integrity constraints and
+ensure it fails.
+\end{itemize}
+\item \emph{Negation as failure}: requires adding a consistency phase: look
+for explanations, in terms of aducibles, for failure.
+\begin{itemize}
+\item Implicitly add all negative literals to $A$.
+\item Implicitly add $\leftarrow P,\text{not }P$ to $IC$ for all predicates
+$P$.
+\end{itemize}
+\end{itemize}
+
+\subsection{Operational Semantics of Abduction}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\columnwidth]{img/abduction-example}
+\end{figure}
+
+\paragraph{Abductive Phase}
+
+Consider each literal in the goal, left to right. Start with an abductive
+phase.
+\begin{enumerate}
+\item \emph{The current goal is not an aducible}. Initiate SLDNF derivation
+with current goal to be proved by refutation. If literal is positive,
+use normal resolution, otherwise go to case 3.
+\item \emph{The current goal is an aducible}. If the goal is already part
+of $\Delta$, then the resolution is already proved and we proceed
+to the next goal.
+\item \emph{The current goal is an aducible not yet assumed}. Assume the
+literal. Trigger a consistency phase (failure derivation). If it does
+derive a failure, continue with the updated $\Delta$.
+\end{enumerate}
+
+\paragraph{Consistency Phase}
+
+In the consistency phase, consider each literal from each constraint
+(denial) which includes the assumed literal.
+\begin{enumerate}
+\item \emph{The literal is not an aducible}. Then apply a SLDNF failure
+derivation of this literal.
+\item \emph{The literal is already assumed in} $\Delta$. This literal succeeds,
+so we need to check the rest to prove that it fails.
+\item \emph{The literal's negation is already assumed in} $\Delta$. This
+literal fails, and so the current constraint is satisfied. Continue
+to the next constraint.
+\item \emph{Otherwise}. Trigger an abductive derivation of this literal's
+negation. If it succeeds, then this constraint is satisfied. Continue
+to the next constraint with the updated $\Delta$.
+\end{enumerate}
+
+\subsection{Semantic Properties of Abduction}
+
+\paragraph{Knowledge Assimilation}
+
+Explanation of new information computed abductively and added to $KB$.
+
+\paragraph{Non-Monotonicity}
+
+Use abduction for default reasoning. E.g. suppose $\text{fly}\left(X\right)\leftarrow\text{bird}\left(X\right)$
+by default, but $\text{bird}\left(X\right)\leftarrow\text{penguin}\left(X\right)$
+and $\lnot\text{fly}\left(X\right)\leftarrow\text{penguin}\left(X\right)$:
+
+\begin{align*}
+KB & \begin{cases}
+\text{bird}\left(X\right)\leftarrow\text{penguin}\left(X\right)\\
+\text{not\_fly}\left(X\right)\leftarrow\text{penguin}\left(X\right)\\
+\text{fly}\left(X\right)\leftarrow\text{bird}\left(X\right),\text{birdsFly}\left(X\right)
+\end{cases}\\
+IC & \leftarrow\text{birdsFly}\left(X\right),\text{not\_fly}\left(X\right)
+\end{align*}
+
+Or using NAF:
+
+\begin{align*}
+KB & \begin{cases}
+\text{bird}\left(X\right)\leftarrow\text{penguin}\left(X\right)\\
+\text{abnormal}\left(X\right)\leftarrow\text{penguin}\left(X\right)\\
+\text{fly}\left(X\right)\leftarrow\text{bird}\left(X\right),\text{not abnormal}\left(X\right)
+\end{cases}\\
+IC & \emptyset\text{ (\ensuremath{\rightarrow\text{abnormal}\left(X\right),\text{not abnormal}\left(X\right)} implicitly)}
+\end{align*}
+
+I.e. $KB\vdash Q$ under SLDNF if $Q$ has an abductive solution after:
+\begin{enumerate}
+\item Renaming all uses of $\text{not }q\left(X\right)$ to $q*\left(X\right)$.
+\item Adding $q*\left(X\right),q\left(X\right)$ to $IC$.
+\end{enumerate}
+
+\subsection{Applications of Abduction}
+\begin{itemize}
+\item Diagnosis Problems
+\item Planning
+\end{itemize}
 
 \end{document}
