@@ -215,6 +215,7 @@ Reducing coupling reduces fragility and allows reuse.
 \item \emph{Cohesion}: An object should have one basic responsibility. Increasing
 cohesion makes objects easier to reason about and reuse.
 \end{itemize}
+We can reduce coupling by using interfaces as roles.
 
 \section{Metrics}
 
@@ -263,7 +264,9 @@ code.
 
 \section{Design Patterns}
 
-\subsection{Null Object Pattern}
+\subsection{Behavioural Patterns}
+
+\subsubsection{Null Object Pattern}
 
 \paragraph{Problem}
 
@@ -275,19 +278,11 @@ Use an interface and add a Null Object class that does nothing.
 
 \subsubsection*{Example}
 
-\begin{lstlisting}[language=Java,basicstyle={\footnotesize\ttfamily},commentstyle={\color{gray}\itshape}]
-interface Track {
-  public void play ();
-}
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.4\columnwidth]{img/null-object}
+\end{figure}
 
-class NullTrack implements Track {
-  public void play () {
-    // do nothing
-  }
-} 
-\end{lstlisting}
-
-\subsection{Template Method Pattern}
+\subsubsection{Template Method Pattern}
 
 \paragraph{Problem}
 
@@ -322,7 +317,7 @@ code.
 
 Immobility caused by coupling.
 
-\subsection{Strategy Pattern}
+\subsubsection{Strategy Pattern}
 
 \paragraph{Problem}
 
@@ -342,4 +337,60 @@ Extend via delegation.
 \paragraph{Benefits}
 
 Does the same as the template method but with looser coupling.
+
+\subsection{Creational Patterns}
+
+\subsubsection{Factory Pattern}
+
+\paragraph{Problems}
+\begin{itemize}
+\item Constructors are not clear.
+\item Required type may not be known until runtime.
+\end{itemize}
+
+\paragraph{Solution}
+
+Name constructors.
+
+\subsubsection*{Examples}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.45\columnwidth]{img/factory}\includegraphics[width=0.5\columnwidth]{img/factory2}
+\end{figure}
+
+\subsubsection{Builder Pattern}
+
+\paragraph{Problem}
+
+May be many constructor parameters.
+
+\paragraph{Solution}
+
+Collect object's configuration parameters.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.55\columnwidth]{img/builder}\includegraphics[width=0.45\columnwidth]{img/builder2}
+\end{figure}
+
+\subsubsection{Singleton Pattern}
+
+\paragraph{Problem}
+
+\emph{Require} that you only have one of a type of object.
+
+\paragraph{Solution}
+
+Keep a single instance and make the constructor private.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\columnwidth]{img/singleton}
+\end{figure}
+
+\paragraph{Drawbacks}
+
+Accessing object requires tight coupling.
 \end{document}
