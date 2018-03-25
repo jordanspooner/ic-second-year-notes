@@ -349,6 +349,40 @@ Keep a single instance and make the constructor private.
 
 Accessing object requires tight coupling.
 
+\subsection{Concurrency Patterns}
+
+\subsubsection{Command Pattern}
+
+\paragraph{Problem}
+
+Want to queue / log executed commands.
+
+\paragraph{Solution}
+
+Wrap up a piece of behaviour to do now or later, in an object.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.5\columnwidth]{img/command}
+\end{figure}
+
+\subsubsection{Publish-Subscribe Pattern}
+
+\paragraph{Problem}
+
+Want to balance load.
+
+\paragraph{Solution}
+
+Keep a queue of commands.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.5\columnwidth]{img/pubsub}
+\end{figure}
+
 \section{Metrics}
 
 \paragraph{Coupling}
@@ -396,7 +430,8 @@ code.
 
 \section{Legacy Systems}
 
-Software you have inherited and that is of value to you.
+\emph{Legacy system}: software you have inherited and that is of value
+to you.
 
 \paragraph{Key Ideas}
 \begin{itemize}
@@ -414,6 +449,23 @@ decision to use one behaviour or another.
 \item \emph{Sensing}: verify correct calls are made when we can't access
 values our code computes.
 \end{itemize}
+\end{itemize}
+
+\section{Concurrency}
+
+\paragraph{Key Ideas}
+
+Try to separate code that manages threads and concurrent execution.
+\begin{itemize}
+\item Implementing \texttt{Runnable} instead of extending \texttt{Thread}
+reduces coupling.
+\item \texttt{Runnable}s can be run synchronously or asynchronously.
+\item \texttt{Callable}s can also return values and throw exceptions.
+\item \texttt{Execcutor}s can maintain a queue of commands. Queues can act
+as load balancers.
+\item \texttt{Future}s allow us to wait for a result.
+\item \texttt{ExeccutorService}s allow us wait for all tasks to complete
+(or use a latch).
 \end{itemize}
 
 \end{document}
