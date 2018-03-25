@@ -310,6 +310,31 @@ complexity.}}\tabularnewline
 
 Observable, discrete, deterministic, known.
 
+\subsection{Representation}
+
+\paragraph{Feature-centric}
+
+For each feature define:
+\begin{itemize}
+\item \emph{Causal rules}: specify when a feature gets a new value.
+\item \emph{Frame rules}: specify when a feature keeps its value.
+\end{itemize}
+We still need preconditions for actions.
+
+\paragraph{Action-centric}
+
+For each action define:
+\begin{itemize}
+\item \emph{Preconditions}: features that must be true for an action to
+occur.
+\item \emph{Effects}: features that change as a result of the actions.
+\end{itemize}
+Assume:
+\begin{itemize}
+\item Unmentioned \emph{primitive} features aren't changed.
+\item \emph{Derived} features are expressed in terms of primitive features.
+\end{itemize}
+
 \paragraph{STRIPS Language for Planning}
 \begin{enumerate}
 \item \emph{States} - conjunctions of ground atoms.
@@ -350,9 +375,10 @@ obtained from the specification of the planning problem.
 e.g. by ignoring preconditions and effects not in goal.
 \end{enumerate}
 \item \emph{Regression planning} (backward) - blind search backwards from
-the goal.
+the goal (try to achieve sub-goals).
 \begin{enumerate}
-\item \emph{Problem}: Non-interleaved regression planning is incomplete
+\item \emph{Problem}: We may have to search back from many goal states.
+\item \emph{Problem}: Non-interleaved regression planning is incomplete.
 \end{enumerate}
 \end{enumerate}
 
@@ -1051,4 +1077,71 @@ I.e. $KB\vdash Q$ under SLDNF if $Q$ has an abductive solution after:
 \item Planning
 \end{itemize}
 
+\paragraph{Event Calculus}
+
+Logical framework for representing and reasoning about events and
+effects over time.
+\begin{itemize}
+\item \emph{Ontology} consists of events, fluents and time.
+\item \emph{Signature} includes:
+\begin{itemize}
+\item $\text{initiates}(e,f,t)$: Fluent $f$ starts to hold after event
+$e$ at time $t$.
+\item $\text{terminates}(e,f,t)$: Fluent $f$ stops holding after event
+$e$ at time $t$.
+\item $\text{initially}(f)$: Fluent $f$ holds at the beginning.
+\item $\text{happens}(e,t)$: Event $e$ happens at time $t$.
+\item $\text{holdsAt}(f,t)$: Fluent $f$ holds at time $t$.
+\item $\text{clipped}(t_{1},f,t_{2})$: Fluent $f$ is terminated between
+times $t_{1}$ and $t_{2}$.
+\end{itemize}
+\end{itemize}
+Description includes two theories:
+\begin{itemize}
+\item \emph{Domain independent theory}: General rules for when fluents hold
+at certain times.
+\begin{itemize}
+\item $\text{holdsAt}\left(f,t_{2}\right)\leftarrow\text{initially}\left(f\right),\text{not clipped}\left(0,f,t_{2}\right)$:
+initially true fluents hold until an event terminates them.
+\item $\text{holdsAt}\left(f,t_{2}\right)\leftarrow\text{initiates}\left(a,f,t_{1}\right),\text{happens}\left(a,t_{1}\right),t1<t2,\text{not clipped}\left(t_{1},f,t_{2}\right)$:
+fluents initiated by an event hold until an event terminates them.
+\item $\text{clipped}\left(t_{1},f,t\right)\leftarrow\text{happens}\left(a,t_{2}\right),\text{terminates}\left(e,f,t_{2}\right),t_{1}<t_{2},t_{2}<t$:
+fluents only change status via terminating events.
+\end{itemize}
+\item \emph{Domain dependent theory}: Particular effects of events or actions,
+using $\text{initiates}(.)\leftarrow\text{BODY}$ and $\text{terminates}(.)\leftarrow\text{BODY}$,
+as well as initial state (using $\text{initially}(.)$) and event
+occurrences (using $\text{happens}(.)$).
+\begin{itemize}
+\item Preconditions are captured in the conditions in initiates axioms.
+\item Effects are expressed by head atoms of initiates and terminates rules.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Event Calculus Abductive Planning}
+
+Given
+\begin{itemize}
+\item $DI$: domain independent theory.
+\item $DD$: domain dependent theory.
+\item $IC$: integrity constraints.
+\item $G$: goal state.
+\end{itemize}
+A plan is some $P=\left(As,TC\right)$ where
+\begin{itemize}
+\item $As=\left\{ \text{happens}\left(e_{i},t_{i}\right),\text{happens}\left(e_{j},t_{j}\right),\dots\right\} $.
+\item $TC=\left\{ t_{i}<t_{j},\dots\right\} $.
+\end{itemize}
+such that
+\begin{itemize}
+\item $DI\cup DD\cup P\vDash G$.
+\item $DI\cup DD\cup P\cup IC$ is consistent.
+\end{itemize}
+Setting $KB=DI\cup DD$ and $\Delta=P$:
+\begin{itemize}
+\item $KB\cup\Delta\vDash G$.
+\item $KB\cup\Delta\cup IC\not\vDash\bot$.
+\end{itemize}
+
+\section{SAT Solving}
 \end{document}
