@@ -867,7 +867,7 @@ $S\cup\left\{ r\left(a\right)\right\} \not\vdash_{\text{SLDNF}}p\left(a\right)$.
 
 \subsection{Semantics for Normal Logic Programs}
 
-\subsubsection{Completion Semantics}
+\subsubsection{(Clark) Completion Semantics}
 
 The \emph{completion} of $S$ is found by:
 \begin{enumerate}
@@ -1230,6 +1230,50 @@ clauses, and add $L$ to the assignment.
 from $\left\{ C_{k},L\right\} $ and $\left\{ C_{m},\lnot L\right\} $,
 branch the computation (adding $L$ and $\lnot L$ to each branch's
 assignment respectively), and regenerate $Sc$ using the UNIT rule.
+\end{itemize}
+
+\section{Answer Set Semantics}
+
+All rules must be safe:
+\begin{itemize}
+\item A rule $R$ is safe, if every variable in $R$ occurs in $\text{body}^{+}\left(R\right)$.
+\end{itemize}
+To check with $X$ is an answer set of a program $P$:
+\begin{enumerate}
+\item Find the \emph{relevant grounding} $\mathcal{RG}\left(P\right)$:
+\begin{enumerate}
+\item For each rule $R$ in $P$, generate all rules which are ground instances
+$R_{g}$ of $R$, s.t. for each atom $A$ in $\text{body}^{+}\left(R_{g}\right)$
+there is at least one rule already in $\mathcal{RG}\left(P\right)$
+with $A$ as the head.
+\end{enumerate}
+\item Calculate the reduct of $\mathcal{RG}\left(P\right)$ w.r.t. $X$,
+$\mathcal{RG}\left(P\right)^{X}$:
+\begin{enumerate}
+\item Remove any rule whose body contains the negation of an atom in $X$.
+\item Delete any negation from the remaining rules.
+\end{enumerate}
+\item Check whether $X=M\left(\mathcal{RG}\left(P\right)^{X}\right)$ (the
+LHM of the reduct).
+\begin{enumerate}
+\item Find LHM by starting with $M=\{\}$ iteratively adding any atom that
+is the head of a rule in $P$ whose body is already satisfied by $M$.
+\end{enumerate}
+\end{enumerate}
+
+\paragraph{Relationship between ASP and Clark Completion}
+
+The answer sets of $P$ are the models of $\text{completion}$$\left(P\right)$
+which have no non-empty unfounded subsets w.r.t. $P$.
+\begin{itemize}
+\item Given an interpretation $I$, $U\subseteq I$ is an \emph{unfounded
+subset} w.r.t. $P$ if there's no rule $R$ in $P$ that proves anything
+in $U$ without using elements of $U$. I.e. no rule s.t.:
+\begin{enumerate}
+\item $I$ satisfies $\text{body}\left(R\right)$.
+\item $\text{head}\left(R\right)\in U$.
+\item $I\cap\text{body}^{+}\left(R\right)=\emptyset$.
+\end{enumerate}
 \end{itemize}
 
 \end{document}
