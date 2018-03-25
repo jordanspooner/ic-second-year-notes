@@ -217,51 +217,6 @@ cohesion makes objects easier to reason about and reuse.
 \end{itemize}
 We can reduce coupling by using interfaces as roles.
 
-\section{Metrics}
-
-\paragraph{Coupling}
-\begin{itemize}
-\item \emph{Afferent coupling}: How many other classes use (\uline{a}rrive
-at) this class (measures \emph{responsibility}).
-\item \emph{Efferent coupling}: How many classes are used by (\uline{e}xit)
-this class (measures \emph{independence}).
-\item \emph{Instability}: $\text{Ce}/\left(\text{Ce}+\text{Ca}\right)$.
-Core parts should be stable. Parts at the edges, e.g. UI, don't need
-to be.
-\end{itemize}
-
-\paragraph{Cyclomatic Complexity}
-\begin{itemize}
-\item Counts nodes and edges in the control flow of a program (number of
-possible different executions).
-\item Gives lower bound on number of tests required.
-\end{itemize}
-
-\paragraph{WILT}
-
-Whitespace Integrated over Lines of Text is strongly correlated with
-cyclomatic complexity.
-
-\paragraph{ABC Metrics}
-
-Counts occurrences of:
-\begin{itemize}
-\item \uline{A}ssignments
-\item \uline{B}ranches
-\item \uline{C}onditions
-\end{itemize}
-\emph{Flog} is an ABC metric tailored to Ruby. \emph{Flay} identifies
-duplication.
-
-\paragraph{Lifeline}
-
-Graph complexity over time.
-
-\paragraph{Turbulence}
-
-Number of commits made to each file, compared against complexity of
-code.
-
 \section{Design Patterns}
 
 \subsection{Behavioural Patterns}
@@ -393,4 +348,72 @@ Keep a single instance and make the constructor private.
 \paragraph{Drawbacks}
 
 Accessing object requires tight coupling.
+
+\section{Metrics}
+
+\paragraph{Coupling}
+\begin{itemize}
+\item \emph{Afferent coupling}: How many other classes use (\uline{a}rrive
+at) this class (measures \emph{responsibility}).
+\item \emph{Efferent coupling}: How many classes are used by (\uline{e}xit)
+this class (measures \emph{independence}).
+\item \emph{Instability}: $\text{Ce}/\left(\text{Ce}+\text{Ca}\right)$.
+Core parts should be stable. Parts at the edges, e.g. UI, don't need
+to be.
+\end{itemize}
+
+\paragraph{Cyclomatic Complexity}
+\begin{itemize}
+\item Counts nodes and edges in the control flow of a program (number of
+possible different executions).
+\item Gives lower bound on number of tests required.
+\end{itemize}
+
+\paragraph{WILT}
+
+Whitespace Integrated over Lines of Text is strongly correlated with
+cyclomatic complexity.
+
+\paragraph{ABC Metrics}
+
+Counts occurrences of:
+\begin{itemize}
+\item \uline{A}ssignments
+\item \uline{B}ranches
+\item \uline{C}onditions
+\end{itemize}
+\emph{Flog} is an ABC metric tailored to Ruby. \emph{Flay} identifies
+duplication.
+
+\paragraph{Lifeline}
+
+Graph complexity over time.
+
+\paragraph{Turbulence}
+
+Number of commits made to each file, compared against complexity of
+code.
+
+\section{Legacy Systems}
+
+Software you have inherited and that is of value to you.
+
+\paragraph{Key Ideas}
+\begin{itemize}
+\item \emph{Understand system structure}: dependency graphs / dependency
+structure matrices.
+\item \emph{Preserve existing behaviour}: keep stuff that works and don't
+change too much.
+\item \emph{Test harness}: introduce automated tests around any changes
+you make.
+\begin{itemize}
+\item \emph{Seams}: place where you can alter behaviour without editing
+it in that place.
+\item Every seam has an \emph{enabling point}: place whee you can make the
+decision to use one behaviour or another.
+\item \emph{Sensing}: verify correct calls are made when we can't access
+values our code computes.
+\end{itemize}
+\end{itemize}
+
 \end{document}
