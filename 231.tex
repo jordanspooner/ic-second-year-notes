@@ -1144,4 +1144,92 @@ Setting $KB=DI\cup DD$ and $\Delta=P$:
 \end{itemize}
 
 \section{SAT Solving}
+
+Given a propositional formula $\varphi$ (usually in CNF), SAT on
+$\varphi$ means to determine if there exists a variable assignment
+under which $\varphi$ evaluates to true.
+
+\paragraph{Why CNF?}
+\begin{itemize}
+\item Efficient algorithms to transform formulae into CNF.
+\item Can exploit CNF: easier to detect conflicts.
+\end{itemize}
+
+\paragraph{SAT Algorithms}
+\begin{itemize}
+\item Complete algorithms:
+\begin{itemize}
+\item \emph{Proof systems}: e.g. truth table / natural deduction.
+\item \emph{Davis-Putman} (DP): based on resolution.
+\item \emph{Stalmark's method}.
+\item \emph{Davis-Logemann-Loveland} (DLL/DPLL): search-based.
+\item \emph{Conflict-Driven Clause Learning} (CDCL).
+\end{itemize}
+\item Incomplete algorithms:
+\begin{itemize}
+\item Local search / hill climbing.
+\item Genetic algorithms.
+\end{itemize}
+\end{itemize}
+
+\subsection{DP Algorithm}
+
+For a set $S$ of clauses, for each variable in $S$:
+\begin{enumerate}
+\item For each clause $C_{i}$ containing the variable and each clause $C_{j}$
+containing its negation, resolve $C_{i}$ and $C_{j}$. (Fail if resolvent
+is $\square$).
+\item Add the resolvent to $S$.
+\item Remove $S$ from all clauses.
+\end{enumerate}
+Final set of variables informs a \emph{partial assignment}.
+
+\paragraph{Improvements}
+\begin{itemize}
+\item Ignore when resolution generates a tautology.
+\item \textbf{Pure literal rule}
+\begin{itemize}
+\item \emph{Pure literal}: only ever occurs with the same polarity. 
+\item Clauses containing pure literals can be removed.
+\item Remember required assignments.
+\end{itemize}
+\item \textbf{Unit propagation rule}
+\begin{itemize}
+\item \emph{Unit clause}: clause with a single literal.
+\item Satisfy the literal by making it true.
+\item Propagate the assignment by removing clauses that contain the literal,
+and removing the negated literal from any clauses that contain it.
+\end{itemize}
+\end{itemize}
+
+\subsection{DLL Algorithm}
+
+\paragraph{Key Idea}
+
+Instead of eliminating variables, split on a variable at each step.
+
+\paragraph{Simplifications}
+
+Given a set $Sc$ of clauses:
+\begin{itemize}
+\item $\text{UNSAT}\left(Sc\right)$: if $Sc$ contains $\{\}$ then formula
+is unsatisfiable.
+\item $\text{SAT}\left(Sc\right)$: if $Sc=\{\}$ then formula is satisfiable.
+\item $\text{MULT}\left(L,Sc\right)$: if literal occurs more than once
+in a clause in $Sc$, all but one can be deleted.
+\item $\text{SUB}\left(C,Sc\right)$: A clause in $Sc$ can be deleted if
+it is a superset of another clause in $Sc$.
+\item $\text{TAUT}\left(C,Sc\right)$; A clause in $Sc$ that contains a
+literal and its negation can be deleted.
+\item $\text{PURE}\left(L,Sc\right)$: If $L$ is a pure literal in $Sc$,
+delete all clauses containing $L$ and add $L$ to the assignment.
+\item $\text{UNIT}\left(L,Sc\right)$: If $Sc$ contains a unit clause $\{L\}$,
+delete all clauses including $L$, remove $\lnot L$ from the remaining
+clauses, and add $L$ to the assignment.
+\item $\text{SPLIT}\left(L,Sc\right)$: If $Sc$ contains clauses of the
+from $\left\{ C_{k},L\right\} $ and $\left\{ C_{m},\lnot L\right\} $,
+branch the computation (adding $L$ and $\lnot L$ to each branch's
+assignment respectively), and regenerate $Sc$ using the UNIT rule.
+\end{itemize}
+
 \end{document}
