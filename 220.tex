@@ -381,6 +381,65 @@ Keep a single instance and make the constructor private.
 
 Accessing object requires tight coupling.
 
+\subsection{Structural Patterns}
+
+\subsubsection{Adapter Pattern}
+
+\paragraph{Problem}
+
+Have an $X$ but need a $Y$. E.g. translate a message from a common
+format used in a message bus.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\columnwidth]{img/adapter}
+\end{figure}
+
+\subsubsection{Decorator Pattern}
+
+\paragraph{Problem}
+
+Have an $X$ but want a better $X$.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\columnwidth]{img/decorator}
+\end{figure}
+
+\subsubsection{Facade Pattern}
+
+\paragraph{Problem}
+
+Have an $X$ but want a simpler $X$.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.4\columnwidth]{img/facade}
+\end{figure}
+
+\subsubsection{Proxy Pattern}
+
+\paragraph{Problem}
+
+I have an $X$ but it's too slow.
+
+\paragraph{Solution}
+
+Control access to a surrogate object.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\columnwidth]{img/proxy}
+\end{figure}
+
+\paragraph{Extensions}
+
+\emph{Caching} can reduce latency of subsequent calls.
+
 \subsection{Architectural Styles}
 
 \subsubsection{Model-View-Controller}
@@ -432,7 +491,7 @@ Keep a queue of commands.
 \subsubsection*{Example}
 
 \begin{figure}[H]
-\centering{}\includegraphics[width=0.5\columnwidth]{img/pubsub}
+\centering{}\includegraphics[width=0.4\columnwidth]{img/pubsub}
 \end{figure}
 
 \subsubsection{Map-Reduce Pattern}
@@ -448,8 +507,23 @@ Divide computation into map and reduce phases to allow easy parallelisation.
 \subsubsection*{Example}
 
 \begin{figure}[H]
-\centering{}\includegraphics[width=0.45\columnwidth]{img/mapreduce}
+\centering{}\includegraphics[width=0.4\columnwidth]{img/mapreduce}
 \end{figure}
+
+\subsubsection{Ports and Adapters / Hexagonal Architecture}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.5\columnwidth]{img/hexagonal}
+\end{figure}
+\begin{itemize}
+\item Separate core application logic from services which the application
+depends on.
+\item Access other services only through adapters.
+\item \emph{Unit test} individual objects, mocking external services at
+the adapter level.
+\item \emph{Integration test} the adapters.
+\item \emph{System tests} run a small set of end-to-end test scenarios.
+\end{itemize}
 
 \section{Metrics}
 
@@ -560,4 +634,56 @@ button.addActionListener(new ActionListener() {
 \end{lstlisting}
 \end{itemize}
 
+\section{Web Applications}
+
+\paragraph{Key Ideas}
+\begin{itemize}
+\item \emph{Serve data rather than pages}: providing an API. We can then:
+\begin{itemize}
+\item Process and render (e.g. using AJAX) the data (to many clients).
+\item Use it in another server side application.
+\end{itemize}
+\item \emph{Model} often involves business logic, data from DBs, etc.
+\item \emph{Controller} has to handle \emph{Routing} / \emph{parameters}
+/ GET and POST \emph{requests}.
+\item Provide \emph{views} (templates) for different clients.
+\item \emph{Cloud} hosting often preferred to minimise responsibility/downtime
+and adapt quickly to demand.
+\end{itemize}
+
+\section{Distribution and Remoting}
+
+\paragraph{Key Ideas}
+\begin{itemize}
+\item Use \emph{HTTP} (methods, status codes) to make requests.
+\item \emph{REST} (Representational State Transfer): resources identified
+by URIs and have a representation (e.g. using XML or JSON).
+\item Hide away mechanics of how services are accessed.
+\item \emph{Richardson maturity model}:
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.25\columnwidth]{img/rmm}
+\end{figure}
+\begin{itemize}
+\item Level 0: Don't use URIs or different methods. Usually use a single
+URI.
+\item Level 1: Use URIs to represent resources, but don't HTTP use methods.
+\item Level 2: Use URIs and different methods, and return appropriate status
+codes.
+\item Level 3: Fully RESTful. Representations contain hyperlinks to other
+resources. E.g. do a search for records rather than looking up a given
+record.
+\end{itemize}
+\end{itemize}
+
+\section{Continuous Delivery}
+
+\paragraph{Agile Methods}
+
+E.g. Extreme Programming, Scrum, Kanban. Favour an iterative approach
+with \emph{small development cycles}.
+
+\paragraph{Continuous Integration}
+
+Developers should merge in work often to avoid integration problems.
+Run automated tests to keep \texttt{master} healthy.
 \end{document}
