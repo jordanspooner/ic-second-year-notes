@@ -1,4 +1,4 @@
-COURSES = 202 211 212 220 221 231 233 240 245 
+COURSES = 202 211 212 220 221 231 240 245 
 TEXS = $(foreach course, $(COURSES), $(course).tex)
 PDFS = $(foreach course, $(COURSES), $(course).pdf)
 
