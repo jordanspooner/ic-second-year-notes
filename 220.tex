@@ -293,6 +293,38 @@ Extend via delegation.
 
 Does the same as the template method but with looser coupling.
 
+\subsubsection{Observer Pattern}
+
+\paragraph{Problem}
+
+E.g. do $X$ when someone presses button $Y$.
+
+\paragraph{Solution}
+
+Subscribe to changes of state.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\columnwidth]{img/observer}
+\end{figure}
+
+\subsubsection{Command Pattern}
+
+\paragraph{Problem}
+
+Want to queue / log executed commands.
+
+\paragraph{Solution}
+
+Wrap up a piece of behaviour to do now or later, in an object.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.5\columnwidth]{img/command}
+\end{figure}
+
 \subsection{Creational Patterns}
 
 \subsubsection{Factory Pattern}
@@ -349,29 +381,49 @@ Keep a single instance and make the constructor private.
 
 Accessing object requires tight coupling.
 
-\subsection{Concurrency Patterns}
+\subsection{Architectural Styles}
 
-\subsubsection{Command Pattern}
+\subsubsection{Model-View-Controller}
 
 \paragraph{Problem}
 
-Want to queue / log executed commands.
+Same data but different views.
 
 \paragraph{Solution}
 
-Wrap up a piece of behaviour to do now or later, in an object.
+Separation of concerns in interactive apps.
 
 \subsubsection*{Example}
 
 \begin{figure}[H]
-\centering{}\includegraphics[width=0.5\columnwidth]{img/command}
+\centering{}\includegraphics[width=0.45\columnwidth]{img/mvc}
 \end{figure}
+
+\subsubsection{Presentation-Abstraction-Control}
+
+\paragraph{Problem}
+
+GUIs with hierarchical structure.
+
+\paragraph{Solution}
+
+Define a tree of MVC agents that communicate up and down.
+
+\subsubsection*{Example}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.4\columnwidth]{img/pac}
+\end{figure}
+
+\paragraph{Alternative}
+
+Use an event bus to allow communication between all agents.
 
 \subsubsection{Publish-Subscribe Pattern}
 
 \paragraph{Problem}
 
-Want to balance load.
+Producers and consumers / balancing load.
 
 \paragraph{Solution}
 
@@ -387,7 +439,7 @@ Keep a queue of commands.
 
 \paragraph{Problem}
 
-Working on large datasets.
+Large scale data processing.
 
 \paragraph{Solution}
 
@@ -482,6 +534,30 @@ as load balancers.
 \item \texttt{Future}s allow us to wait for a result.
 \item \texttt{ExeccutorService}s allow us wait for all tasks to complete
 (or use a latch).
+\end{itemize}
+
+\section{Interactive Applications}
+
+\paragraph{Graphical User Interfaces}
+\begin{itemize}
+\item \emph{Use} a \texttt{JFrame} (rather than \emph{extending} it).
+\item Define a \texttt{JPanel}, to which we \texttt{add} \texttt{JButton}s,
+\texttt{JTextField}s, .... 
+\item Add the panel to the frame using \texttt{frame.getContentPane().add(panel)}.
+\item Make the window appear using \texttt{frame.setVisible(true)}.
+\end{itemize}
+
+\paragraph{Observers}
+\begin{itemize}
+\item Use anonymous inner classes to implement \texttt{ActionListener}s.
+E.g.
+\begin{lstlisting}
+button.addActionListener(new ActionListener() {
+	public void actionPerformed(ActionEvent actionEvent) {
+		// ... do something ...
+	}
+});
+\end{lstlisting}
 \end{itemize}
 
 \end{document}
