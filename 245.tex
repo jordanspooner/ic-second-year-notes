@@ -142,7 +142,123 @@ of possible values.
 
 \subsection{Discrete Random Variables}
 
-TODO
+\subsubsection{Definition}
+
+$X$ is discrete iff $\text{range}\left(X\right)$ is countable.
+\[
+p\left(x_{i}\right)=F\left(x_{i}\right)-F\left(x_{i-1}\right)
+\]
+\[
+F\left(x_{i}\right)=\sum_{j=1}^{i}p\left(x_{j}\right)
+\]
+\begin{itemize}
+\item $p_{X}$ is the \emph{probability mass function}.
+\item $F_{x}$ is the \emph{cumulative distribution function}.
+\end{itemize}
+
+\subsubsection{Expectation and Probability Generating Function}
+
+\paragraph{Mean $E\left(X\right)$}
+
+\[
+E_{X}\left(X\right)=\sum_{x}xp_{x}\left(x\right)
+\]
+
+\[
+E_{X}\left(aX+b\right)=aE_{X}\left(X\right)+b
+\]
+
+\paragraph{Variance $\text{Var}\left(X\right)$}
+
+\[
+\text{Var}_{X}\left(X\right)=E_{X}\left[\left(X-E_{X}\left(X\right)\right)^{2}\right]=E\left(X^{2}\right)-\left(E\left(X\right)\right)^{2}
+\]
+
+\[
+\text{Var}\left(aX+b\right)=a^{2}\text{Var}\left(X\right)
+\]
+
+\paragraph{Standard Deviation $\sigma_{X}\left(X\right)$}
+
+\[
+\sigma_{X}\left(X\right)=\sqrt{\text{Var}_{X}\left(X\right)}
+\]
+
+\paragraph{Skewness $\gamma_{1}$
+\[
+\gamma_{1}=\frac{E_{X}\left[\left(X-E_{X}\left(X\right)\right)^{3}\right]}{\sigma_{X}\left(X\right)^{3}}
+\]
+}
+
+\paragraph{Probability Generating Function $G_{X}\left(z\right)$
+\[
+G_{X}\left(z\right)=E_{X}\left(z^{X}\right)=\sum_{x}p_{X}\left(x\right)z^{x}
+\]
+}
+
+\paragraph{Moments $M_{n}$}
+\begin{itemize}
+\item The $n$th moment of a random variable $X$ is $M_{n}=E\left(X^{n}\right)$.
+\item The $n$th factorial moment is $M_{n}^{f}=E\left(X\left(X-1\right)\dots\left(X-n+1\right)\right)=G^{(n)}\left(1\right)$.
+\end{itemize}
+
+\paragraph{Sums of Random Variables}
+
+\begin{align*}
+E\left(S_{n}\right)=\sum_{i=1}^{n}E\left(X_{i}\right) &  & E\left(\frac{S_{n}}{n}\right)=\frac{\sum_{i=1}^{n}E\left(X_{i}\right)}{n}\\
+\text{Var}\left(S_{n}\right)=\sum_{i=1}^{n}\text{Var}\left(X_{i}\right) &  & \text{Var}\left(\frac{S_{n}}{n}\right)=\frac{\sum_{i=1}^{n}\text{Var}\left(X_{i}\right)}{n^{2}} &  & \left(X_{i}\text{ are independent}\right)\\
+G_{S_{n}}\left(z\right)=\prod_{i=1}^{n}G_{X_{i}}\left(z\right) &  &  &  & \left(X_{i}\text{ are independent}\right)
+\end{align*}
+
+\subsubsection{Discrete Distributions}
+
+\paragraph{Bernoulli $\text{Bernoulli}\left(p\right)$}
+\begin{itemize}
+\item $p\left(x\right)=p^{x}\left(1-p\right)^{1-x}$ for $x=0,1$.
+\item $\mu=p$.
+\item $\sigma^{2}=p\left(1-p\right)$.
+\end{itemize}
+
+\paragraph{Binomial $\text{Binomial}\left(n,p\right)$}
+\begin{itemize}
+\item $n$ identical \emph{independent} $\text{Bernoulli}\left(p\right)$
+trials.
+\item $p\left(x\right)=\left(\begin{array}{c}
+n\\
+x
+\end{array}\right)p^{x}\left(1-p\right)^{n-x}$ for $x=1,2,\dots,n$.
+\item $\mu=np$.
+\item $\sigma^{2}=np\left(1-p\right)$.
+\item $\gamma_{1}=\frac{1-2p}{\sqrt{np\left(1-p\right)}}$.
+\end{itemize}
+
+\paragraph{Geometric $\text{Geometric}\left(p\right)$}
+\begin{itemize}
+\item Potentially infinite sequence of \emph{independent} $\text{Bernoulli}\left(p\right)$
+trials.
+\item $p\left(x\right)=p\left(1-p\right)^{x-1}$ for $x=1,2,\dots$.
+\item $\mu=\frac{1}{p}$.
+\item $\sigma^{2}=np\left(1-p\right)$.
+\item $\gamma_{1}=\frac{1-2p}{\sqrt{1-p}}$.
+\end{itemize}
+
+\paragraph{Poisson $\text{Poi}\left(\lambda\right)$}
+\begin{itemize}
+\item $p\left(x\right)=\frac{e^{-\lambda}\lambda^{x}}{x!}$ for $x=0,1,2,\dots$.
+\item $\mu=\sigma^{2}=\lambda$.
+\item $\gamma_{1}=\frac{1}{\sqrt{\lambda}}$.
+\item $G\left(z\right)=e^{-\lambda\left(1-z\right)}$.
+\item When $p$ is small and $n$ is large, $\text{Binomial}\left(n,p\right)$
+is approximated by $\text{Poi}\left(n,p\right)$.
+\end{itemize}
+
+\paragraph{Uniform $\text{U}\left(\left\{ 1,2,\dots,n\right\} \right)$}
+\begin{itemize}
+\item $p\left(x\right)=\frac{1}{n}$ for $x=1,2,\dots,n$.
+\item $\mu=\frac{n+1}{2}$.
+\item $\sigma^{2}=\frac{n^{2}-1}{12}$.
+\item $\gamma_{1}=0$.
+\end{itemize}
 
 \subsection{Continuous Random Variables}
 
@@ -414,4 +530,22 @@ variance: exact CI is given by $\left[\overline{x}-t_{n-1,1-\frac{\alpha}{2}}\fr
 \section{Hypothesis Testing}
 
 TODO
+
+\subsection{Goodness of Fit}
+
+\paragraph{Chi-Square Statistic
+\[
+\chi^{2}=\sum_{i=1}^{k}\frac{\left(O_{i}-E_{i}\right)^{2}}{E_{i}}
+\]
+}
+\begin{itemize}
+\item Approximation is valid only if $\forall jE_{j}\geq5$.
+\item The \emph{rejection region} at the $100\alpha\%$ level is given by
+\[
+R=\left\{ x^{2}\mid x^{2}>\chi_{k-p-1,1-\alpha}^{2}\right\} 
+\]
+where $k$ is the number of terms summed and $p$ is the number of
+parameters being estimated.
+\end{itemize}
+
 \end{document}
