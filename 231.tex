@@ -1294,7 +1294,7 @@ If the body is satisfied by an answer set, then the number of $h_{i}$s
 should be between $\mathtt{lb}$ and $\mathtt{ub}$.
 
 \[
-\mathtt{lb}\left\{ h_{1},\dots,h_{m}\right\} \mathtt{ub}\;:-\;b_{1},\dots,b_{n}
+\mathtt{lb}\left\{ h_{1};\dots;h_{m}\right\} \mathtt{ub}\;:-\;b_{1},\dots,b_{n}
 \]
 
 Now when constructing the reduct:
@@ -1318,7 +1318,50 @@ Eliminates any answer that satisfies $b_{1}\land\dots\land b_{n}$.
 :-\;b_{1},\dots,b_{n}
 \]
 
-\subsection{Abduction in ASP}
+\paragraph{Abduction in ASP}
 
 Rewrite the aducibles as a choice rule, and the goal as a constraint.
+
+\subsection{Aggregates}
+
+\[
+\mathtt{lb\#agg}\left\{ e_{1};\dots;e_{n}\right\} \mathtt{ub}
+\]
+
+is satisfied by $X$ iff
+\[
+\mathtt{lb\#agg}\left(\mathrm{eval}\left(X,\left\{ e_{1},\dots,e_{n}\right\} \right)\right)\mathtt{ub}
+\]
+\begin{itemize}
+\item Variables which only occur inside aggregates are \emph{local}, and
+produce multiple aggregate elements, instead of multiple rules.
+\begin{itemize}
+\item \emph{Safety}: a rule with an aggregate is unsafe if a local variable
+occurs in an aggregate element but doesn't occur in a positive literal
+on the RHS of the element.
+\end{itemize}
+\item Semantics usually defined by $FLP$ reduct.
+\[
+P_{FLP}^{X}=\left\{ r\in P\mid X\vDash\text{body}\left(I\right)\right\} 
+\]
+but this doesn't always have a minimal model.
+\end{itemize}
+
+\subsection{Optimisation}
+
+\paragraph{Weak Constraints
+\[
+:\sim\:b_{1},\dots,b_{m}.\left[\mathtt{wt@lev},t_{1},\dots,t_{n}\right]
+\]
+}
+
+The score at a priority level $p$ is
+\[
+\text{score}\left(P,p,X\right)=\sum\mathtt{wt}.\left[\mathtt{wt@p},t_{1},\dots,t_{n}\right]_{\in\text{Weak}\left(P,X\right)}
+\]
+\begin{itemize}
+\item $X_{1}$ is preferred to $X_{2}$ if for the highest priority where
+their scores differ, $X_{1}$ has a lower score.
+\end{itemize}
+
 \end{document}
