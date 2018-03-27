@@ -4,10 +4,14 @@
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
 
 \makeatletter
+
+\providecommand{\tabularnewline}{\\}
+
 
 
 
@@ -595,7 +599,7 @@ An estimator $T$ is consistent if
 If $T$ is unbiased and $\lim_{n\rightarrow\infty}\text{Var}\left(T\right)=0$
 then $T$ is consistent.
 
-\paragraph{Maximum Likelihood Estimation}
+\subsection{Maximum Likelihood Estimation}
 \begin{enumerate}
 \item Find the likelihood function $L\left(\theta\right)$ where:
 \[
@@ -636,9 +640,53 @@ by CLT.
 variance: exact CI is given by $\left[\overline{x}-t_{n-1,1-\frac{\alpha}{2}}\frac{S}{\sqrt{n-1}},\overline{x}+t_{n-1,1-\frac{\alpha}{2}}\frac{S}{\sqrt{n-1}}\right]$.
 \end{itemize}
 
+\subsection{Bayesian Estimation}
+
+\paragraph{Maximum Likelihood Estimator}
+\begin{itemize}
+\item Doesn't take into account any prior information about the MLE.
+\item Only returns a single and specific value of $\theta$.
+\end{itemize}
+
+\paragraph{Maximum a Posteriori Estimator}
+
+Instead of maximising $\prod_{i=1}^{n}P\left(X=x_{i}|\theta\right)$,
+maximise $\prod_{i=1}^{n}P\left(\theta\mid X=x_{i}\right)=\prod_{i=1}^{n}P\left(X=x_{i}\mid\theta\right)\times P\left(\theta\right)$.
+
 \section{Hypothesis Testing}
 
-TODO
+\subsection{Testing Population Mean}
+
+\paragraph{Hypotheses}
+\begin{itemize}
+\item $H_{0}:\theta=\theta_{0}$ vs. $H_{1}:\theta\neq\theta_{0}$ is a
+\emph{two-sided} test.
+\item $H_{0}:\theta>\theta_{0}$ vs. $H_{1}:\theta<\theta_{0}$ is a \emph{one-sided}
+test.
+\end{itemize}
+
+\paragraph{Tests Statistics and Rejection Regions}
+\begin{itemize}
+\item Choose a test statistic $T\left(\underline{X}\right)$ for which we
+can find the distribution under $H_{0}$.
+\item Calculate the rejection region $R$ such that $P\left(T\in R\mid H_{0}\right)=\alpha$
+for some small probability $\alpha$.
+\item Compute the realised value of the test statistic and conclude appropriately.
+\end{itemize}
+
+\paragraph{Errors and Power}
+\begin{enumerate}
+\item \emph{Type I}: Reject $H_{0}$ when it was true.
+\item \emph{Type II}: Not rejecting $H_{0}$ when $H_{1}$ is true.
+\item \emph{Power}: Probability of reject $H_{0}$ when $H_{1}$ is true.
+\end{enumerate}
+
+\paragraph{Samples from Two Populations}
+
+Use \emph{bias-corrected pooled sample variance}:
+\[
+S_{n_{1}+n_{2}-2}^{2}=\frac{\sum_{i=1}^{n_{1}}\left(X_{i}-\overline{X}\right)^{2}+\sum_{i=1}^{n_{2}}\left(Y_{i}-\overline{Y}\right)^{2}}{n_{1}+n_{2}-2}=\frac{n_{1}-1}{n_{1}+n_{2}-2}S_{n_{1}}^{2}+\frac{n_{2}-1}{n_{1}+n_{2}-2}S_{n_{2}}^{2}
+\]
 
 \subsection{Goodness of Fit}
 
@@ -656,5 +704,26 @@ R=\left\{ x^{2}\mid x^{2}>\chi_{k-p-1,1-\alpha}^{2}\right\}
 where $k$ is the number of terms summed and $p$ is the number of
 parameters being estimated.
 \end{itemize}
+
+\subsection{Independence Testing}
+\begin{enumerate}
+\item Write up a contingency table.
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{c|ccc|c}
+ & $y_{1}$ & $\dots$ & $y_{l}$ & \tabularnewline
+\hline 
+$x_{1}$ & $n_{11}$ &  & $n_{1l}$ & $n_{1\bullet}$\tabularnewline
+$\vdots$ &  &  &  & \tabularnewline
+$x_{k}$ & $n_{k1}$ &  & $n_{kl}$ & $n_{k\bullet}$\tabularnewline
+\hline 
+ & $n_{\bullet1}$ &  & $n_{\bullet l}$ & $n$\tabularnewline
+\end{tabular}
+\end{table}
+\item The expected value in each cell is $\hat{n}_{ij}=\frac{n_{i\bullet}\times n_{\bullet j}}{n}$.
+\item Compute the $x^{2}$ statistic.
+\item Compare against $\chi^{2}$ dist. with $kl-\left(k-1\right)-\left(l-1\right)-1=\left(k-1\right)\left(l-1\right)$
+degrees of freedom.
+\end{enumerate}
 
 \end{document}
