@@ -130,6 +130,10 @@ P\left(\theta\mid X\right)=\frac{P\left(X\mid\theta\right)P\left(\theta\right)}{
 Mapping from sample space to $\mathbb{R}$ (e.g. $X:S\rightarrow\mathbb{R}$).
 \begin{itemize}
 \item \emph{Probability distribution function} $P_{X}\left(x\right)=P\left(X^{-1}\left(x\right)\right)$.
+\begin{itemize}
+\item Probabilities are between 0 and 1.
+\item Sum to 1.
+\end{itemize}
 \item \emph{Cumulative distribution function} $F_{X}\left(x\right)=P_{X}\left(X\leq x\right)$.
 \begin{itemize}
 \item For every real number $x$, $0\leq F_{X}\left(x\right)\leq1$.
@@ -424,7 +428,112 @@ $X\sim\text{N}\left(\mu,\sigma^{2}\right)$.
 
 \subsection{Joint Random Variables}
 
-TODO
+\paragraph{Definitions}
+
+Has joint cdf:
+\[
+F_{XY}\left(x,y\right)=P_{XY}\left(\left(-\infty,x\right],\left(-\infty,y\right]\right)
+\]
+
+We can recover marginal cdfs:
+\[
+F_{X}\left(x\right)=F_{XY}\left(x,\infty\right)
+\]
+\[
+F_{Y}\left(y\right)=F_{XY}\left(\infty,y\right)
+\]
+
+Has joint pmf:
+
+\[
+p_{XY}\left(x,y\right)=P_{XY}\left(X=x,Y=y\right)
+\]
+We can recover marginal pmfs:
+
+\[
+p_{X}\left(x\right)=\sum_{y}p_{XY}\left(x,y\right)
+\]
+
+\[
+p_{Y}\left(y\right)=\sum_{x}p_{XY}\left(x,y\right)
+\]
+
+\paragraph{Definitions for Jointly Continuous Variables}
+
+Has joint cdf:
+
+\[
+F_{XY}\left(x,y\right)=\int_{t=-\infty}^{y}\int_{s=-\infty}^{x}f_{XY}\left(s,t\right)\text{d}s\text{d}t
+\]
+
+Has joint pdf:
+
+\[
+f_{XY}\left(x,y\right)=\frac{\partial^{2}}{\partial x\partial y}F_{XY}\left(x,y\right)
+\]
+We can recover marginal pdfs:
+
+\[
+f_{X}\left(x\right)=\int_{y=-\infty}^{\infty}f_{XY}\left(s,y\right)\text{d}s\text{d}y
+\]
+
+\[
+f_{Y}\left(y\right)=\int_{x=-\infty}^{\infty}f_{XY}\left(x,s\right)\text{d}s\text{d}x
+\]
+
+\paragraph{Conditional Distributions}
+
+\[
+p_{Y\mid X}\left(y\mid x\right)=\frac{p_{XY}\left(x,y\right)}{p_{X}\left(x\right)}
+\]
+
+\paragraph{$X<Y$}
+
+\[
+P\left(X<Y\right)=\int_{y=-\infty}^{\infty}\int_{x=-\infty}^{y}f_{XY}\left(x,y\right)\text{d}x\text{d}y
+\]
+
+\paragraph{Expectation}
+
+\[
+E_{XY}\left(g\left(x,y\right)\right)=\sum_{y}\sum_{x}g\left(x,y\right)p_{XY}\left(x,y\right)
+\]
+
+\[
+E_{XY}\left(g\left(x,y\right)\right)=\int_{y=-\infty}^{\infty}\int_{x=-\infty}^{\infty}g\left(x,y\right)p_{XY}\left(x,y\right)\text{d}x\text{d}y
+\]
+
+\paragraph{Conditional Expectation}
+
+\[
+E_{Y\mid X}\left(Y|X=x\right)=\sum_{y}y\:p_{Y|X}\left(y|x\right)
+\]
+
+\[
+E_{Y\mid X}\left(Y|X=x\right)=\int_{y=-\infty}^{\infty}y\:f_{Y|X}\left(y|x\right)\text{d}y
+\]
+
+\paragraph{Tower Rule}
+
+\[
+E_{Y}\left(Y\right)=E_{X}\left(E_{Y\mid X}\left(Y\mid X\right)\right)
+\]
+
+\paragraph{Covariance}
+
+Measures how two RVs change in tandem with one another.
+
+\[
+\sigma_{XY}=E_{XY}\left(\left(X-\mu_{X}\right)\left(Y-\mu_{Y}\right)\right)
+\]
+
+\paragraph{Correlation}
+
+Invariant to scale of the RVs $X$ and $Y$.
+
+\[
+\rho_{XY}=\frac{\sigma_{XY}}{\sigma_{X}\sigma_{Y}}
+\]
 
 \section{Estimation}
 
@@ -505,7 +614,7 @@ usually find the $\hat{\theta}$ that solves
 \item Ensure that the estimate $\hat{\theta}$ corresponds to a maximum
 by checking that the second derivative satisfies
 \[
-\frac{\delta^{2}}{\delta\theta^{2}}l\left(\hat{\theta}\right)<0
+\frac{\partial^{2}}{\partial\theta^{2}}l\left(\hat{\theta}\right)<0
 \]
 \end{enumerate}
 The MLE is not necessarily unbiased, but it is consistent and efficient,
