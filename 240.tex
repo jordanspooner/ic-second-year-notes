@@ -4,7 +4,10 @@
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{float}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
 
 \makeatletter
 
@@ -13,6 +16,7 @@
 \usepackage{array}
 \usepackage{multirow}
 \usepackage{amsbsy}
+\usepackage{MnSymbol}
 
 
 
@@ -322,4 +326,225 @@ holds, assuming, assuming $P(C_{a})$ and $P(C_{b})$.
 
 Prove that, for all $B$ and $C$, $P\left(\texttt{while }B\texttt{ do }C\right)$
 holds, assuming, assuming $P(C)$.
+
+\section{Register Machines}
+
+\subsection{Definitions}
+
+\paragraph{Register Machine}
+\begin{itemize}
+\item Finitely many \emph{registers} $R_{0},\dots,R_{n}$.
+\item A \emph{program} which is a finite list of instructions $L_{k}:\text{body}$.
+The body can be:
+\begin{itemize}
+\item $R^{+}\rightarrow L_{i}$. Add 1 to $R$ and jump to $L_{i}$.
+\item $R^{-}\rightarrow L_{i},L_{j}$. If $R>0$, subtract 1 and jump to
+$L_{i}$, else to $L_{j}$.
+\item $HALT$. Stop executing instructions.
+\end{itemize}
+\end{itemize}
+\begin{table}[H]
+\centering{}\includegraphics[width=0.45\columnwidth]{img/rm-representation}
+\end{table}
+
+\paragraph{Configuration}
+
+$\left(l,r_{0},\dots,r_{n}\right)$, where $l$ is the current label
+and $r_{k}$ is the contents of $R_{k}$.
+
+\paragraph{Computation}
+
+Sequence of configurations.
+\begin{itemize}
+\item \emph{Halting computation}: Computation where the last configuration
+$c_{m}=\left(l,\dots\right)$ is halting configuration:
+\begin{itemize}
+\item \emph{Proper halt}: $L_{l}$ is $HALT$.
+\item \emph{Erroneous halt}: Jumps to an instruction that doesn't exist.
+\end{itemize}
+\item Computation is \emph{deterministic}: relation between initial and
+final register contents is a \emph{partial function}.
+\end{itemize}
+
+\subsection{Computable Functions}
+
+\paragraph{Definition}
+
+$f\in\mathbb{N}^{n}\rightharpoonup\mathbb{N}$ is computable if there
+is a register machine $M$ such that for all $\left(x_{1},\dots,x_{n}\right)\in\mathbb{N}^{n}$
+and all $y\in\mathbb{N}$:
+\begin{quotation}
+The computation of $M$ starting with $R_{0}=0,R_{1}=x_{1},\dots,R_{n}=x_{n}$
+and all other registers set to 0, halts with $R_{0}=y$ if and only
+if $f\left(x_{1},\dots,x_{n}\right)=y$.
+\end{quotation}
+
+\paragraph{Halting Problem}
+\begin{itemize}
+\item $S$ is a set of pairs $\left(A,D\right)$ where $A$ is an algorithm
+and $D$ is some datum on which it operates.
+\item $A\left(D\right)\downarrow$ holds for $\left(A,D\right)\in S$ if
+algorithm $A$ applied to $D$ halts.
+\end{itemize}
+The Church-Truing thesis shows that there is no algorithm $H$ s.t.
+for all $\left(A,D\right)\in S$:
+\[
+H\left(A,D\right)=\begin{cases}
+1 & A\left(D\right)\downarrow\\
+0 & \text{otherwise}
+\end{cases}
+\]
+
+\paragraph{G\"{o}del Numberings}
+
+We code pairs numerically:
+\begin{itemize}
+\item $\llangle x,y\rrangle\triangleq2^{x}\left(2y+1\right)$.
+\item $\left\langle x,y\right\rangle \triangleq2^{x}\left(2y+1\right)-1$.
+\end{itemize}
+We code lists numerically:
+\begin{itemize}
+\item $\ulcorner[]\urcorner\triangleq0$.
+\item $\ulcorner x::l\urcorner\triangleq\llangle x,\ulcorner l\urcorner\rrangle=2^{x}\left(2\times\ulcorner l\urcorner+1\right)$.
+\end{itemize}
+We code programs numerically:
+\begin{itemize}
+\item $\ulcorner P\urcorner\triangleq\ulcorner\left[\ulcorner\text{body}_{0}\urcorner,\dots,\ulcorner\text{body}_{n}\urcorner\right]\urcorner$.
+\end{itemize}
+where instruction bodies are coded:
+\begin{itemize}
+\item $\ulcorner R_{i}^{+}\rightarrow L_{j}\urcorner\triangleq\llangle2i,j\rrangle$
+\item $\ulcorner R_{i}^{-}\rightarrow L_{j},L_{k}\urcorner\triangleq\llangle2i+1,\left\langle j,k\right\rangle \rrangle$
+\item $\ulcorner HALT\urcorner\triangleq0$.
+\end{itemize}
+
+\subsection{Gadgets}
+
+\subsubsection*{Zero $R_{0}$}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.3\columnwidth]{img/zero}
+\end{figure}
+
+\subsubsection*{Add $R_{1}$ to $R_{2}$}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.4\columnwidth]{img/add}
+\end{figure}
+
+\subsubsection*{Multiply $R_{1}$ by $R_{2}$ to $R_{0}$}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\columnwidth]{img/mult}
+\end{figure}
+
+\subsubsection{Reasoning about Gadgets}
+\begin{itemize}
+\item Test it on various inputs and look for patterns.
+\item Break up into bits we understand.
+\item Use invariants.
+\begin{itemize}
+\item Write out \emph{verification conditions}: conditions, in terms of
+invariants and changes, for which an invariant must hold.
+\item Start out with $\bot$ and weaken the invariant until a pattern emerges.
+\end{itemize}
+\end{itemize}
+
+\subsubsection*{Push $X$ to $L$}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.65\columnwidth]{img/push}
+\end{figure}
+
+\subsubsection*{Pop $L$ to $X$}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.675\columnwidth]{img/pop}
+\end{figure}
+
+\subsection{Universal Register Machine}
+
+Simulates an arbitrary register machine on arbitrary input.
+\begin{enumerate}
+\item Copy the $PC$th item of $P$ to $N$.
+\item If $N=0$ halt, else decode $N$ as $\llangle y,z\rrangle$. Set $C::=y$
+and $N::=z$.
+\item Copy the $i$th item of list $A$ into $R$ (where $C=2i$ or $2i+1$).
+\item Execute the current instruction on $R$, update $PC$ to next label,
+and restore register value to $A$.
+\end{enumerate}
+
+\subsection{Halting Problem for Register Machines}
+
+$H$ decides the problem if given:
+\begin{itemize}
+\item $R_{0}=0$.
+\item $R_{1}=e$.
+\item $R_{2}=\ulcorner\left[a_{1},\dots,a_{n}\right]\urcorner$
+\end{itemize}
+$H$ always halts with $R_{0}$ equal to 0 or 1. $R_{0}=1$ iff the
+program represented by $e$ eventually halts when started with $R_{0}=0,\dots,R_{n}=a_{n}$
+and all other registers zeroed.
+
+\paragraph{Proof that $H$ Cannot Exist}
+\begin{itemize}
+\item Consider $H'=H$ with $R_{1}$ pushed onto $R_{2}$.
+\item Consider $C=H'$ where $C$ halts iff $H'$ halts with $R_{0}=0$.
+\end{itemize}
+Assume $H$ exists:
+
+\begin{multline*}
+C\text{ started with }R_{1}=c\text{ halts}\\
+\iff H'\text{ started with }R_{1}=c\text{ halts with }R_{0}=0\\
+\iff H\text{ started with }R_{1}=c,R_{2}=\ulcorner\left[c\right]\urcorner\text{ halts with }R_{0}=0\\
+\iff\text{prog}\left(c\right)\text{ started with }R_{1}=c\text{ does not halt}\\
+\iff C\text{ started with }R_{1}=c\text{ does not halt}
+\end{multline*}
+
+Contradiction!
+
+\section{Lambda Calculus}
+
+\paragraph{$\lambda$-Terms}
+
+\[
+M::=x\mid\lambda x.M\mid MM
+\]
+\begin{itemize}
+\item $\lambda x.M$ is a \emph{$\lambda$-abstraction}.
+\item $MM$ is an \emph{application}.
+\item $\lambda x.xy$ means $\lambda x.\left(xy\right)$.
+\item $\lambda x_{1}\dots x_{n}.M$ means $\lambda x_{1}.\left(\dots\left(\lambda x_{n}.M\right)\dots\right)$.
+\item $M_{1}M_{2}\dots M_{n}$ means $\left(\dots\left(M_{1}M_{2}\right)\dots\right)M_{n}$.
+\end{itemize}
+
+\paragraph{Computation}
+
+Using $\beta$-reduction:
+\begin{itemize}
+\item $\begin{array}{c}
+\\
+\hline \left(\lambda x.M\right)N\rightarrow_{\beta}M\left[N/x\right]
+\end{array}$.
+\item $\begin{array}{c}
+M\rightarrow_{\beta}M'\\
+\hline \lambda x.M\rightarrow_{\beta}\lambda x.M'
+\end{array}$.
+\item $\begin{array}{c}
+M\rightarrow_{\beta}M'\\
+\hline MN\rightarrow_{\beta}M'N
+\end{array}$.
+\item $\begin{array}{c}
+N\rightarrow_{\beta}N'\\
+\hline MN\rightarrow_{\beta}MN'
+\end{array}$.
+\end{itemize}
+
+\paragraph{Free and Bound Variables}
+\begin{itemize}
+\item \emph{Binding} occurrence if $x$ is between $\lambda$ and $.$.
+\item \emph{Bound} if in the body of a binding occurrence of $x$.
+\item \emph{Free} if neither binding nor bound.
+\end{itemize}
+
 \end{document}
