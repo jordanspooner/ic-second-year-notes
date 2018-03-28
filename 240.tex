@@ -505,6 +505,8 @@ Contradiction!
 
 \section{Lambda Calculus}
 
+\subsection{Syntax of the $\lambda$-Calculus}
+
 \paragraph{$\lambda$-Terms}
 
 \[
@@ -518,9 +520,52 @@ M::=x\mid\lambda x.M\mid MM
 \item $M_{1}M_{2}\dots M_{n}$ means $\left(\dots\left(M_{1}M_{2}\right)\dots\right)M_{n}$.
 \end{itemize}
 
-\paragraph{Computation}
+\paragraph{Free and Bound Variables}
+\begin{itemize}
+\item \emph{Binding} occurrence if $x$ is between $\lambda$ and $.$.
+\item \emph{Bound} if in the body of a binding occurrence of $x$.
+\item \emph{Free} if neither binding nor bound.
+\end{itemize}
+The set of free variables $FV\left(M\right)$ is calculated by:
+\begin{itemize}
+\item $FV\left(x\right)=\left\{ x\right\} $.
+\item $FV\left(\lambda x.M\right)=FV\left(M\right)-\left\{ x\right\} $.
+\item $FV\left(MN\right)=FV\left(M\right)\cup FV\left(N\right)$.
+\end{itemize}
+If $FV\left(M\right)=\emptyset$, $M$ is a \emph{closed term} / \emph{combinator}.
 
-Using $\beta$-reduction:
+\paragraph{Substitution}
+\begin{itemize}
+\item $x\left[M/y\right]=\begin{cases}
+M & x=y\\
+x & x\neq y
+\end{cases}$
+\item $\left(\lambda x.N\right)\left[M/y\right]=\begin{cases}
+\lambda x.N & x=y\\
+\lambda z.N\left[z/x\right]\left[M/y\right] & x\neq y
+\end{cases}$
+\item $\left(M_{1}M_{2}\right)\left[M/y\right]=\left(M_{1}\left[M/y\right]\right)\left(M_{2}\left[M/y\right]\right)$
+\end{itemize}
+
+\paragraph{$\alpha$-Equivalence}
+\begin{itemize}
+\item $\begin{array}{c}
+\\
+\hline x=_{\alpha}x
+\end{array}$.
+\item $\begin{array}{c}
+M\left[z/x\right]=_{\alpha}N\left[z/y\right]\qquad z\notin FV\left(M\right)\cup FV\left(N\right)\\
+\hline \lambda x.M=_{\alpha}\lambda y.N
+\end{array}$.
+\item $\begin{array}{c}
+M=_{\alpha}M'\qquad N=_{\alpha}N'\\
+\hline MN=_{\alpha}M'N'
+\end{array}$.
+\end{itemize}
+
+\subsection{Semantics of the $\lambda$-Calculus}
+
+\paragraph{$\beta$-reduction}
 \begin{itemize}
 \item $\begin{array}{c}
 \\
@@ -538,13 +583,60 @@ M\rightarrow_{\beta}M'\\
 N\rightarrow_{\beta}N'\\
 \hline MN\rightarrow_{\beta}MN'
 \end{array}$.
+\item $\begin{array}{c}
+N=_{\alpha}M\qquad M\rightarrow_{\beta}M'\qquad M'=_{\alpha}N'\\
+\hline N\rightarrow_{\beta}N'
+\end{array}$.
 \end{itemize}
 
-\paragraph{Free and Bound Variables}
+\paragraph{Reflexive Transitive Closure of $\rightarrow_{\beta}$}
 \begin{itemize}
-\item \emph{Binding} occurrence if $x$ is between $\lambda$ and $.$.
-\item \emph{Bound} if in the body of a binding occurrence of $x$.
-\item \emph{Free} if neither binding nor bound.
+\item $\begin{array}{c}
+M=_{\alpha}M'\\
+\hline M\rightarrow_{\beta}^{*}M'
+\end{array}$.
+\item $\begin{array}{c}
+M\rightarrow_{\beta}M''\qquad M''\rightarrow_{\beta}^{*}M'\\
+\hline M\rightarrow_{\beta}^{*}M'
+\end{array}$.
+\end{itemize}
+
+\paragraph{Church-Rosser Theorem}
+
+$\rightarrow_{\beta}^{*}$ is \emph{confluent}.
+\begin{quotation}
+If $M\rightarrow_{\beta}^{*}M_{1}$ and $M\rightarrow_{\beta}^{*}M_{2}$
+then there exists $M'$ such that
+
+$M_{1}\rightarrow_{\beta}^{*}M'$ and $M_{2}\rightarrow_{\beta}^{*}M'$.
+\end{quotation}
+
+\paragraph{$\beta$-Equivalence}
+
+$M_{1}=_{\beta}M_{2}$ iff there exists $M$ such that $M_{1}\rightarrow_{\beta}^{*}M$
+and $M_{2}\rightarrow_{\beta}^{*}M$.
+
+\paragraph{$\beta$-Normal Form}
+
+A $\lambda$-term with no $\beta$-redexes.
+\begin{itemize}
+\item $\beta$-normal forms are unique.
+\item Some $\lambda$-terms have no $\beta$-normal form. E.g. $\left(\lambda x.xx\right)\left(\lambda x.xx\right)$.
+\item Some $\lambda$-terms a $\beta$-normal form and also infinite chains
+of reudction. E.g. $\left(\lambda x.y\right)\left(\lambda x.xx\right)\left(\lambda x.xx\right)$.
+\end{itemize}
+
+\paragraph{$\lambda$-Definable Functions}
+\begin{itemize}
+\item $f\in\mathbb{N}^{n}\rightharpoonup\mathbb{N}$ is $\lambda$-definable
+if there is a closed $\lambda$-term $F$ that represents it, such
+that:
+\begin{itemize}
+\item If $f\left(x_{1},\dots,x_{n}\right)=y$ then $Fx_{1}\dots x_{n}=_{\beta}y$.
+\item If $f\left(x_{1},\dots,x_{n}\right)\uparrow$ then $Fx_{1}\dots x_{n}$
+has no $\beta$-normal form.
+\end{itemize}
+\item A function is computable iff it is $\lambda$-definable.
 \end{itemize}
 
 \end{document}
