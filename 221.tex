@@ -379,7 +379,7 @@ to grammar rules.
 \subsection{LL (Top-Down) Parsing}
 
 A language is LL($k$) if $k$-token lookahead is sufficient to choose
-between atlernatives of a rule when parsing.
+between alternatives of a rule when parsing.
 
 \paragraph{Backus-Naur Form (BNF)}
 
@@ -513,5 +513,236 @@ to types.
 \item Check length of parameters.
 \item Check parameters.
 \end{enumerate}
+
+\section{Runtime Memory Organisation}
+
+\subsubsection*{Basic Types}
+\begin{itemize}
+\item \emph{Primitive types}: mapped to memory locations and/or registers.
+Sometimes memory aligned to keep accesses optimal.
+\item \emph{Records} / \emph{structures}: fields are grouped together and
+usually allocated consecutively in memory. Fields accessed by a constant
+byte offset from start.
+\item \emph{Arrays}: variables of same size grouped together and accessed
+by a runtime integer expression that gives the offset from the start.
+\end{itemize}
+
+\subsubsection*{Objects}
+\begin{itemize}
+\item \emph{Fields}: memory location of object reference + offset of field.
+\item \emph{Methods}: object reference passed as a hidden parameter.
+\item \emph{Inheritance}, \emph{overriding} and \emph{dynamic binding}:
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\linewidth]{img/objects}
+\end{figure}
+\end{itemize}
+
+\paragraph{Program Address Space}
+\begin{itemize}
+\item \emph{Code segment}.
+\item \emph{Stack segment}: for storing local variables.
+\begin{itemize}
+\item Access is through the \emph{frame pointer register}.
+\item For \emph{method calls}: we also hold the return address, address
+of the method's of object, parameters, saved values of registers,
+space for a return value.
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\linewidth]{img/stack}
+\end{figure}
+\end{itemize}
+\item \emph{Data segment}.
+\begin{itemize}
+\item \emph{Static area}: for storing global / static variables.
+\item \emph{Heap area}.
+\begin{itemize}
+\item Keep a \emph{FreeList} (chain of pointers to unused / returned / garbage
+collected memory blocks in the heap area).
+\item Maintain different free lists for different block-size intervals.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\paragraph{Garbage Collection}
+
+The garbage collector needs to know:
+\begin{itemize}
+\item Which variables in the program point to the heap.
+\item For each object pointed to, which pointers it contains.
+\end{itemize}
+\emph{Heap compaction}: Reduce fragmentation by:
+\begin{enumerate}
+\item Mark live blocks.
+\item Co-locate live blocks.
+\item Update the pointers that point to co-located blocks.
+\end{enumerate}
+Algorithms include:
+\begin{enumerate}
+\item \textbf{Reference-Counting.} Record in each block the number of pointers
+that point to the block.
+\begin{itemize}
+\item Needs techniques to reclaim cyclic data structures.
+\end{itemize}
+\item \textbf{Mark-Sweep.} Has two phases:
+\begin{enumerate}
+\item \emph{Mark phase}: mark all blocks that are reachable from non-heap
+references.
+\item \emph{Sweep phase}: scan all blocks, reclaiming dead blocks and unmarking
+live blocks.
+\end{enumerate}
+\begin{itemize}
+\item \emph{Pointer-Reversal Marking}: allows visiting all notes of a directed
+graph without additional stack space. Swap children pointer with parent
+pointer.
+\end{itemize}
+\item \textbf{Two-Space.} Split the heap into a From-Space and a To-Space.
+\begin{enumerate}
+\item Allocate blocks from the From-Space.
+\item When the From-Space is exhausted, copy reachable blocks from the From-Space
+to the two space.
+\end{enumerate}
+\begin{itemize}
+\item \emph{Fast}: no pointers manipulations, copying automatically compacts
+the heap.
+\item \emph{Wasteful}: wastes half the memory and copies long-lived blocks.
+\end{itemize}
+\item \textbf{Generational.} Divide the heap into several generations based
+on age of block.
+\begin{itemize}
+\item Allocate new blocks from the youngest generation.
+\item Perform GC on youngest generation more often than the next.
+\item Apply different GC techniques to different generations.
+\end{itemize}
+\end{enumerate}
+
+\paragraph{Debuggers}
+
+Reverse lookup from PC to source line.
+\begin{itemize}
+\item Don't affect behaviour of a program except execution time.
+\item Requires information about identifiers and mapping from program counter
+to source lines.
+\end{itemize}
+
+\paragraph{Profilers}
+
+Interrupt program every $X$ milliseconds.
+\begin{itemize}
+\item Identify the method that was executing - lookup table sorted by start
+address of methods.
+\item Increment a counter.
+\item Print out counts on program completion.
+\end{itemize}
+
+\section{Code Generation}
+
+For each statement / expression type, use a standard template, with
+gaps filled in with details.
+
+\paragraph{Stack Machine}
+
+Uses a stack and a single temporary register.
+\begin{itemize}
+\item \texttt{\emph{Add}}: \texttt{T := store{[}SP{]}; SP := SP+1; T :=
+store{[}SP{]}+T; store{[}SP{]} := T;}.
+\end{itemize}
+
+\paragraph{Register Machine}
+
+Assume an infinite number of registers.
+\begin{itemize}
+\item Can be further improved by using immediate operands instead of always
+loading constants into registers.
+\end{itemize}
+
+\paragraph{Accumulator Machine}
+
+Use one register.
+\begin{itemize}
+\item \texttt{\emph{Add}}: \texttt{Acc := Acc+Store{[}SP{]}; SP := SP+1;}.
+\item \texttt{\emph{Push}}: \texttt{SP := SP-1; Store{[}SP{]} := Acc;}.
+\item \texttt{\emph{Pop}}: \texttt{Acc := Store{[}SP{]}; SP := SP+1;}.
+\item \texttt{\emph{Load name}}: \texttt{Acc := Store{[}name{]};}.
+\item \texttt{\emph{Store name}}: \texttt{Store{[}name{]} := Acc;}.
+\end{itemize}
+
+\paragraph{Machines with Limited Register Sets}
+\begin{itemize}
+\item While free registers remain, use the register machine strategy.
+\item When the limit is reached, revert to the accumulator strategy.
+\end{itemize}
+
+\subsection{Register Allocation}
+
+\paragraph{Calling a Function}
+
+Two options:
+\begin{itemize}
+\item \emph{Caller saves registers}: but doesn't know which registers the
+callee needs - has to save all registers it's using that might be
+used.
+\item \emph{Callee saves registers}: but doesn't know which registers the
+callers need - has to save all registers that it needs that might
+be being used.
+\end{itemize}
+
+\paragraph{Sethi-Ullman Numbering}
+
+Weight the syntax tree.
+\begin{itemize}
+\item Order of evaluation of subexpressions is important: evaluate \emph{first}
+the one that uses the \emph{most} registers.
+\begin{itemize}
+\item \emph{Register targeting}: we want to leave the result in register
+$R$, but also not use the register $R+1$. Pass a \emph{list} of
+registers its allowed to use and return the result in the first one.
+\item \emph{Functions}: often best to do first, since we may have to save
+other registers.
+\end{itemize}
+\item \emph{Worst case}: a perfectly-balanced expression tree with $k$
+operators and $k-1$ intermediate values. $\left\lceil \lg k\right\rceil $
+registers required.
+\item Fails to exploit context:
+\begin{itemize}
+\item Doesn't use registers from statement to statement, e.g. using variables.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Graph Colouring Allocation}
+\begin{enumerate}
+\item Use a tree-walking translator to generate an \emph{intermediate code}
+that saves temp values in named locations (three-address code).
+\item Construct the \emph{interference graph}. Each pair of nodes is linked
+if the values must be stored simultaneously (\emph{live ranges overlap}).
+\item Attempt to colour the nodes so that no connected nodes have the same
+colour.
+\end{enumerate}
+\begin{itemize}
+\item We can now make use of more advanced optimisations such as saving
+\emph{common subexpressions}.
+\item \emph{Spilling}: if we fail to colour the graph, choose a variable
+whose live range is causing trouble, and split its range by storing
+it to memory and reloading it later.
+\end{itemize}
+
+\section{Optimisation}
+\begin{itemize}
+\item \emph{High level}: e.g. \emph{inlining}: replace a call \texttt{f(x)}
+with the function body itself.
+\item \emph{Low level}: e.g. \emph{instruction scheduling}: reorder instructions
+so processor can execute them in parallel.
+\end{itemize}
+
+\paragraph{Peephole Optimisation}
+
+Scan assembly code, replacing obviously inane combinations of instructions.
+
+\paragraph{Phase Ordering Problem}
+\begin{itemize}
+\item \emph{Local}: Optimisation works at level of basic blocks. E.g. Sethi-Ullman
+algorithm, peephole optimisation. Runs quickly and easy to validate.
+\item \emph{Global}: Optimisation works on a whole procedure. May have worse
+than linear complexity.
+\item \emph{Interprocedural}: Works on the whole program. Hard to do.
+\end{itemize}
 
 \end{document}
