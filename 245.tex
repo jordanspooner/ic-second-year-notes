@@ -648,10 +648,23 @@ variance: exact CI is given by $\left[\overline{x}-t_{n-1,1-\frac{\alpha}{2}}\fr
 \item Only returns a single and specific value of $\theta$.
 \end{itemize}
 
+\paragraph{Using Prior Information}
+
+Use Bayes theorem
+\[
+\underbrace{P\left(\theta\mid X\right)}_{\text{posterior}}=\underbrace{P\left(X\mid\theta\right)}_{\text{likelihood}}\times\underbrace{P\left(\theta\right)}_{\text{prior}}\times\underbrace{\frac{1}{P\left(X\right)}}_{\text{evidence}}
+\]
+
 \paragraph{Maximum a Posteriori Estimator}
 
 Instead of maximising $\prod_{i=1}^{n}P\left(X=x_{i}|\theta\right)$,
 maximise $\prod_{i=1}^{n}P\left(\theta\mid X=x_{i}\right)=\prod_{i=1}^{n}P\left(X=x_{i}\mid\theta\right)\times P\left(\theta\right)$.
+
+\paragraph{Prior Distributions}
+
+Often we use the \emph{beta distribution}: $\text{Beta}\left(\theta;\alpha,\beta\right)=\frac{1}{B\left(\alpha,\beta\right)}\times\theta^{\alpha-1}\left(1-\theta\right)^{\beta-1}$
+with $B\left(\alpha,\beta\right)=\frac{\Gamma\left(\alpha\right)\Gamma\left(\beta\right)}{\Gamma\left(\alpha+\beta\right)}$
+and $\Gamma\left(z\right)=\int_{0}^{\infty}x^{z-1}e^{-x}\text{d}x$
 
 \section{Hypothesis Testing}
 
@@ -678,7 +691,7 @@ for some small probability $\alpha$.
 \begin{enumerate}
 \item \emph{Type I}: Reject $H_{0}$ when it was true.
 \item \emph{Type II}: Not rejecting $H_{0}$ when $H_{1}$ is true.
-\item \emph{Power}: Probability of reject $H_{0}$ when $H_{1}$ is true.
+\item \emph{Power}: Probability of rejecting $H_{0}$ when $H_{1}$ is true.
 \end{enumerate}
 
 \paragraph{Samples from Two Populations}
