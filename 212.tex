@@ -8,6 +8,8 @@
 \usepackage{booktabs}
 \usepackage{amstext}
 \usepackage{graphicx}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
 
 \makeatletter
 
@@ -429,7 +431,245 @@ Cross-platform process identifiers.
 \begin{itemize}
 \item Socket connection identified by two pairs of IP address, port number,
 TCP/UDP.
-\item First 1024 ports are reserved.
+\item First 1024 ports are reserved. E,g, 80 for HTTP, 443 for HTTPS, 110
+for POP3, 25 for SMTP, 21 for FTP, 22 for SSH, ....
 \end{itemize}
+Use \texttt{netcat} to read and write across network connections.
+
+\subsection{Transport Layer Interface}
+
+\emph{Berkeley socket interface}:
+\begin{enumerate}
+\item Server and client each bind a transport-level address to a locally
+created socket.
+\begin{itemize}
+\item \texttt{SOCKET(protocol)}: Create a new communication endpoint.
+\item \texttt{BIND(socket, address)}: Attach a local address to a socket.
+\end{itemize}
+\item Server starts listening on this socket, waiting for connections from
+clients.
+\begin{itemize}
+\item \texttt{LISTEN(socket, N)}: Announce willingness to accept N connections.
+\end{itemize}
+\item Server can accept or select connections from clients.
+\begin{itemize}
+\item \texttt{ACCEPT(socket)}: Block until a remote client wants to establish
+connection.
+\end{itemize}
+\item A client connects to the socket, providing full transport-level address.
+\begin{itemize}
+\item \texttt{CONNECT(socket, address, port, protocol)}: Attempt to establish
+a connection.
+\end{itemize}
+\item Client and sever communicate through send / receive operations on
+their respective sockets.
+\begin{itemize}
+\item \texttt{SEND(socket, data)}: Send data over connection.
+\item \texttt{RECEIVE(socket)}: Receive data over connection.
+\end{itemize}
+\item Communication ends when socket is closed.
+\begin{itemize}
+\item \texttt{CLOSE(socket)}: Release the connection.
+\end{itemize}
+\end{enumerate}
+\emph{Without a connection} (e.g. UDP): no need for \texttt{LISTEN},
+\texttt{ACCEPT} and \texttt{CONNECT}.
+
+\subsection{TCP}
+\begin{itemize}
+\item \emph{Reliable} data transfer.
+\item Uses \emph{connections}.
+\item Uses \emph{congestion control}.
+\item \emph{Duplex}. Both endpoints can send and receive at the same time.
+\end{itemize}
+
+\paragraph{Segmentation}
+
+TCP data are transmitted within TCP segments.
+\begin{itemize}
+\item \emph{Maximum Segment Size} (MSS): maximum amount of application data
+transmitted in a single segment (excluding headers).
+\begin{itemize}
+\item Usually related to MTU of connection, to avoid fragmentation.
+\end{itemize}
+\item \emph{Maximum Transmission Unit} (MTU): largest link-layer frame available
+to sender.
+\begin{itemize}
+\item \emph{Path MTU Discovery} (PMTUD): determine largest link-layer frame
+that can be sent on all links from sender host to receiver host.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Header Fields}
+\begin{itemize}
+\item \emph{Sequence number} indicates the place of the first byte carried
+by the segment.
+\begin{itemize}
+\item When TCP connection is set up, a random \uline{I}nitial \uline{S}equence
+\uline{N}umber is decided.
+\end{itemize}
+\item \emph{Acknowledgement number} is the first sequence number \emph{not
+yet} seen by receiver.
+\end{itemize}
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.8\linewidth]{img/tcp}
+\end{figure}
+
+\paragraph{Three-way Handshake}
+\begin{enumerate}
+\item Client sends \texttt{SYN} with its ISN.
+\item Server responds with both:
+\begin{enumerate}
+\item \texttt{SYN} with its ISN.
+\item \texttt{ACK} with the first unseen client sequence number.
+\end{enumerate}
+\item Client responds with \texttt{ACK} with the first unseen server sequence
+number, and its new sequence number.
+\end{enumerate}
+\emph{Disconnection} uses \texttt{FIN} instead of \texttt{SYN}, and
+usually two exchanges.
+\begin{figure}[H]
+\centering{}\includegraphics[width=1\linewidth]{img/handshake}
+\end{figure}
+
+\paragraph{States}
+
+Use \texttt{netstat -at} to see current TCP connection states.
+\begin{figure}[H]
+\centering{}%
+\begin{minipage}[t]{0.5\columnwidth}%
+Client:
+\begin{center}
+\includegraphics[width=0.8\linewidth]{img/client-states}
+\par\end{center}%
+\end{minipage}%
+\begin{minipage}[t]{0.5\columnwidth}%
+Server:
+\begin{center}
+\includegraphics[width=0.8\linewidth]{img/server-states}
+\par\end{center}%
+\end{minipage}
+\end{figure}
+
+\subsection{Error Detection and Retransmission}
+\begin{itemize}
+\item TCP adds reliability on top of unreliable data-link layer. Bit errors
+can occur, hence we use a checksum.
+\item \emph{Error detection}: use a checksum.
+\item \emph{Receiver feedback}: if packet is corrupted, wrong or timeout:
+\begin{itemize}
+\item Could send a \texttt{NACK}, protected with an error-detection code.
+\begin{itemize}
+\item Corrupted \texttt{ACK}s are interpreted as \texttt{NACK}s.
+\item We may get \emph{duplicate} segments, which we can ignore using SEQ
+numbers.
+\begin{itemize}
+\item SEQ number may be a single bit (\emph{alternating bit protocol}).
+\end{itemize}
+\end{itemize}
+\item Could send an \texttt{ACK} for the next needed byte. Many methods:
+\begin{itemize}
+\item \emph{Delayed}: wait for the next segment, if it doesn't arrive, send
+\texttt{ACK}.
+\item \emph{Cumulative}: send \texttt{ACK} for multiple segments at once.
+\item \emph{Duplicate}: send another \texttt{ACK} if an out of order segment
+arrives.
+\item \emph{Immediate}: immediately send an \texttt{ACK} for the first gap.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\paragraph{Congestion Control}
+
+Aims not to overflow the network.
+\begin{itemize}
+\item \emph{Congestion window}: how many bytes can be pushed before waiting
+for an acknowledgement. I.e. last byte sent - last byte \texttt{ACK}ed
+$\leq W$.
+\begin{itemize}
+\item Where $W=\min\left(\text{congestion window},\text{receiver window}\right)$.
+\item The resulting maximum output rate $\lambda=\frac{W}{RTT}$.
+\end{itemize}
+\item \emph{Slow Start}:
+\begin{itemize}
+\item Initial $W$ is $MSS$.
+\item Double $W$ every $RTT$, until:
+\begin{itemize}
+\item $W>$ sshthresh, then use Congestion Avoidance.
+\item $W=$ sshthresh, then use either Slow Start or Congestion Avoidance.
+\end{itemize}
+\end{itemize}
+\item \emph{Congestion Avoidance}:
+\begin{itemize}
+\item $W=W+MSS\times\frac{MSS}{W}$ ($W$ increased by approximately 1 $MSS$
+every $RTT$).
+\end{itemize}
+\item \emph{AIMD Additive-Increase / Multiplicative-Decrease}:
+\begin{itemize}
+\item $W$ is increased with every good acknowledgement by CA.
+\item $W$ is halved at every packet loss event.
+\end{itemize}
+\item \emph{Reliability and Timeout}:
+\begin{itemize}
+\item Timeout should be longer than $RTT$ (to avoid unnecessary retransmissions)
+but not too long (to detect and retransmit lost segments quickly).
+\item Use $T=\overline{RTT}+4\times\overline{DevRTT}$, based on estimated
+$RTT$ (get by ping).
+\end{itemize}
+\item \emph{Fast Recovery}: three duplicate \texttt{ACK}s interpreted as
+a \texttt{NACK}.
+\begin{itemize}
+\item Timeout:
+\begin{itemize}
+\item Set sshthresh to half the current window size.
+\item Go back to $W=MSS$ and run SS.
+\end{itemize}
+\item \texttt{NACK}: Cut $W$ in half and run CA.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Flow Control}
+
+Aims not to overflow the receiver.
+\begin{itemize}
+\item Receiver sends its window size (max number of bytes that can be sent)
+along with its acknowledgement.
+\item A window size of 0 is valid.
+\end{itemize}
+
+\paragraph{Wireless TCP}
+
+TCP assumes IP is running over wires. When packets are lost, TCP assumes
+congestion and slows down. Possible solutions:
+\begin{enumerate}
+\item Split TCP to distinguish between wired and wireless IP.
+\item Let the base station do some transmissions without informing the source.
+\end{enumerate}
+
+\subsection{UDP}
+\begin{itemize}
+\item No flow control, error control, retransmissions.
+\item Datagrams cannot be larger than 65K. (Usually use 500B or less).
+\end{itemize}
+Useful for:
+\begin{itemize}
+\item Finer Application Level control over what data are sent and when (e.g.
+real-time: Skype).
+\item No connection establishment (faster).
+\item Non connection state.
+\item Small packet header overhead.
+\end{itemize}
+
+\subsubsection*{Header Fields}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\linewidth]{img/udp}
+\end{figure}
+
+\subsection{Network Usage}
+
+\[
+\text{Utilisation Factor}=\frac{\text{how much we actually used the network}}{\text{how much we could have used it}}
+\]
 
 \end{document}
