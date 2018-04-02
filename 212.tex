@@ -849,9 +849,11 @@ since only they can decrypt it.
 \item Bob chooses a secret $b$ and Alice a secret $a$.
 \item Bob calculates $x=g^{b}\mod p$ and Alice $y=g^{a}\mod p$, and share
 these.
-\item They then
+\item They then calculate $y^{b}\mod p=\left(g^{a}\mod p\right)^{b}$ and
+$x^{a}\mod p=\left(g^{b}\mod p\right)^{a}$ respectively. The final
+key is $g^{ab}\mod p$.
 \end{enumerate}
-\item Use trusted secure hosts.
+\item Use trusted secure hosts. Obtain a key from the trusted host securely.
 \end{enumerate}
 
 \end{document}
