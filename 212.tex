@@ -6,7 +6,7 @@
 \setlength{\parindent}{0pt}
 \usepackage{float}
 \usepackage{booktabs}
-\usepackage{amstext}
+\usepackage{amsmath}
 \usepackage{graphicx}
 \PassOptionsToPackage{normalem}{ulem}
 \usepackage{ulem}
@@ -673,16 +673,185 @@ real-time: Skype).
 \]
 
 \section{Network Security}
+
+\subsection{Terminology}
+\begin{itemize}
+\item \emph{Hacker}: once skilled, now cybercriminals. White/black/grey
+hats.
+\item \emph{Virii}: e.g. ransomware/spyware/Trojans.
+\item \emph{Anarchists}: physical.
+\item \emph{Crackers}: use others' tools to infiltrate systems.
+\item \emph{DDoSers}: participants in distributed denial of service attacks.
+\item \emph{Spammers/botters}: mass senders of spam messages.
+\item \emph{Pirates}: upload or download illegal content.
+\item \emph{Cyberbullies}: harass, stalk, offend, threaten users.
+\item \emph{Whistleblowers}: reveal inside secrets.
+\item \emph{Social engineers/phishers/catfishes}: manipulators, pretend
+to be somebody else.
+\end{itemize}
+
+\paragraph{Black Hat Tools}
+\begin{itemize}
+\item \emph{Rootkits}: allow attackers to enter system.
+\item \emph{Keyloggers}.
+\item \emph{Trojans}: allow remote control of a system.
+\item \emph{Evil twin}: free WiFi networks, sniff everything you send.
+\end{itemize}
+
+\paragraph{White Hat Tools}
+\begin{itemize}
+\item \emph{Tails}: OS that forgets everything.
+\item \emph{Kali Linux}: provides security and pentesting tools.
+\item \emph{Metasploit}: like \texttt{nmap}, identifies systems and vulns.
+\end{itemize}
+
+\paragraph{Network Security Issues}
 \begin{itemize}
 \item \emph{Access control}: only certain users are allowed to access a
 resource.
 \item \emph{Authentication}: user knows that the resource really is what
 it says it is, and v.v.
 \item \emph{Confidentiality}: user limits access to information / resources
-they own.
+they own. (Encryption).
 \item \emph{Integrity}: actions of a user should not affect integrity of
 resource.
 \item \emph{Non-repudiation}: users cannot deny communication took place.
+(Monitoring, logging, auditing).
 \end{itemize}
+
+\subsection{Firewalls}
+
+\paragraph{Access Control}
+
+In a \emph{secure channel}, the \emph{guard} (e.g. firewall) controls:
+\begin{itemize}
+\item Which principals can access the resource.
+\item Where principals are allowed to be located.
+\item What requests principals are allowed to make.
+\end{itemize}
+A firewall:
+\begin{itemize}
+\item Controls access to the network (gateway between \emph{internal} and
+\emph{external} networks).
+\item Analyses inbound packets, and blocks / allows based on rules.
+\end{itemize}
+Examples:
+\begin{itemize}
+\item \emph{Application-level gateway}: runs on the host.
+\begin{itemize}
+\item Can block based on application-level content.
+\end{itemize}
+\item \emph{Proxy server}: runs on the entire network, can protect entire
+LAN.
+\begin{itemize}
+\item Private network only accessible via proxy.
+\end{itemize}
+\item \emph{Circuit-level gateway}: act like a non-caching proxy.
+\item \emph{Packet filtering}:
+\begin{itemize}
+\item \emph{Stateless}: checks source / destination IP address and ports.
+\item \emph{Stateful}: remembers connections and check contents of current
+and previous packets.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Bastion Hosts}
+
+External hosts which expect to be attacked.
+\begin{itemize}
+\item Performs auditing / logging.
+\item Runs a trusted and secure OS.
+\item Administered via dedicated terminal.
+\item Only run necessary software, set file permissions, turn on quotas,
+process limits, remove regular user accounts, make filesystem read
+only, ....
+\end{itemize}
+Responsibilities:
+\begin{itemize}
+\item Relays connections and maintains state.
+\item Can authenticate users.
+\item Can drop connections if necessary.
+\end{itemize}
+
+\paragraph{Demilitarized Zone}
+
+Area between you and the outside.
+\begin{itemize}
+\item External hosts can only speak directly to your internal hosts within
+the DMZ.
+\item All other non-DMZ hosts are protected by the gateway/router/firewall.
+\item Router uses NAT (network address translation) to get external messages
+to correct internal host.
+\item If you want to expose an internal host without putting it in the DMZ,
+you must \emph{port forward} (from a given port of router's public
+IP to a given port of host's NAT-based LAN IP).
+\end{itemize}
+
+\paragraph{Getting Around Firewalls}
+\begin{itemize}
+\item \texttt{ssh}.
+\item Spoof MAC/IP.
+\item Use a VPN (virtual private network) to tunnel around a firewall.
+\begin{itemize}
+\item Firewall won't be able to know what you're doing.
+\item As long as your tunnel uses SSL (secure sockets layer) / TLS (transport
+security layer).
+\end{itemize}
+\end{itemize}
+
+\paragraph{Access Control Lists}
+
+Packet filtering rules.
+\begin{itemize}
+\item Rules are checked top to bottom. Allow what you need, block everything
+else or v.v.
+\item E.g. use \texttt{iptables} and \texttt{tcpd} to edit access control
+lists.
+\end{itemize}
+
+\paragraph{Keywords}
+\begin{itemize}
+\item \emph{IDS}: intrusion detection system.
+\item \emph{IPS}: intrusion protection system.
+\item \emph{NGFW}: next generation firewall: stateful firewall with IPS/IDS.
+\item \emph{UMT}: unified thread management: NGFW but with extra capabilities
+(e.g. antispam/antivirus).
+\end{itemize}
+
+\subsection{Cryptography}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\linewidth]{img/encryption}
+\end{figure}
+
+\paragraph{Symmetric (Secret Key) Encryption}
+\begin{itemize}
+\item $K=K^{-1}$.
+\item $K$ must be carefully distributed.
+\end{itemize}
+
+\paragraph{Asymmetric (Public Key) Encryption}
+\begin{itemize}
+\item $K$ is the \emph{private-key}.
+\item $K^{-1}$ is the \emph{public-key}.
+\item Successfully decrypting the message using public key \emph{authenticates}
+that the message came from the correct transmitter.
+\item Encrypting a message with the receiver's public key ensures \emph{confidentiality}
+since only they can decrypt it.
+\item More secure but slower than symmetric encryption.
+\end{itemize}
+
+\paragraph{Secure Channel Establishment}
+\begin{enumerate}
+\item Agree on a new key. \emph{Diffie-Hellman} key exchange:
+\begin{enumerate}
+\item Choose a generator $g$ and large prime $p$.
+\item Bob chooses a secret $b$ and Alice a secret $a$.
+\item Bob calculates $x=g^{b}\mod p$ and Alice $y=g^{a}\mod p$, and share
+these.
+\item They then
+\end{enumerate}
+\item Use trusted secure hosts.
+\end{enumerate}
 
 \end{document}
