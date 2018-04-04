@@ -856,4 +856,545 @@ key is $g^{ab}\mod p$.
 \item Use trusted secure hosts. Obtain a key from the trusted host securely.
 \end{enumerate}
 
+\section{Network Layer}
+
+Provides facilities for getting data from a source to a destination.
+\begin{itemize}
+\item May make many hops (\emph{routing}).
+\item Must know network \emph{topology} to choose appropriate paths.
+\item Requires \emph{load balancing} along routes.
+\item Has to deal with \emph{network heterogeneity}.
+\end{itemize}
+
+\paragraph{Router}
+\begin{itemize}
+\item Has \emph{interfaces} (physical ports).
+\end{itemize}
+
+\paragraph{Forwarding}
+\begin{itemize}
+\item Potentially multiple, asymmetric paths.
+\item Routers cooperate to find the best routes, by building a \emph{sink
+tree} with \emph{optimal routes}.
+\item Use \texttt{traceroute} command to see.
+\end{itemize}
+
+\paragraph{Routing Algorithms}
+\begin{itemize}
+\item \emph{Shortest path routing}: calculate using Dijkstra's algorithm.
+\item \emph{Flood routing}: forward incoming packet across every outgoing
+link.
+\begin{itemize}
+\item Always chooses \emph{shortest path}.
+\item Increases \emph{overhead}.
+\item Makes sense when \emph{robustness} is required.
+\end{itemize}
+\begin{enumerate}
+\item After a packet was forwarded across $N$ routers (\emph{hop counter}
+$>N$), discard it.
+\item Avoid directed cycles by forwarding only once.
+\item Flood selectively, only in direction that makes sense.
+\end{enumerate}
+\item \emph{Distance vector routing}: dynamic protocol that uses Bellman-Ford:
+\begin{itemize}
+\item Good news propagates quickly.
+\item Bad news propagates slowly (count-to-infinity problem). Use a longest
+acceptable path to avoid this.
+\end{itemize}
+\begin{enumerate}
+\item Consider costs that direct neighbours advertise to get packet to destination.
+\item Select neighbour whose advertised cost + cost to get to that neighbour
+is lowest.
+\item Advertise new cost to neighbours.
+\end{enumerate}
+\item \emph{Link state routing}:
+\begin{enumerate}
+\item Discover direct neighbours and get their addresses.
+\item Calculate cost for sending packet to each neighbour.
+\item Construct LSA (link state advertisement) packet with all information.
+\item Send / collect packet to / from \emph{all} other routers.
+\item Run Dijkstra's algorithm locally to find shortest paths.
+\end{enumerate}
+\end{itemize}
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{ccc}
+\toprule 
+ & \textbf{DVR} & \textbf{LSR}\tabularnewline
+\midrule
+Network knowledge & Local & Global\tabularnewline
+Computation & Global & Local\tabularnewline
+Synchronisation & Gradual & ``Instant''\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{itemize}
+\item \emph{Hierarchical routing}: routing algorithm that can scale!
+\begin{itemize}
+\item Go for suboptimal routes by introducing \emph{regions}, and separate
+algorithms for intra-region and inter-region routing.
+\end{itemize}
+\item \emph{Broadcast routing}: attempt to send message to every host on
+network:
+\begin{itemize}
+\item Use \emph{flood routing}, if we can \emph{limit} flood.
+\item Multi-destination routing approach, requires list of all destinations.
+\item \emph{Multicast}. Build a sink tree and use for multicast route.
+\end{itemize}
+\item \emph{Multicast routing}:
+\begin{itemize}
+\item \emph{Solution 1}: Construct a spanning tree at each router using
+RPF (reverse-path forwarding).
+\begin{itemize}
+\item Each router broadcasts packet to every adjacent router, except where
+it came from.
+\item Accept packet only if it arrives on a direct path from origin.
+\end{itemize}
+\item Use a group ID to prune paths to nodes that do not contain members
+of the group.
+\item \emph{Solution 2}: Use \emph{core-based trees}.
+\begin{itemize}
+\item Single spanning tree per group with root near middle.
+\item Hosts send multicasts to core.
+\item Not optimal for all sources, but more scaleable.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\paragraph{Internetworking}
+
+Construct gateways that interconnect different kinds of networks.
+\begin{itemize}
+\item \emph{PAN}: personal area network, e.g. hotspot between phone and
+laptop.
+\item \emph{LAN}: local area network, multiple users for the same purpose.
+\item \emph{MAN}: metropolitan area network.
+\item \emph{WAN}: wide area network, e.g. the Internet.
+\end{itemize}
+
+\paragraph{Devices}
+\begin{itemize}
+\item \emph{Repeaters} / \emph{hubs}: physical layer devices that boost
+signals.
+\item \emph{Switches}, \emph{bridges}: data link layer devices that make
+\emph{interconnections} based on MAC address.
+\item Multi-protocol \emph{routers} / \emph{gateways}: network layer devices
+that make decisions based on IP address.
+\end{itemize}
+
+\paragraph{The Internet}
+
+Collection of \emph{autonomous systems} connected by \emph{backbones}.
+\begin{itemize}
+\item \emph{Gateway routers} interconnect autonomous systems.
+\item Use \emph{hierarchical routing}:
+\begin{itemize}
+\item \emph{Intra-AS routing protocols}: RIP (distance vector) and open
+shortest path first OSPF (link state).
+\item \emph{Inter-AS routing protocols}: BGP.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Border Gateway Protocol}
+\begin{itemize}
+\item Neighbouring routers maintain connection to simplify reliability:
+provides reachability information from neighbour ASs.
+\item Determines routes to all outside subnets based on reachability information
+and policies.
+\item Path-vector protocol, based on distance-vector routing but paths instead
+of distances announced.
+\item Routers advertise routes to networks.
+\begin{itemize}
+\item Destinations denoted by address prefixes.
+\item May aggregate prefixes (\emph{supernetting}).
+\end{itemize}
+\item \emph{Autonomous system number} (ASN): uniquely identifies each AS.
+\item BGP attributes: include AS-PATH and NEXT-HOP.
+\item BGP import policy: decides whether to accept or reject route advertisement.
+\end{itemize}
+
+\subsection{Internet Protocol}
+
+\emph{Best-effort}: a packet-switched connectionless service.
+\begin{itemize}
+\item Datagram format.
+\item Fragmentation.
+\item Addressing.
+\item Packet handling.
+\end{itemize}
+
+\paragraph{Fragmentation}
+\begin{itemize}
+\item If input datagram exceeds MTU of output link, IP datagram must be
+\emph{fragmented}.
+\item Destination reassembles fragmented datagrams.
+\item \emph{Fragment offset} is offset in units of 8 bytes.
+\item \emph{Total length} is the number of bits in this fragment.
+\item \emph{More fragments} flag will be set if more fragments are expected
+to follow.
+\end{itemize}
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.95\linewidth]{img/ip}
+\end{figure}
+
+\subsubsection{IPv4 Addressing}
+
+Each IP address is a associated with an interface.
+
+\paragraph{Classful Addressing}
+
+No longer used:
+\begin{itemize}
+\item Class A: 0NNNNNNN.HHHHHHHH.HHHHHHHH.HHHHHHHH.
+\item Class B: 10NNNNNN.NNNNNNNN.HHHHHHHH.HHHHHHHH.
+\item Class C: 110NNNNN.NNNNNNNN.NNNNNNNN.HHHHHHHH.
+\item Class D: 1110....: multicast address.
+\item Class E: 1111....: reserved for future use.
+\end{itemize}
+
+\paragraph{Subnet Masking}
+
+Use a single network address for entire organisation, and divide internally
+into subnet addresses and host ids.
+\begin{itemize}
+\item \emph{Classless Inter-Domain Routing} (CIDR) notation: address/prefix-length.
+\item Subnet mask for length $p$ is $p$ 1's followed by $32-p$ 0's.
+\item Network name is given first IP.
+\item First IP of a host is the router.
+\item Last IP is the broadcast address.
+\end{itemize}
+
+\paragraph{Longest Prefix Matching}
+
+Choose entry that matches destination address with longest prefix.
+\begin{itemize}
+\item 0.0.0.0/0 is the \emph{default route} (otherwise broadcast).
+\end{itemize}
+
+\paragraph{Network Address Translation}
+
+Assign each company / home a single IP, each device gets a unique
+local IP.
+\begin{itemize}
+\item Several private address ranges exist for local networks.
+\item You can find out your local IP, you can use \texttt{ifconfig}.
+\item When a connection is set up from a local IP on port X, the router
+uses its public address on port Y, and registers a mapping.
+\item Incoming connections require a static mapping from a port on the public
+address to a given port on a local address.
+\end{itemize}
+Criticism:
+\begin{enumerate}
+\item Violates architectural IP model of IP address uniquely identifying
+a machine.
+\item Makes internet a connection-oriented network.
+\item NAT makes assumptions about TCP, cannot easily support new transport
+protocols.
+\item Uses behind NAT cannot be contact directly without port forwarding.
+\end{enumerate}
+IPv6 could help deal with lack of IP addresses.
+
+\subsubsection{IPv6 Addressing}
+\begin{itemize}
+\item Expanded addressing, supports anycast.
+\item Fragmentation done at end systems.
+\item Remove header checksum, since the transport protocols do this already.
+\item Remove options.
+\end{itemize}
+
+\subsection{Internet Control Message Protocol}
+\begin{itemize}
+\item Error reporting.
+\item Signalling.
+\end{itemize}
+E.g. used for \texttt{ping}.
+
+\subsection{Dynamic Host Configuration Protocol}
+
+Address configuration.
+\begin{itemize}
+\item Each new machine broadcasts DHCP DISCOVER packet when it connects.
+\item DHCP server replies with the assigned IP address.
+\item Mapping may be static, or assign different addresses each time a host
+connects.
+\end{itemize}
+
+\section{Data Link Layer}
+
+\subsection{Ethernet}
+
+\paragraph{Cables}
+
+Goal is to protect against electromagnetic interference (EMI):
+\begin{itemize}
+\item \emph{UTP} (unshielded twisted pair).
+\item STP (shielded/screened twisted pair).
+\item \emph{FTP} (foiled twisted pair).
+\item \emph{SFTP} (shielded and foiled twisted pair).
+\end{itemize}
+
+\paragraph{Pinouts}
+\begin{itemize}
+\item \emph{Straight-through}: communicate between \emph{different} OSI
+layers.
+\item \emph{Crossover} (media dependent interface MDI): communicate between
+devices of the \emph{same} OSI layer.
+\item \emph{Rollover} (media dependent interface with crossover MDIX): directly
+tap into a networking device.
+\end{itemize}
+
+\paragraph{Switches}
+\begin{itemize}
+\item Forwards messages out of the right port.
+\item Uses a forwarding information base (FIB) MAC table.
+\end{itemize}
+
+\paragraph{Frames}
+\begin{itemize}
+\item Has a cyclic redundancy check (CRC) checksum in the footer).
+\end{itemize}
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\linewidth]{img/ethernet}
+\end{figure}
+
+\paragraph{MAC Addressing}
+\begin{itemize}
+\item Each network interface card (NIC) has a MAC address.
+\item 48 bits / 6 bytes.
+\item 8th (I/G) bit decides if individual or group address.
+\item 7th (U/L) bit decides if universally or locally administered.
+\item FF:FF:FF:FF:FF:FF is the \emph{broadcast address}.
+\item IP is linked to MAC address, so routers can explain to switches which
+host a packet is for.
+\end{itemize}
+
+\paragraph{Address Resolution Protocol}
+
+Use \texttt{arp} to see what your computer knows. Use \texttt{tcpdump}
+to see communication.
+\begin{enumerate}
+\item \emph{Router}: asks each host on LAN if they have the request IP.
+(Broadcasts a frame).
+\begin{itemize}
+\item \texttt{arp who has host\_ip tell router\_ip (router\_mac)}
+\end{itemize}
+\item \emph{Host}: checks it has the requested address, if so, send reply
+with its MAC.
+\begin{itemize}
+\item \texttt{arp reply host\_ip is\_at host\_mac (router\_mac)}
+\end{itemize}
+\item \emph{Router}: receive ARP message and caches IP and MAC.
+\end{enumerate}
+
+\subsection{Network Topologies}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.5\linewidth]{img/network-topologies}
+\end{figure}
+\begin{itemize}
+\item \emph{Bus}: used main coaxial cable to connect all hosts, use a BNC
+coaxial T connectors and terminators. 
+\item \emph{Ring}: requires 2 NICs per host. If a link gets cut, network
+dies. Also \emph{dual-ring} which requires 4 NICs per host.
+\begin{itemize}
+\item \emph{Fibre Distributed Data Interface} (FDDI): supports long distance
+transmission, and can short circuit two rings together.
+\end{itemize}
+\item \emph{Token ring}: connect all hosts to a multi-station access unit
+(MSAU). Data flows by passing around a token.
+\begin{itemize}
+\item \emph{Frames}: \emph{access control} bit at the start of all frames
+to identify presence of token, \emph{frame status} bit to say whether
+address was found, \emph{inter-frame gaps} to separate them.
+\item \emph{Active monitor}: takes responsibility for generating tokens,
+any host must be able to do this.
+\item \emph{Concentrators} avoid single failures breaking links by switching
+out faulty hosts.
+\end{itemize}
+\item \emph{Star}: no token. Central device is a single point of failure
+(SPoF).
+\item \emph{Line}: ring that doesn't meet at the ends (terrible).
+\item \emph{Tree}: a star bus.
+\item \emph{Mesh}: some connected to some. More fault tolerant, but expensive.
+\item \emph{Fully connected}: expensive and difficult to manage.
+\item \emph{Hybrid}: mix of topologies.
+\end{itemize}
+
+\subsection{Medium Access Control}
+
+Coordinates channel access.
+\begin{itemize}
+\item A separate layer within the Data Link layer (the other is Logical
+Link Control). 
+\end{itemize}
+
+\paragraph{Strategies}
+\begin{enumerate}
+\item \emph{No control}. let stations retransmit after collision.
+\begin{itemize}
+\item Fine if utilisation is low, otherwise very inefficient.
+\end{itemize}
+\item \emph{Round-robin}. stations take turns using the channel.
+\begin{itemize}
+\item Used by \emph{token-based} MAC systems - only station with the token
+can transmit.
+\end{itemize}
+\item \emph{Reservation}: stations obtain channel reservation before transmitting.
+\begin{itemize}
+\item Used in \emph{slotted} systems - need to manage reservations.
+\end{itemize}
+\end{enumerate}
+
+\paragraph{Static Channel Allocation}
+\begin{enumerate}
+\item \emph{Time division multiplexing} (TDM): station must wait its turn
+to transmit.
+\item \emph{Frequency division multiplexing} (FDM): station must use only
+limited frequency band.
+\end{enumerate}
+
+\paragraph{Dynamic Channel Allocation}
+\begin{enumerate}
+\item \emph{ALOHA}: When a station has a frame to be transmitted, send it.
+When collisions occur, wait a \emph{random} amount of time and retry.
+\item \emph{Slotted ALOHA}: Only specific time slots when stations may transmit.
+\begin{enumerate}
+\item \emph{Carrier sensing}: transmission only allowed when channel is
+idle.
+\begin{enumerate}
+\item \emph{CSMA/CD}: Carrier sense multiple access / collision detection
+(Ethernet).
+\item \emph{CSMA/CA}: Carrier sense multiple access / collision avoidance
+(WiFi).
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+\paragraph{Collision Detection}
+\begin{itemize}
+\item Station senses channel while transmitting to know whether its frame
+is OK.
+\item \emph{CD}: transmission stops after collision, add \emph{jamming signal}.
+\item Host must transmit for long enough to know frame is OK (min length
+is $2n$ where $n$ is end-to-end transmission delay).
+\end{itemize}
+
+\paragraph{Back-Off}
+\begin{itemize}
+\item \emph{1-persistant CSMA}: Station keeps checking if the channel is
+free and then transmits immediately.
+\item \emph{Non-persistent CSMA}: If channel is busy, wait for a random
+amount of time before checking again and then transmit immediately.
+\item \emph{$p$-persistent CSMA}: Station keeps checking if channel is
+free and transmits with probability $p$.
+\item \emph{Binary exponential back-off}: after $c$ collisions, choose
+slot in range $0$ to $2^{c}-1$ for next attempt. Give up after 10
+collisions (1023 upper limit).
+\end{itemize}
+
+\paragraph{Token Passing}
+
+An alternative to CSMA/CD.
+\begin{itemize}
+\item Collisions are inevitable using CSMA/CD, stations may be delayed indefinitely.
+\end{itemize}
+
+\paragraph{Carrier Extension}
+
+Pad any packet up to 512 bytes.
+
+\paragraph{Frame Bursting}
+
+Allow host to send multiple frames: many short frames with carrier
+in between.
+
+\paragraph{Switched topology}
+
+One host on each port to avoid collisions. Switches only transmit
+when channel available.
+
+\section{Physical Layer}
+
+\subsubsection*{Cables}
+
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{cc}
+\toprule 
+ & \textbf{Repeater Spacing}\tabularnewline
+\midrule
+\emph{Twisted Pair} & 2km\tabularnewline
+\emph{Coaxial Cable} & 1-9km\tabularnewline
+\emph{Fibre Optic} & 40km\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{itemize}
+\item Attenuation, bandwidth.
+\end{itemize}
+
+\paragraph{Patch Panels}
+
+Connects sockets to switches.
+
+\paragraph{Wireless Transmission}
+\begin{itemize}
+\item Convenient when communication required without wires.
+\item Bidirectional by default.
+\end{itemize}
+
+\paragraph{Information Representation}
+\begin{itemize}
+\item \emph{Baud rate}: symbol rate per second.
+\item \emph{Bitrate}: how many times per unit \emph{can} the symbol change?
+\end{itemize}
+%
+\begin{itemize}
+\item A digital channel can be implemented by an analogue channel using
+a \emph{modem}.
+\item An analogue channel can be implemented by a digital channel using
+a \emph{codec}.
+\end{itemize}
+
+\paragraph{Properties of Signals}
+
+\[
+c=f\lambda
+\]
+
+If $\lambda$ is in meters and $f$ is in MHz, $\lambda f\approx300$.
+\begin{itemize}
+\item \emph{Waveform}: shape.
+\item \emph{Amplitude}: range.
+\item \emph{Wavelength}: distance signal travels before repetition.
+\item \emph{Frequency}: number of repetitions per unit time.
+\end{itemize}
+
+\paragraph{Modulation}
+
+Encode digital information signal to be transmitted effectively using
+bandwidth supported by a channel.
+\begin{itemize}
+\item \emph{Baseband modulation}: unmodified.
+\item \emph{Broadband modulation}: use physical carrier signal to encode
+information signal.
+\begin{itemize}
+\item \emph{Amplitude modulation} (ASK): carrier frequency is modulated
+in amplitude (prone to interference).
+\item \emph{Frequency modulation} (PSK).
+\item \emph{Phase modulation} (PSK): phase change represents a 1 bit.
+\item More advanced modulation techniques transmit multiple bits per symbol
+- using combination of modulation schemes.
+\end{itemize}
+\end{itemize}
+
+\paragraph{DSL}
+\begin{itemize}
+\item Conventional phone lines can only reach 56Kbps download speed, limited
+to 3000Hz bandwidth.
+\item DSL (digital subscriber line) removes the bandwidth filter.
+\item ADSL (asymmetric). E.g. divides 1.1MHz bandwidth into 256 channels
+of 4000Hz each, mostly allocated to download.
+\end{itemize}
+
 \end{document}
