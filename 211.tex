@@ -4,8 +4,13 @@
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{float}
+\usepackage{booktabs}
 
 \makeatletter
+
+\providecommand{\tabularnewline}{\\}
+
 
 
 
@@ -33,6 +38,10 @@
 \usepackage{listings}
 \renewcommand{\lstlistingname}{Listing}
 
+\AtBeginDocument{
+  \def\labelitemii{ }
+}
+
 \makeatother
 
 \usepackage{babel}
@@ -40,6 +49,214 @@
 
 \title{Reference Sheet for C211 Operating Systems}
 
-\date{Spring 2018}\maketitle
+\date{Spring 2018}
+\maketitle
 
+\paragraph{Operating systems}
+
+have to
+\begin{itemize}
+\item \emph{Manage resources}: processors, memory, IO, clocks, interrupt
+controllers, storage.
+\item \emph{Provide clean interfaces}: offer level of abstraction above
+hardware.
+\end{itemize}
+
+\paragraph{Flavours}
+
+E.g. server / supercomputer / smartphone / embedded operating systems.
+
+\paragraph{Kernel}
+
+Part of the OS that:
+\begin{itemize}
+\item Is always loaded in memory.
+\item Executes in a privileged mode with access to all hardware.
+\end{itemize}
+
+\paragraph{Structure}
+\begin{itemize}
+\item \emph{Monolithic kernels}: single executable with its own address
+space.
+\begin{itemize}
+\item $+$ Efficient calls within kernel.
+\item $+$ Easier to write components due to shared memory.
+\item $-$ Complex design with lots of interactions.
+\item $-$ No protection between kernel components.
+\end{itemize}
+\item \emph{Microkernels}: minimal level kernel with functionality in user-level
+servers.
+\begin{itemize}
+\item $+$ Kernel not complex so less error prone.
+\item $+$ Servers have clean interfaces.
+\item $+$ Servers can crash and restart without crashing kernel.
+\item $-$ Overhead of IPC within kernel high.
+\end{itemize}
+\item \emph{Hybrid kernels}: combines features of each. Compromise between
+clean design and performance overhead.
+\end{itemize}
+
+\section{Processes}
+
+\paragraph{Process}
+
+An instance of a program being executed.
+\begin{itemize}
+\item Provides illusion of concurrency.
+\item Provides isolation between programs (each has its own address space).
+\item Simplicity of programming (can assume complete control).
+\item Allows better utilisation of resources.
+\end{itemize}
+
+\paragraph{Types of Concurrency}
+\begin{itemize}
+\item \emph{Pseudo concurrency}: single processor is switched between processes
+by interleaving (e.g. by \emph{time-slicing}).
+\item \emph{Real concurrency}: utilises multiple physical processors.
+\end{itemize}
+
+\paragraph{CPU Utilisation}
+
+If we have $n$ processes, each with probability $p$ of waiting for
+I/O at any time, expect CPU utilisation to be $1-p^{n}$.
+
+\paragraph{Context Switch}
+
+Processor switches from executing process $A$ to process $B$.
+\begin{itemize}
+\item OS may make scheduling decisions: may switch processes in response
+to events/interrupts.
+\item Adds non-determinism to execution (events occur in unpredictable order).
+\item \emph{Expensive}: need to save/restore state, lost CPU caches (including
+TLBs), ...
+\end{itemize}
+
+\paragraph{Process Control Block}
+
+Each process has a \emph{process descriptor} or \emph{process control
+block}, kept in the \emph{process table}.
+\begin{itemize}
+\item Process has its own virtual machine (CPU, address space, file descriptors,
+...).
+\item Need to store state:
+\begin{itemize}
+\item $-$ \emph{Registers}: PC, page table register, stack pointer, ...
+\item $-$ \emph{Process management info}: ID, parent, group, priority,
+CPU used, ...
+\item $-$ \emph{File management info}: root directory, working directory,
+open FDs
+\end{itemize}
+\end{itemize}
+
+\paragraph{Process Types}
+\begin{itemize}
+\item \emph{Foreground processes}: interact with users.
+\item \emph{Background processes}: daemons.
+\end{itemize}
+
+\paragraph{Process Creation}
+
+Can happen by system initialisation, user requests, system calls.
+
+\paragraph{Process termination}
+\begin{itemize}
+\item \emph{Normal completion}: process completes execution of body.
+\item \emph{System call}: call to \texttt{exit()}.
+\item \emph{Abnormal exit}: run into error / unhandled exception.
+\item \emph{Never}: e.g. (hopefully) web servers.
+\end{itemize}
+
+\paragraph{Process Hierarchies}
+
+All processes form a process tree with \texttt{init} as the root (\emph{process
+group}).
+
+\paragraph{Creation and Termination}
+\begin{itemize}
+\item \texttt{fork()} creates a new child process with an exact copy of
+parent. 
+\begin{itemize}
+\item $-$ In parent process, returns PID of child.
+\item $-$ In child process, returns 0.
+\end{itemize}
+\item \texttt{execve(path, argv, envp)} executes a command.
+\item \texttt{waitpid(pid, stat, option)} suspends execution of calling
+process until \texttt{pid} terminates normally or a signal is received.
+\begin{itemize}
+\item $-$ \texttt{-1} waits for any child.
+\item $-$ \texttt{0} waits for any child in the same process group as the
+caller.
+\item $-$ \texttt{-gid} waits for any child with process group \texttt{gid}.
+\end{itemize}
+\item \texttt{exit(status)} terminates process (called implicitly).
+\item \texttt{kill(pid, sig)} sends signal \texttt{sig} to \texttt{pid}.
+\end{itemize}
+
+\paragraph{Communicating between Processes}
+
+Files, signals, pipes, message queues, sockets, shared memory, semaphores.
+
+\paragraph{UNIX Signals}
+
+Used to notify processes when an event occurs.
+\begin{itemize}
+\item User ID of the receiving process must match that of the sending process
+or have appropriate privileges.
+\item Kernel can send signal to any process.
+\item \texttt{SIGFPE} division by 0, \texttt{SIFSEGV} segment violation,
+\texttt{SIGPIPE} writes to closed pipe, \texttt{SIGINT} interrupted
+process, ....
+\item Process can ignore / handle signals (except \texttt{SIGKILL} and \texttt{SIGSTOP}).
+\end{itemize}
+
+\paragraph{UNIX Pipes}
+
+Connects standard output of one process to standard input of another.
+Allows \emph{one-way} communication.
+\begin{itemize}
+\item \texttt{pipe(fd{[}2{]})}: \texttt{fd{[}0{]}} is the read end and \texttt{fd{[}1{]}}
+the write end of the pipe.
+\item \emph{Named pipes} (FIFOs): persistent pipes that outlive process
+which created them.
+\begin{itemize}
+\item Stored on the filesystem, but more efficient since it only exists
+in memory.
+\end{itemize}
+\end{itemize}
+
+\section{Threads}
+
+Execution streams that share the same address space (each process
+can contain one or more threads).
+
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{cc}
+\toprule 
+\textbf{Per process} & \textbf{Per thread}\tabularnewline
+\midrule
+Address space & PC\tabularnewline
+Global variables & Registers\tabularnewline
+Open files & Stack\tabularnewline
+Child processes & \tabularnewline
+Signals & \tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Scheduling}
+
+\section{Synchronisation}
+
+\section{Deadlocks}
+
+\section{Memory Management}
+
+\section{Device Management}
+
+\section{Disk Management}
+
+\section{File Systems}
+
+\section{Security}
 \end{document}
