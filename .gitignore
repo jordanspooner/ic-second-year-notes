@@ -1,6 +1,7 @@
 *.lyx
 *.lyx~
 *.lyx#
+*.lyx.emergency
 *.pdf
 *.eps
 *.aux
