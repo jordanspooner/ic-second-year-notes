@@ -6,6 +6,7 @@
 \setlength{\parindent}{0pt}
 \usepackage{float}
 \usepackage{booktabs}
+\usepackage{graphicx}
 
 \makeatletter
 
@@ -39,7 +40,7 @@
 \renewcommand{\lstlistingname}{Listing}
 
 \AtBeginDocument{
-  \def\labelitemii{ }
+  \def\labelitemii{\(\bullet\)}
 }
 
 \makeatother
@@ -140,11 +141,11 @@ block}, kept in the \emph{process table}.
 ...).
 \item Need to store state:
 \begin{itemize}
-\item $-$ \emph{Registers}: PC, page table register, stack pointer, ...
-\item $-$ \emph{Process management info}: ID, parent, group, priority,
-CPU used, ...
-\item $-$ \emph{File management info}: root directory, working directory,
-open FDs
+\item \emph{Registers}: PC, page table register, stack pointer, ...
+\item \emph{Process management info}: ID, parent, group, priority, CPU used,
+...
+\item \emph{File management info}: root directory, working directory, open
+FDs
 \end{itemize}
 \end{itemize}
 
@@ -176,17 +177,16 @@ group}).
 \item \texttt{fork()} creates a new child process with an exact copy of
 parent. 
 \begin{itemize}
-\item $-$ In parent process, returns PID of child.
-\item $-$ In child process, returns 0.
+\item In parent process, returns PID of child.
+\item In child process, returns 0.
 \end{itemize}
 \item \texttt{execve(path, argv, envp)} executes a command.
 \item \texttt{waitpid(pid, stat, option)} suspends execution of calling
 process until \texttt{pid} terminates normally or a signal is received.
 \begin{itemize}
-\item $-$ \texttt{-1} waits for any child.
-\item $-$ \texttt{0} waits for any child in the same process group as the
-caller.
-\item $-$ \texttt{-gid} waits for any child with process group \texttt{gid}.
+\item \texttt{-1} waits for any child.
+\item \texttt{0} waits for any child in the same process group as the caller.
+\item \texttt{-gid} waits for any child with process group \texttt{gid}.
 \end{itemize}
 \item \texttt{exit(status)} terminates process (called implicitly).
 \item \texttt{kill(pid, sig)} sends signal \texttt{sig} to \texttt{pid}.
@@ -244,7 +244,195 @@ Signals & \tabularnewline
 \end{tabular}
 \end{table}
 
+\paragraph{Uses}
+
+Applications with multiple activities which:
+\begin{enumerate}
+\item Execute in parallel.
+\item Access and process the same data.
+\item May sometimes block.
+\end{enumerate}
+Processes are more heavyweight (difficult communication and expensive
+creation / context switching / termination).
+
+\paragraph{PThreads}
+\begin{itemize}
+\item \texttt{pthread\_create(thread, attr, start\_routine, arg)} creates
+a new thread.
+\item \texttt{pthread\_exit(value\_ptr)} terminates thread and makes \texttt{value\_ptr}
+available to any join. Called implicitly when thread returns.
+\begin{itemize}
+\item If \texttt{main()} terminates, entire process is terminated, unless
+\texttt{pthread\_exit()} is called (process executes until last thread
+terminates or \texttt{exit()} is called).
+\end{itemize}
+\item \texttt{pthread\_yield()} releases CPU to let another thread run.
+\item \texttt{pthread\_join(thread, value\_ptr)} blocks until thread terminates.
+\end{itemize}
+
+\paragraph{Implementation Options}
+\begin{itemize}
+\item \emph{User-level}: kernel is not aware of threads, each process manages
+its own threads.
+\begin{itemize}
+\item Implemented by software library.
+\item Process maintains \emph{thread table} for \emph{thread scheduling}.
+\item $+$ Better performance (creation, termination, switching and joining
+are fast since no kernel involvement required).
+\item $+$ Each application can have its own scheduling algorithm.
+\item $-$ Blocking system calls stops all threads in process. Non-blocking
+I/O can be used (difficult to use).
+\item $-$ During page fault, OS blocks whole process.
+\end{itemize}
+\item \emph{Kernel-level}: managed by the kernel.
+\begin{itemize}
+\item $+$ Blocking system calls / page faults are easily accommodated.
+\item $-$ Thread creation and termination requires system calls so more
+expensive (can use \emph{thread pools} to recycle threads).
+\item $-$ Thread synchronisation requires blocking system calls so more
+expensive.
+\item $-$ Thread switching requires system calls so more expensive.
+\item $-$ No application-specific schedulers.
+\end{itemize}
+\item \emph{Hybrid approach}: use kernel threads and multiple user-level
+threads onto kernel-threads.
+\end{itemize}
+
 \section{Scheduling}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.75\linewidth]{img/process-states}
+\end{figure}
+
+\paragraph{Goals}
+\begin{itemize}
+\item Ensure fairness.
+\item Avoid indefinite postponement.
+\item Enforce policy (e.g. priorities).
+\item Maximise resource utilisation (e.g. CPU, I/O devices).
+\item Minimise overhead (from scheduling decisions and context switches).
+\end{itemize}
+\rule{0.25\columnwidth}{0.5pt}
+\begin{itemize}
+\item Batch systems: optimise for \emph{throughput} and \emph{turnaround
+time}.
+\item Interactive systems: optimise for \emph{response time}.
+\item Real-time systems: meet deadlines.
+\end{itemize}
+
+\paragraph{Preemption}
+\begin{itemize}
+\item \emph{Non-preemptive}: let process run until it blocks or voluntarily
+releases CPU.
+\item \emph{Preemptive}: Let process run for a maximum amount of fixed time,
+using clock interrupt.
+\end{itemize}
+
+\paragraph{Processes}
+\begin{itemize}
+\item \emph{CPU-bound}: spend most of their time using the CPU.
+\item \emph{I/O-bound}: spend most of their time waiting for I/O and use
+CPU only briefly.
+\end{itemize}
+
+\subsection{Scheduling Algorithms}
+
+\paragraph{First-Come-First-Served}
+
+Non-preemptive. Runnable process added to the end of ready queue.
+\begin{itemize}
+\item $+$ No indefinite postponement (all processes are eventually scheduled).
+\item $+$ Really easy to implement.
+\item $-$ Poor turnaround time if a long job is followed by many short
+jobs.
+\end{itemize}
+
+\paragraph{Round Robin}
+
+Run process until it blocks or time quantum exceeded.
+\begin{itemize}
+\item $+$ Fair: ready jobs get equal share of the CPU.
+\item $+$ Good response time for small number of jobs.
+\item $+$ Average turnaround time is low when run-times differ.
+\item $+$ Average turnaround time is poor for similar run-times.
+\end{itemize}
+As quantum increases:
+\begin{itemize}
+\item $+$ Overhead decreases.
+\item $-$ Response time worsens.
+\end{itemize}
+Quantum value should be:
+\begin{itemize}
+\item Much large than cost of a context switch,
+\item But provide decent response time.
+\end{itemize}
+
+\paragraph{Shortest Job First}
+
+Non-preemptive scheduling with run-times known in advance. Pick shortest
+job first.
+\begin{itemize}
+\item $-$ Run-times not usually known in advance.
+\begin{itemize}
+\item Heuristics not always applicable.
+\item User-supplied estimates encourage cheating (terminate processes if
+they exceed estimate).
+\end{itemize}
+\end{itemize}
+
+\paragraph{Shortest Remaining Time}
+
+Preemptive version of shortest job first.
+
+\paragraph{Fair-Share}
+
+Round robin taking into account user that owns a process.
+
+\paragraph{Lottery Scheduling}
+\begin{itemize}
+\item Jobs receive lottery tickets for various resources (e.g. CPU time).
+\item At each scheduling decision, one ticket is chosen at random.
+\item $+$ Highly responsive.
+\item $+$ No starvation.
+\item $+$ Jobs can exchange tickets (allows for priority donation, jobs
+can cooperate).
+\item $+$ Adding / removing jobs affect remaining jobs proportionally.
+\item $-$ Unpredictable response time.
+\end{itemize}
+
+\subsection{Priority Scheduling}
+
+Always run the job with the highest priority.
+\begin{itemize}
+\item Priorities could be externally defined or on some process-specific
+metrics.
+\item Priorities could be static or dynamic.
+\end{itemize}
+
+\paragraph{General-Purpose Scheduling}
+\begin{itemize}
+\item Favour short and I/O bound jobs.
+\item Quickly determine the nature of the job and adapt to changes.
+\end{itemize}
+
+\paragraph{Multilevel Feedback Queues}
+
+One queue for each priority level.
+\begin{itemize}
+\item Run job on highest non-empty priority queue.
+\item Each queue can use a different scheduling algorithm (usually round
+robin).
+\item Need to worry about starvation of low-priority jobs:
+\begin{itemize}
+\item Recompute priorities periodically (e.g. based on how much CPU they've
+used).
+\item \emph{Ageing}: increase job's priority as it waits.
+\end{itemize}
+\item $-$ Not very flexible, priorities make no guarantees.
+\item $-$ Does not react quickly to changes - often needs warm-up period.
+\item $-$ Cheating is still a concern.
+\item $-$ Cannot donate priority.
+\end{itemize}
 
 \section{Synchronisation}
 
