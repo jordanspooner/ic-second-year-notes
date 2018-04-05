@@ -436,7 +436,245 @@ used).
 
 \section{Synchronisation}
 
+\paragraph{Critical Section / Region}
+
+Section of code in which processes access a shared resource.
+
+\paragraph{Mutual Exclusion}
+
+Ensures that if a process is executing its critical section, no other
+process is executing it.
+\begin{itemize}
+\item Processes require \emph{permission} to enter critical sections - \emph{synchronisation
+mechanism} required at entry and exit.
+\end{itemize}
+Requirements for mutual exclusion:
+\begin{enumerate}
+\item No two processes can be inside a critical section at the same time.
+\item No process running outside the critical section can prevent other
+processes from entering it.
+\item No process requiring access to a critical section can be delayed forever.
+\item No assumptions are made about relative speed of processes.
+\end{enumerate}
+
+\paragraph{Disabling Interrupts}
+\begin{itemize}
+\item Only works on single-processor systems.
+\item Blocks I/O, preemptive scheduling, .... Only for short times used
+by kernel code.
+\end{itemize}
+
+\paragraph{Strict Alternation}
+
+Record whose `turn' it is.
+\begin{itemize}
+\item Violates requirement 2.
+\item Busy waiting wastes CPU time (only OK when waiting for a short time).
+\end{itemize}
+
+\paragraph{Peterson's Solution}
+
+Also record whether a thread is interested in entering critical region.
+
+\paragraph{Atomic Operations}
+
+A sequence of one or mare statements that is indivisible.
+\begin{itemize}
+\item \emph{TSL (Test and Set Lock) instruction}: atomically sets memory
+location to 1 and returns old value.
+\end{itemize}
+
+\paragraph{Lock Variables}
+\begin{enumerate}
+\item \emph{Spin lock}: lock using busy waiting.
+\begin{itemize}
+\item Wastes CPU so only should be used when wait is short.
+\item May run into \emph{priority inversion problem}.
+\end{itemize}
+\item \emph{Read/Write lock}: in write mode, thread has exclusive access;
+in read mode, multiple threads can access.
+\end{enumerate}
+
+\paragraph{Lock Metrics}
+\begin{itemize}
+\item \emph{Lock granularity}: the amount of data a lock is protecting.
+\item \emph{Lock overhead}: measure of cost of using locks (memory space,
+initialisation, time required to acquire and release).
+\item \emph{Lock contention}: measure of number of processes waiting for
+lock.
+\end{itemize}
+To minimise contention / maximise concurrency:
+\begin{enumerate}
+\item Choose finer lock granularity.
+\item Make critical sections small.
+\item Use a different lock (e.g. read/write).
+\end{enumerate}
+
+\paragraph{Race Condition}
+
+Occurs when multiple threads or processes read and write shared data
+and the final result depends on the relative timing of their execution.
+
+\paragraph{Memory Models}
+
+Assume \emph{sequential consistency}: operations of each thread are
+in program order.
+
+\paragraph{Happens-Before Relationship}
+
+Partial order between events in a trace. E.g. for $a,b$ with $a$
+occurring before $b$ in the trace:
+\begin{itemize}
+\item If $a,b$ are in the same thread, then $a\rightarrow b$.
+\item if $a$ is \texttt{unlock(L)} and $b$ is \texttt{lock(L)}, then $a\rightarrow b$.
+\item Irreflexive, antisymmetric and transitive.
+\end{itemize}
+So a data race occurs between $a,b$ in trace iff:
+\begin{enumerate}
+\item They access the same memory location.
+\item At least one is a write.
+\item They are unordered according to happens-before.
+\end{enumerate}
+
+\paragraph{Semaphores}
+
+Process cooperate by means of signals (process will continue if it
+receives a signal). Special variable with atomic operations:
+\begin{enumerate}
+\item \texttt{down(s)}: receive a signal via a semaphore \texttt{s}.
+\item \texttt{up(s)}: transmit a signal via semaphore \texttt{s}.
+\item \texttt{init(s, i)}: initialise semaphore \texttt{s} with value \texttt{i}.
+\end{enumerate}
+\begin{itemize}
+\item Implemented using a \texttt{counter} and a \texttt{queue} of waiting
+processes.
+\item Initial \texttt{counter} indicates how many process can access shared
+data at same time.
+\item Useful for mutual exclusion, ordering events.
+\end{itemize}
+
+\paragraph{Producer/Consumer}
+
+Easily implemented with three semaphores:
+\begin{itemize}
+\item Producer can only deposit in buffer if there is space and mutex is
+ensured.
+\item Consumer can only fetch from buffer if it is non-empty and mutex is
+ensured.
+\item Buffer can hold $0$ to $N$ items.
+\end{itemize}
+
+\paragraph{Monitors}
+
+Made up of:
+\begin{itemize}
+\item \emph{Shared data}.
+\item \emph{Entry procedures} (called from outside monitor) and \emph{internal
+procedures}.
+\item An implicit monitor \emph{lock}.
+\item \emph{Condition variables} associated with high-level conditions:
+\begin{itemize}
+\item \texttt{wait(c)}: releases monitor lock and waits for \texttt{c} to
+be signalled.
+\item \texttt{signal(c)}: wakes up one process waiting for \texttt{c}.
+\item \texttt{broadcast(c)}: wakes up all processes waiting for \texttt{c}.
+\end{itemize}
+\end{itemize}
+Different semantics possible:
+\begin{itemize}
+\item \emph{Hoare}: process waiting for signal is immediately scheduled.
+\begin{itemize}
+\item $+$ Easy to reason about.
+\item $-$ \emph{Inefficient}: forces a context switch, places extra constraints
+on scheduler.
+\end{itemize}
+\item \emph{Lampson}: sending signal and waking up from a wait not atomic.
+\begin{itemize}
+\item $-$ More difficult to understand (\texttt{wait()} usually needs to
+be called in a \texttt{while} loop).
+\item $+$ More efficient.
+\item $+$ \emph{More robust}: if condition is wrong, it gets discarded
+when rechecked.
+\end{itemize}
+\end{itemize}
+
 \section{Deadlocks}
+
+Set of processes is \emph{deadlocked} if each process is waiting for
+an event that only another process can cause.
+
+\paragraph{Requirements}
+\begin{itemize}
+\item \emph{Mutual exclusion}: each resource is either available or assigned
+to exactly one process.
+\item \emph{Hold and wait}: process can request resources while it holds
+other resources earlier.
+\item \emph{No preemption}: resources given to a process earlier cannot
+be forcibly revoked.
+\item \emph{Circular wait}: two or more processes in a circular chain, each
+waiting for a resource held by the next process.
+\end{itemize}
+
+\paragraph{Resource Allocation Graph}
+
+Directed graph in which:
+\begin{itemize}
+\item Arc from resource to process = process currently owns resource.
+\item Arc from process to resource = process blocked waiting for resource.
+\item Cycle = deadlock.
+\end{itemize}
+
+\paragraph{Handling Deadlocks}
+\begin{enumerate}
+\item \emph{Ignore it}: fine if contention for resources is low.
+\item \emph{Detection and recovery}.
+\begin{enumerate}
+\item \emph{Detection}: dynamically build resource ownership graph and look
+for cycles.
+\item \emph{Recovery}:
+\begin{enumerate}
+\item \emph{Preemption}: temporarily take resource from owner and give to
+another (hard).
+\item \emph{Rollback}: checkpoint states, and rollback on deadlock.
+\item \emph{Killing processes}: select a random process and cycle and kill
+it.
+\end{enumerate}
+\end{enumerate}
+\item \emph{Dynamic avoidance}: dynamically consider request and whether
+it is safe to grant it.
+\begin{enumerate}
+\item \emph{Banker's algorithm}: a state is \emph{safe} iff there exists
+a sequence of allocations that guarantees \emph{all} customers can
+be satisfied.
+\end{enumerate}
+\item \emph{Prevention}: ensure at least one of the four deadlock conditions
+never holds.
+\begin{enumerate}
+\item \emph{Mutual exclusion}: try to share the resource.
+\item \emph{Hold and wait}: require all processes to request resources before
+start (need to know what you need in advance).
+\item \emph{No preemption}: force process to give up resource (often hard).
+\item \emph{Avoid circular wait}: force single resource per process OR enforce
+global order of resources.
+\end{enumerate}
+\end{enumerate}
+
+\paragraph{Communication Deadlock}
+
+Use reliable communication protocol based on timeouts.
+
+\paragraph{Livelock}
+
+Processes/threads not blocked but not making progress. E.g.
+\begin{itemize}
+\item Entering critical section fails and cause another attempt.
+\item System receiving and processing messages, where processing thread
+has lower priority and never gets a chance to run (\emph{receive livelock}).
+\end{itemize}
+
+\paragraph{Starvation}
+
+Want all processes to eventually get resource they need.
 
 \section{Memory Management}
 
