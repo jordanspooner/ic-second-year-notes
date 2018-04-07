@@ -966,6 +966,115 @@ Consider \emph{page fault frequency} to tune allocation.
 
 \section{Device Management}
 
+\paragraph{Objectives}
+\begin{enumerate}
+\item Allow fair access to shared devices.
+\item Exploit parallelism of I/O devices.
+\item Provide uniform simple view of I/O (hide complexity, make naming /
+error handling uniform).
+\end{enumerate}
+
+\paragraph{Device Variations}
+
+\emph{Block} devices use a buffer cache. \emph{Character} devices
+don't.
+
+\paragraph{I/O Layers}
+\begin{enumerate}
+\item \emph{User level I/O software}: provides user interface:
+\begin{itemize}
+\item Operations \texttt{open}, \texttt{close}, \texttt{read}, \texttt{write},
+\texttt{seek}.
+\item UNIX: access virtual devices as files.
+\end{itemize}
+\item \emph{Device-independent operating system software}: provides device
+independence (from type and instance).
+\begin{itemize}
+\item Maps logical to physical devices.
+\item Requests validation against device characteristics.
+\item Allocates dedicated devices.
+\item Validates user access.
+\item Implements buffering.
+\item Reports errors.
+\end{itemize}
+\item \emph{Device drivers/handlers}: handle one device type.
+\begin{itemize}
+\item Implements read/write.
+\item Accesses device registers.
+\item Initiates operations.
+\item Schedules requests.
+\item Handles errors.
+\end{itemize}
+\item \emph{Interrupt handlers}: process each interrupt.
+\begin{itemize}
+\item Block devices: on transfer completion, signals device handler.
+\item Character devices: when character transferred, process next character.
+\end{itemize}
+\end{enumerate}
+
+\paragraph{Dedicated Devices}
+
+Either \emph{fail} if already opened or \emph{queue} open requests.
+
+\paragraph{Shared Devices}
+
+E.g. OS provides file system for disks.
+
+\paragraph{Spooling}
+
+Avoid blocking user access to allocated, non-sharable devices. E.g.
+for printers:
+\begin{enumerate}
+\item Save printer output to disk file.
+\item Print file later by \emph{spooler daemon} (only spooler daemon permitted
+access to printer).
+\end{enumerate}
+
+\paragraph{Buffered I/O}
+\begin{itemize}
+\item \emph{Output}: transferred to OS output buffer, process only suspends
+when buffer is full.
+\item \emph{Input}: OS reads ahead, process blocks only when buffer is empty.
+\end{itemize}
+
+\paragraph{Unbuffered I/O}
+\begin{itemize}
+\item Data transferred directly from user space to/from device (each read/write
+causes physical I/O).
+\item High process switching overhead.
+\end{itemize}
+
+\paragraph{Memory-Mapped I/O}
+
+Devices addressed as memory locations.
+
+\paragraph{Ways to do I/O}
+\begin{enumerate}
+\item \emph{Programmed I/O}: continually poll until ready.
+\item \emph{Interrupt-driven I/O}: initiate transfer, interrupt when complete.
+\item \emph{I/O using DMA}: DMA controller transfers and interrupts when
+complete.
+\end{enumerate}
+
+\paragraph{Blocking I/O}
+\begin{itemize}
+\item I/O call returns when operation completed.
+\item Process suspended during I/O.
+\end{itemize}
+
+\paragraph{Non-blocking I/O}
+\begin{itemize}
+\item I/O call returns as much as available.
+\item Provides application-level polling for I/O.
+\end{itemize}
+
+\paragraph{Asynchronous I/O}
+\begin{itemize}
+\item Process executes in parallel with I/O operation.
+\item I/O systems notify process upon completion (e.g. by callback function).
+\item Very efficient, but difficult to use and less secure.
+\end{itemize}
+
 \section{Disk Management}
 
 \section{File Systems}
