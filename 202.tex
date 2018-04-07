@@ -64,6 +64,20 @@
 \usepackage{listings}
 \renewcommand{\lstlistingname}{Listing}
 
+
+\usepackage{titlesec}
+\titleformat*{\section}{\color{blue!60!green!40!black} \vspace{8pt}\titlerule\vspace{4pt}\Large\bfseries\sffamily}
+\titleformat*{\subsection}{\color{blue!60!green} \vspace{2pt}\large\bfseries\sffamily}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{enumitem}
+\setlist{itemsep=0pt}
+
+
+\let\emph\relax
+\DeclareTextFontCommand{\emph}{\bfseries}
+
 \makeatother
 
 \usepackage{babel}
@@ -72,9 +86,9 @@
 
 \begin{document}
 
-\title{Reference Sheet for C202 Algorithms II}
+\title{\vspace{-4ex}Reference Sheet for CO202 Algorithms II\vspace{-4ex}}
 
-\date{Spring 2018}
+\date{Spring 2018\vspace{-2ex}}
 \maketitle
 
 \section{Order of Growth}
@@ -782,14 +796,14 @@ of nodes).
 \item Time complexity: $O\left(\left|V\right|\left|E\right|\right)$.
 \end{itemize}
 
-\paragraph{Floyd-Warshall Algorithm
+\paragraph{Floyd-Warshall Algorithm}
+
 \[
-D_{ij}^{\left(k\right)}=\protect\begin{cases}
-w_{ij} & k=0\protect\\
+D_{ij}^{\left(k\right)}=\begin{cases}
+w_{ij} & k=0\\
 \min\left(D_{ij}^{\left(k-1\right)},D_{ik}^{\left(k-1\right)}+D_{kj}^{\left(k-1\right)}\right) & k\geq1
-\protect\end{cases}
+\end{cases}
 \]
-}
 \begin{itemize}
 \item Time complexity: $O\left(\left|V\right|^{3}\right)$.
 \end{itemize}

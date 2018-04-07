@@ -42,14 +42,29 @@
 \usepackage{listings}
 \renewcommand{\lstlistingname}{Listing}
 
+
+
+\usepackage{titlesec}
+\titleformat*{\section}{\color{blue!60!green!40!black} \vspace{8pt}\titlerule\vspace{4pt}\Large\bfseries\sffamily}
+\titleformat*{\subsection}{\color{blue!60!green} \vspace{2pt}\large\bfseries\sffamily}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{enumitem}
+\setlist{itemsep=0pt}
+
+
+\let\emph\relax
+\DeclareTextFontCommand{\emph}{\bfseries}
+
 \makeatother
 
 \usepackage{babel}
 \begin{document}
 
-\title{Reference Sheet for C221 Compilers}
+\title{\vspace{-4ex}Reference Sheet for CO221 Compilers\vspace{-4ex}}
 
-\date{Autumn 2017}
+\date{Autumn 2017\vspace{-2ex}}
 
 \maketitle
 \begin{figure}[H]

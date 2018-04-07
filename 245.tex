@@ -39,14 +39,28 @@
 \usepackage{listings}
 \renewcommand{\lstlistingname}{Listing}
 
+
+\usepackage{titlesec}
+\titleformat*{\section}{\color{blue!60!green!40!black} \vspace{8pt}\titlerule\vspace{4pt}\Large\bfseries\sffamily}
+\titleformat*{\subsection}{\color{blue!60!green} \vspace{2pt}\large\bfseries\sffamily}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{enumitem}
+\setlist{itemsep=0pt}
+
+
+\let\emph\relax
+\DeclareTextFontCommand{\emph}{\bfseries}
+
 \makeatother
 
 \usepackage{babel}
 \begin{document}
 
-\title{Reference Sheet for C245 Probability and Statistics}
+\title{\vspace{-4ex}Reference Sheet for CO245 Probability and Statistics\vspace{-4ex}}
 
-\date{Spring 2018}
+\date{Spring 2018\vspace{-2ex}}
 \maketitle
 
 \section{Probability}
@@ -192,17 +206,17 @@ E_{X}\left(aX+b\right)=aE_{X}\left(X\right)+b
 \sigma_{X}\left(X\right)=\sqrt{\text{Var}_{X}\left(X\right)}
 \]
 
-\paragraph{Skewness $\gamma_{1}$
+\paragraph{Skewness $\gamma_{1}$}
+
 \[
 \gamma_{1}=\frac{E_{X}\left[\left(X-E_{X}\left(X\right)\right)^{3}\right]}{\sigma_{X}\left(X\right)^{3}}
 \]
-}
 
-\paragraph{Probability Generating Function $G_{X}\left(z\right)$
+\paragraph{Probability Generating Function $G_{X}\left(z\right)$}
+
 \[
 G_{X}\left(z\right)=E_{X}\left(z^{X}\right)=\sum_{x}p_{X}\left(x\right)z^{x}
 \]
-}
 
 \paragraph{Moments $M_{n}$}
 \begin{itemize}
@@ -703,11 +717,11 @@ S_{n_{1}+n_{2}-2}^{2}=\frac{\sum_{i=1}^{n_{1}}\left(X_{i}-\overline{X}\right)^{2
 
 \subsection{Goodness of Fit}
 
-\paragraph{Chi-Square Statistic
+\paragraph{Chi-Square Statistic}
+
 \[
 \chi^{2}=\sum_{i=1}^{k}\frac{\left(O_{i}-E_{i}\right)^{2}}{E_{i}}
 \]
-}
 \begin{itemize}
 \item Approximation is valid only if $\forall jE_{j}\geq5$.
 \item The \emph{rejection region} at the $100\alpha\%$ level is given by
