@@ -1277,5 +1277,332 @@ blocks can't be evicted.
 
 \section{File Systems}
 
+\paragraph{Objectives}
+\begin{enumerate}
+\item Long term, non-volatile, online \emph{storage}.
+\item \emph{Sharing} of information or software.
+\item \emph{Concurrent access} to shared data.
+\item \emph{Organisation} and \emph{management} of data.
+\end{enumerate}
+A \emph{file} is a named collection of data.
+
+\paragraph{File Types}
+\begin{itemize}
+\item Links (hard / soft).
+\item Regular files (ASCII / binary).
+\item Directories.
+\item Special files (character / block devices).
+\end{itemize}
+
+\paragraph{Functions}
+
+Create, delete, open, close, read, write, ... and also functions for
+metadata.
+
+\paragraph{Support Functions}
+\begin{itemize}
+\item Logical name to physical disk address translation.
+\item Management of disk space.
+\item File locking for exclusive access.
+\item Performance optimisation (caching, buffering).
+\item Protection against simple failure.
+\item Security (protection against unauthorised access).
+\end{itemize}
+
+\paragraph{Attributes}
+\begin{itemize}
+\item Basic information: name, type, organisation, creator.
+\item Address information: volume, start address (sector), size used, size
+allocated.
+\item Access control information: owner, authentication, permissions.
+\item Usage information: creation, last modified, last read, expiry date,
+....
+\end{itemize}
+
+\subsection{File System Organisation}
+
+\paragraph{Dynamic Space Management}
+
+Allocate space in blocks.
+\begin{itemize}
+\item \emph{Small block size}: wastes space for large files.
+\begin{itemize}
+\item High overhead for managing data.
+\item High file transfer time (seek time greater than transfer time).
+\end{itemize}
+\item \emph{Large block size}: wastes space for small files (more memory
+used for buffer space).
+\end{itemize}
+
+\paragraph{Contiguous File Allocation}
+
+Place file data at contiguous addresses on storage device.
+\begin{itemize}
+\item $+$ Successive logical records usually physically adjacent.
+\item $-$ External fragmentation.
+\item $-$ Poor performance if files grow and shrink. (If file grows beyond
+originally specified size and no contiguous free blocks available,
+extra I/O operations required to move it to new area).
+\end{itemize}
+
+\paragraph{Block Chaining}
+
+When locating data block, chain must be searched from beginning.
+\begin{itemize}
+\item $-$ If blocks dispersed throughout disk, search process slow.
+\item $-$ Wastes pointer space in each block.
+\item \emph{Large block sizes} causes internal fragmentation.
+\item \emph{Small block sizes} cause poor performance due to many seeks.
+\end{itemize}
+
+\paragraph{Block Allocation Table}
+
+Stores pointers to file blocks.
+\begin{itemize}
+\item Directory entries indicate first block of file.
+\item Block number as index into block allocation table.
+\item $+$ Reduces number of lengthy seeks.
+\item $-$ Files become fragmented, requires periodic defragmentation.
+\item $-$ Tables can get very large
+\end{itemize}
+
+\paragraph{File Allocation Table}
+
+Stored on disk but cached in memory for performance.
+
+\paragraph{Index Blocks}
+
+Each file has one or more index blocks, with a list of pointers to
+the file's data blocks.
+\begin{itemize}
+\item Directory entries point to index block.
+\item \emph{Chaining}: some entries in index block reserved for pointers
+to further index blocks.
+\item $+$ Searching may take place in index blocks.
+\item $+$ Placing index blocks near data blocks allows quick access to
+data.
+\item $+$ Can cache index blocks in memory.
+\end{itemize}
+
+\paragraph{Free Space Management}
+\begin{enumerate}
+\item Use a \emph{free list}: linked list of block containing locations
+of free blocks.
+\begin{itemize}
+\item Blocks allocated from beginning, freed blocks added to end.
+\item $+$ Low overhead to maintain free list.
+\item $-$ Files likely to be allocated in noncontiguous blocks (increases
+file access time).
+\end{itemize}
+\item Use a \emph{bitmap}: contains one bit in memory for each disk block.
+\begin{itemize}
+\item $+$ Can determine available contiguous blocks quickly.
+\item $-$ May need to search entire bitmap to find block (higher overhead).
+\end{itemize}
+\end{enumerate}
+
+\paragraph{Filesystem Layout}
+\begin{itemize}
+\item \emph{Boot block}.
+\item \emph{Superblock}: records number of inodes, data blocks, start of
+bitmaps, first data block, block size, max file size, etc.
+\item \emph{Free inode bitmap}.
+\item \emph{Free block bitmap}.
+\item \emph{Inodes} and \emph{data blocks}.
+\end{itemize}
+
+\subsection{Directory Organisation}
+
+Directories map symbolic file names to logical disk locations.
+
+\paragraph{Hierarchical File System}
+\begin{itemize}
+\item Root indicates where root directory begins.
+\item Root directory points to various directories.
+\end{itemize}
+
+\paragraph{Pathnames}
+\begin{itemize}
+\item \emph{Absolute}: from root.
+\item \emph{Relative}: to working (current) directory.
+\end{itemize}
+
+\paragraph{Directory Operations}
+
+Open, close, search, create, delete, link, unlink, change directory,
+list files, read attributes, write attributes, mount.
+
+\paragraph{Links}
+
+References to directories/files somewhere else in FS.
+\begin{itemize}
+\item \emph{Hard link}: reference address of file.
+\item \emph{Soft (symbolic) link}: reference full pathname (created as directory
+entry).
+\end{itemize}
+When deleting files:
+\begin{itemize}
+\item Hard links require a link count with file, delete file when count
+= 0.
+\item Symbolic links can be left and cause exception when used.
+\end{itemize}
+Directory traversal algorithms may loop.
+
+\paragraph{Mounting}
+
+Combine multiple FSs into one namespace.
+\begin{itemize}
+\item Support for soft-links but not hard-links.
+\item \emph{Mount point}: directory in native FS assigned to root of mounted
+FS.
+\item Manage mounted directories using \emph{mount tables}.
+\end{itemize}
+
 \section{Security}
+
+\paragraph{Objectives}
+\begin{itemize}
+\item \emph{Confidentiality} (prevent theft).
+\item \emph{Integrity} (prevent destruction / alteration).
+\item \emph{Availability} (prevent denial of service).
+\end{itemize}
+
+\paragraph{Policy}
+
+Specifies what security is provided.
+
+\paragraph{Mechanisms}
+
+How to implement security policy.
+
+\paragraph{People Security}
+
+Insider / social engineering attacks.
+\begin{enumerate}
+\item Computer crime by \emph{insiders}.
+\item \emph{Social engineering}: e.g. phishing attacks, tailgating, etc.
+\item Working around security for convenience (e.g. reusing passwords).
+\item People with wrong security expectations.
+\end{enumerate}
+
+\paragraph{Hardware Security}
+
+E.g. stealing a hard disk to get data.
+\begin{enumerate}
+\item Attacks by physical access to computer.
+\item Emission security (EM waves).
+\end{enumerate}
+
+\paragraph{Software/ Security}
+
+E.g. exploit bug to get SU privileges.
+\begin{enumerate}
+\item Software bugs which allow attackers to compromise systems. E.g. Buffer/integer
+overflows, format string vulnerabilities.
+\end{enumerate}
+
+\subsection{Access Control}
+
+\paragraph{Authentication}
+
+Verify identity of users. By:
+\begin{enumerate}
+\item \emph{Personal characteristics}: e.g. fingerprints. Suffers from high
+equipment cost.
+\item \emph{Possessions}: e.g. keys. Suffers from impersonation attacks
+if lost.
+\item \emph{Knowledge}: e.g. passwords. Suffers from dictionary attacks,
+password reuse.
+\begin{itemize}
+\item Change passwords regularly: passwords vulnerable to guessing attacks
+through lifetime.
+\item Use \emph{one way hash function}: avoid theft of plaintext passwords.
+\item Use \emph{salt}: avoid rainbow table attacks / visibility of duplicate
+passwords.
+\end{itemize}
+\end{enumerate}
+
+\paragraph{Authorisation}
+
+Allow users to perform action only when authorised.
+\begin{itemize}
+\item \emph{Principle of Least Privilege}: give users minimum rights required
+to carry out task.
+\item \emph{Access rights}: set of objects and operations permitted on them.
+\item \emph{Access Control Matrix}: implemented by ACL (stores principals
+that can access each object, operations they can perform).
+\end{itemize}
+UNIX:
+\begin{itemize}
+\item Users are principles (have UIDs, root is 0 and has access to everything).
+\item Each user can belong to one or more groups, each file can belong to
+one group.
+\item Files/directories can be read/written/executed.
+\end{itemize}
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.6\linewidth]{img/linux-file}
+\end{figure}
+
+\paragraph{Process Execution}
+
+When user \texttt{a} executes program, runs with \texttt{a}'s privileges.
+E.g. only root has access to password file.
+\begin{itemize}
+\item SUID bit: file switches effective UID to file owner when executed.
+\end{itemize}
+Each process has three IDs:
+\begin{enumerate}
+\item \emph{Real UID}: ID of the user who started the process.
+\item \emph{Effective UID}: effective ID of the process, used in access
+control checks.
+\item \emph{Saved UID}: saved ID to which the effective ID can be changed
+to.
+\end{enumerate}
+
+\paragraph{Capabilities}
+
+Rows of access matrix + domain gives capability list.
+\begin{itemize}
+\item Possession of capability gives right to perform operations specified
+by it.
+\item Protected objects (usually not directly accessible).
+\end{itemize}
+
+\paragraph{Discretionary Access Control (DAC)}
+
+Principals determine who may access their objects.
+
+\paragraph{Mandatory Access Control (MAC)}
+
+Precise system rules determine access to objects.
+
+\paragraph{Bell - La Padula Model}
+
+Objects and principals have assigned security level.
+\begin{enumerate}
+\item \emph{Simple security policy}: a process running at level $k$ can
+read objects only at level $k$ or lower.
+\item \emph{{*} property}: a process running at level $k$ can write only
+object at its level or higher.
+\end{enumerate}
+Guarantees confidentiality.
+
+\paragraph{Biba Model}
+
+Guarantees data integrity.
+\begin{enumerate}
+\item \emph{Simple integrity principle}: a process running at level $k$
+can write objects only at level $k$ or lower.
+\item \emph{{*} property}: a process running at level $k$ can read only
+object at its level or higher.
+\end{enumerate}
+
+\paragraph{Key Principles}
+\begin{enumerate}
+\item Each process has \emph{least privilege possible} (default: none).
+\item Protection mechanism should be \emph{simple}.
+\item Scheme should be \emph{psychologically acceptable}.
+\item System design should be \emph{public}.
+\end{enumerate}
+
 \end{document}
