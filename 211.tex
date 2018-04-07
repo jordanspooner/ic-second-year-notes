@@ -4,8 +4,10 @@
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{array}
 \usepackage{float}
 \usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{graphicx}
 
@@ -1076,6 +1078,202 @@ complete.
 \end{itemize}
 
 \section{Disk Management}
+
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.4\linewidth]{img/disk}
+\end{figure}
+
+\paragraph{Sector Layout}
+
+Surface divided into 20 or more zones.
+\begin{itemize}
+\item Outer zones have more sectors per track (so sectors have same physical
+length).
+\item Zones hidden using virtual geometry.
+\end{itemize}
+
+\paragraph{Disk Addressing}
+
+Physical hardware addresses have form (cylinder, surface, sector).
+Use \emph{logical sector addressing} / \emph{logical block addressing}:
+sectors numbered consecutively.
+
+\paragraph{Disk Formatting}
+\begin{itemize}
+\item \emph{Low level format}: adds structure to each sector (e.g. preamble,
+error correcting code).
+\item \emph{High level format}: adds filesystem structure, partitions, ....
+\end{itemize}
+
+\paragraph{Disk Delay}
+
+Seek time + latency time (rotational delay) + transfer rate. Where
+$b$ is bytes transferred, $N$ is bytes per track, and $r$ is rotation
+speed in revolutions per second.
+\[
+t_{access}=t_{seek}+\frac{1}{2r}+\frac{b}{rN}
+\]
+
+\paragraph{Solid State Drives}
+\begin{itemize}
+\item More bandwidth.
+\item Smaller latencies.
+\item Much higher cost per unit storage.
+\end{itemize}
+
+\subsection{Disk Scheduling}
+
+\paragraph{First Come First Serve}
+
+No ordering of requests $\rightarrow$ random seek patterns.
+\begin{itemize}
+\item $+$ OK for lightly loaded disks.
+\item $+$ Fair scheduling.
+\item $-$ Poor performance for heavy loads.
+\end{itemize}
+
+\paragraph{Shortest Seek Time First}
+
+Order requests according to shortest seek distance from current head
+position.
+\begin{itemize}
+\item $-$ Discriminates against innermost / outermost tracks (unpredictable
+and unfair).
+\end{itemize}
+
+\paragraph{SCAN / Elevator Scheduling}
+
+Choose requests which result in shortest seek time in preferred direction.
+(Only change direction when no further requests in preferred direction).
+\begin{itemize}
+\item $-$ Long delays for requests at extreme locations.
+\end{itemize}
+
+\paragraph{C-SCAN Scheduling}
+
+Services requests in one direction only. (Jump to outermost request
+after innermost).
+\begin{itemize}
+\item $+$ Lower variance of requests on extreme tracks.
+\item $-$ May delay requests indefinitely (but unlikely).
+\end{itemize}
+
+\paragraph{N-Step SCAN}
+
+Services only requests when sweep began. (Requests arriving during
+sweep serviced during return sweep).
+\begin{itemize}
+\item $+$ Doesn't delay requests indefinitely.
+\end{itemize}
+
+\subsection{RAID}
+
+Redundant Array of Inexpensive Disks.
+\begin{itemize}
+\item Use array of physical drives appearing as single virtual drive.
+\item Stores data distributed over array of physical disks to allow parallel
+operating (\emph{striping}).
+\item Use redundant disk capacity to respond to disk failure.
+\end{itemize}
+\begin{figure}[H]
+\centering{}\includegraphics[width=0.95\linewidth]{img/raid}
+\end{figure}
+
+\paragraph{RAID 0 (Striping)}
+\begin{itemize}
+\item $+$ Disk can seek / transfer concurrently.
+\item $-$ No redundancy $\rightarrow$ no fault tolerance.
+\end{itemize}
+
+\paragraph{RAID 1 (Mirroring)}
+\begin{itemize}
+\item $+$ Reads can be serviced by either disk (fast).
+\item $+$ Failure recovery easy.
+\item $-$ Writes must update both disks in parallel.
+\item $-$ High storage overhead.
+\end{itemize}
+
+\paragraph{RAID 2 (Bit-Level Hamming)}
+\begin{itemize}
+\item $+$ Corrects single-bit errors (and detect double-bit errors).
+\item $+$ Very high throughput (read all disks in parallel).
+\item $-$ All disks participate in I/O requests (no concurrency).
+\item $-$ Read-modify-write cycle to keep ECC bits correct.
+\end{itemize}
+
+\paragraph{RAID 3 (Byte-Level XOR)}
+\begin{itemize}
+\item $+$ Lower storage overhead than RAID 2.
+\item $-$ Only one I/O request can take place at a time.
+\end{itemize}
+
+\paragraph{RAID 4 (Block-Level XOR)}
+\begin{itemize}
+\item $+$ Can service multiple reads concurrently.
+\item $-$ Parity disk becomes bottleneck.
+\end{itemize}
+
+\paragraph{RAID 5 (Block-Level Distributed XOR)}
+\begin{itemize}
+\item $+$ Good efficiency/redundancy trade-off (some potential for write
+concurrency).
+\item $-$ Reconstruction of failed disk non-trivial.
+\end{itemize}
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{>{\raggedright}p{1.5cm}c>{\centering}p{2.5cm}>{\centering}p{2.5cm}>{\centering}p{2.5cm}}
+\toprule 
+\textbf{\footnotesize{}Category} & \textbf{\footnotesize{}Level} & \textbf{\footnotesize{}Description} & \textbf{\footnotesize{}I/O Data Transfer} & \textbf{\footnotesize{}I/O Request Rate}\tabularnewline
+ &  &  & {\footnotesize{}(Read / Write)} & {\footnotesize{}(Read / Write)}\tabularnewline
+\midrule 
+{\footnotesize{}Striping} & {\footnotesize{}0} & {\footnotesize{}Non-redundant} & {\footnotesize{}$+$ / $+$} & {\footnotesize{}$+$ / $+$}\tabularnewline
+\midrule 
+{\footnotesize{}Mirroring} & {\footnotesize{}1} & {\footnotesize{}Mirrored} & {\footnotesize{}$+$ / $0$} & {\footnotesize{}$+$ / $0$}\tabularnewline
+\midrule 
+\multirow{2}{1.5cm}{{\footnotesize{}Parallel Access}} & {\footnotesize{}2} & {\footnotesize{}Redundant via Hamming code} & {\footnotesize{}++ / ++} & {\footnotesize{}$0$ / $0$}\tabularnewline
+ & {\footnotesize{}3} & {\footnotesize{}Bit interleaved parity} & {\footnotesize{}++ / ++} & {\footnotesize{}$0$ / $0$}\tabularnewline
+\midrule 
+\multirow{2}{1.5cm}{{\footnotesize{}Independent Access}} & {\footnotesize{}4} & {\footnotesize{}Block interleaved parity} & {\footnotesize{}$+$ / $-$} & {\footnotesize{}$+$ / $-$}\tabularnewline
+ & {\footnotesize{}5} & {\footnotesize{}Block interleaved distributed parity} & {\footnotesize{}$+$ / $-$} & {\footnotesize{}$+$ / $-$ or $0$}\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Disk Caching}
+
+Use main memory to improve disk access.
+\begin{itemize}
+\item \emph{Buffer} in memory for disk sectors, managed in terms of blocks
+(multiple sectors for efficiency).
+\item Buffer uses finite space (so needs replacement policy).
+\end{itemize}
+
+\paragraph{Least Recently Used}
+
+Replace block that was in cache the longest with no references.
+\begin{itemize}
+\item Cache consists of \emph{stack} of blocks, implemented with \emph{pointers}.
+\item $-$ Doesn't keep track of block popularity.
+\end{itemize}
+
+\paragraph{Least Frequency Used}
+
+Replace block that has experience fewest references.
+\begin{itemize}
+\item Counter associated with each block (incremented with each access).
+\item $-$ Some blocks may be referenced many times in short period.
+\end{itemize}
+
+\paragraph{Frequency-Based Replacement}
+
+Divides LRU stack into a new and old section. Evict lowest count from
+old block.
+\begin{itemize}
+\item Reference blocks move to the top of stack.
+\item Reference count only updated if not in new section.
+\item $-$ Blocks may age out too quickly: add a middle section from which
+blocks can't be evicted.
+\end{itemize}
 
 \section{File Systems}
 
