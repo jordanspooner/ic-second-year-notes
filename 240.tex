@@ -1,4 +1,5 @@
 \documentclass[twocolumn,english]{article}
+\renewcommand{\familydefault}{\sfdefault}
 \usepackage[latin9]{inputenc}
 \usepackage[landscape]{geometry}
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
@@ -19,9 +20,16 @@
 
 
 
+
+
+
+
+
+
 \usepackage{array}
 \usepackage{multirow}
 \usepackage{MnSymbol}
+
 
 
 
@@ -49,11 +57,12 @@
 \usepackage{babel}
 
 
+
 \usepackage{titlesec}
 \titleformat*{\section}{\color{blue!60!green!40!black} \vspace{8pt}\titlerule\vspace{4pt}\Large\bfseries\sffamily}
 \titleformat*{\subsection}{\color{blue!60!green} \vspace{2pt}\large\bfseries\sffamily}
 
-\renewcommand{\familydefault}{\sfdefault}
+
 
 \usepackage{enumitem}
 \setlist{itemsep=0pt}
@@ -62,31 +71,40 @@
 \let\emph\relax
 \DeclareTextFontCommand{\emph}{\bfseries}
 
+
+
+\usepackage{babel}
+
 \makeatother
 
 \usepackage{babel}
 \begin{document}
 
-\title{\vspace{-4ex}Reference Sheet for CO240 Models of Computation\vspace{-4ex}}
+\title{\vspace{-4ex}
+Revision Notes for CO240 Models of Computation\vspace{-4ex}
+}
 
-\date{Autumn 2017\vspace{-2ex}}
+
+\date{Autumn 2017\vspace{-2ex}
+}
 
 \maketitle
- 
 
 \section{Operational Semantics}
+
 
 \subsection{Simple Expressions}
 
 $E\in\text{SimpleExp}::=n\lvert E+E\lvert E\times E\lvert\dots$
 
+
 \subsubsection{Big-step (Natural)}
 \begin{itemize}
-\item {\scriptsize{}{}(B-NUM)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(B-NUM)} $\begin{array}{c}
 \\
 \hline n\Downarrow n
 \end{array}$. 
-\item {\scriptsize{}{}(B-ADD)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(B-ADD)} $\begin{array}{c}
 E_{1}\Downarrow n_{1}\;E_{2}\Downarrow n_{2}\\
 \hline E_{1}+E_{2}\Downarrow n_{3}
 \end{array}$ (where $n_{3}=n_{1}+n_{2}$). 
@@ -101,15 +119,15 @@ and $E\Downarrow n_{2}$ then $n_{1}=n_{2}$.
 
 \subsubsection{Small-step (Structural)}
 \begin{itemize}
-\item {\scriptsize{}{}(S-LEFT)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(S-LEFT)} $\begin{array}{c}
 E_{1}\rightarrow E_{1}'\\
 \hline E_{1}+E_{2}\rightarrow E_{1}'+E_{2}
 \end{array}$. 
-\item {\scriptsize{}{}(S-RIGHT)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(S-RIGHT)} $\begin{array}{c}
 E\rightarrow E'\\
 \hline n+E\rightarrow n+E'
 \end{array}$. 
-\item {\scriptsize{}{}(S-ADD)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(S-ADD)} $\begin{array}{c}
 \\
 \hline n_{1}+n_{2}\rightarrow n_{3}
 \end{array}$ (where $n_{3}=n_{1}+n_{2}$). 
@@ -137,9 +155,11 @@ such that for all $i$, $E_{i}\rightarrow E_{i+1}$.
 
 Series of small steps made during evaluation.
 
+
 \paragraph{Derivation tree}
 
 The tree of rule applications required to make a step.
+
 
 \subsection{While Language}
 
@@ -148,6 +168,7 @@ $B\in\text{Bool}::=\texttt{true}\lvert\texttt{false}\mid E=E\mid E<E\mid\dots\mi
 $E\in\text{Exp}::=x\mid n\mid E+E\mid\dots$
 
 $C\in\text{Com}::=\texttt{skip}\mid x:=E\mid\texttt{if }B\texttt{ then }C\texttt{ else }C\mid C;C\mid\texttt{while }B\texttt{ do }C$
+
 
 \subsubsection{States}
 \begin{itemize}
@@ -159,21 +180,22 @@ $E$ w.r.t. state $s$.
 
 \subsubsection{Small Step}
 
+
 \paragraph{Expressions}
 \begin{itemize}
-\item {\scriptsize{}{}(W-EXP.LEFT)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-EXP.LEFT)} $\begin{array}{c}
 \left\langle E_{1},s\right\rangle \rightarrow_{e}\left\langle E_{1}',s'\right\rangle \\
 \hline \left\langle E_{1}+E_{2},s\right\rangle \rightarrow_{e}\left\langle E_{1}'+E_{2},s'\right\rangle 
 \end{array}$. 
-\item {\scriptsize{}{}(W-EXP.RIGHT)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-EXP.RIGHT)} $\begin{array}{c}
 \left\langle E,s\right\rangle \rightarrow_{e}\left\langle E',s'\right\rangle \\
 \hline \left\langle n+E,s\right\rangle \rightarrow_{e}\left\langle n+E',s'\right\rangle 
 \end{array}$. 
-\item {\scriptsize{}{}(W-EXP.VAR)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-EXP.VAR)} $\begin{array}{c}
 \\
 \hline \left\langle x,s\right\rangle \rightarrow_{e}\left\langle n,s\right\rangle 
 \end{array}$ (where $s(x)=n$). 
-\item {\scriptsize{}{}(W-EXP.ADD)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-EXP.ADD)} $\begin{array}{c}
 \\
 \hline \left\langle n_{1}+n_{2},s\right\rangle \rightarrow_{e}\left\langle n_{3},s\right\rangle 
 \end{array}$ (where $n_{3}=n_{1}+n_{2}$). 
@@ -181,107 +203,107 @@ $E$ w.r.t. state $s$.
 
 \paragraph{Booleans}
 \begin{itemize}
-\item {\scriptsize{}{}(W-BOOL.AND-LEFT)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-BOOL.AND-LEFT)} $\begin{array}{c}
 \langle B_{1},s\rangle\rightarrow_{b}\langle B'_{1},s'\rangle\\
 \hline \left\langle B_{1}\&B_{2},s\right\rangle \rightarrow_{b}\left\langle B'_{1}\&B_{2},s'\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.AND-TRUE-RIGHT)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.AND-TRUE-RIGHT)} $\begin{array}{c}
 \langle B,s\rangle\rightarrow_{b}\langle B',s'\rangle\\
 \hline \left\langle \mathtt{true}\&B,s\right\rangle \rightarrow_{b}\left\langle \mathtt{true}\&B',s'\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.AND-FALSE-RIGHT)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.AND-FALSE-RIGHT)} $\begin{array}{c}
 \langle B,s\rangle\rightarrow_{b}\langle B',s'\rangle\\
 \hline \left\langle \mathtt{false}\&B,s\right\rangle \rightarrow_{b}\left\langle \mathtt{false}\&B',s'\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.AND-FALSE-FALSE)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.AND-FALSE-FALSE)} $\begin{array}{c}
 \\
 \hline \left\langle \mathtt{false}\&\mathtt{false},s\right\rangle \rightarrow_{b}\left\langle \mathtt{false},s\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.AND-FALSE-TRUE)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.AND-FALSE-TRUE)} $\begin{array}{c}
 \\
 \hline \left\langle \mathtt{false}\&\mathtt{true},s\right\rangle \rightarrow_{b}\left\langle \mathtt{false},s\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.AND-TRUE-FALSE)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.AND-TRUE-FALSE)} $\begin{array}{c}
 \\
 \hline \left\langle \mathtt{true}\&\mathtt{false},s\right\rangle \rightarrow_{b}\left\langle \mathtt{false},s\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.AND-TRUE-TRUE)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.AND-TRUE-TRUE)} $\begin{array}{c}
 \\
 \hline \left\langle \mathtt{true}\&\mathtt{true},s\right\rangle \rightarrow_{b}\left\langle \mathtt{true},s\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.NOT)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.NOT)} $\begin{array}{c}
 \langle B,s\rangle\rightarrow_{b}\langle B',s'\rangle\\
 \hline \left\langle \lnot B,s\right\rangle \rightarrow_{b}\left\langle \lnot B',s'\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.NOT-TRUE)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.NOT-TRUE)} $\begin{array}{c}
 \\
 \hline \left\langle \lnot\mathtt{true},s\right\rangle \rightarrow_{b}\left\langle \mathtt{false},s\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.NOT-FALSE)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.NOT-FALSE)} $\begin{array}{c}
 \\
 \hline \left\langle \lnot\mathtt{false},s\right\rangle \rightarrow_{b}\left\langle \mathtt{true},s\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.EQ-LEFT)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.EQ-LEFT)} $\begin{array}{c}
 \langle E_{1},s\rangle\rightarrow_{e}\langle E'_{1},s'\rangle\\
 \hline \left\langle E_{1}=E_{2},s\right\rangle \rightarrow_{b}\left\langle E'_{1}=E_{2},s'\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.EQ-RIGHT)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.EQ-RIGHT)} $\begin{array}{c}
 \langle E,s\rangle\rightarrow_{e}\langle E',s'\rangle\\
 \hline \left\langle n=E,s\right\rangle \rightarrow_{b}\left\langle n=E',s'\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.EQ)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.EQ)} $\begin{array}{c}
 \\
 \hline \left\langle n_{1}=n_{2},s\right\rangle \rightarrow_{b}\left\langle \mathtt{true},s\right\rangle 
-\end{array}$ ($n_{1}=n_{2}$).
-\item {\scriptsize{}{}(W-BOOL.NEQ)} $\begin{array}{c}
+\end{array}$ ($n_{1}=n_{2}$). 
+\item {\scriptsize{}{}{}(W-BOOL.NEQ)} $\begin{array}{c}
 \\
 \hline \left\langle n_{1}=n_{2},s\right\rangle \rightarrow_{b}\left\langle \mathtt{false},s\right\rangle 
-\end{array}$ ($n_{1}\neq n_{2}$).
-\item {\scriptsize{}{}(W-BOOL.LESS-LEFT)} $\begin{array}{c}
+\end{array}$ ($n_{1}\neq n_{2}$). 
+\item {\scriptsize{}{}{}(W-BOOL.LESS-LEFT)} $\begin{array}{c}
 \langle E_{1},s\rangle\rightarrow_{e}\langle E'_{1},s'\rangle\\
 \hline \left\langle E_{1}<E_{2},s\right\rangle \rightarrow_{b}\left\langle E'_{1}<E_{2},s'\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.LESS-RIGHT)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.LESS-RIGHT)} $\begin{array}{c}
 \langle E,s\rangle\rightarrow_{e}\langle E',s'\rangle\\
 \hline \left\langle n<E,s\right\rangle \rightarrow_{b}\left\langle n<E',s'\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-BOOL.LESS)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-BOOL.LESS)} $\begin{array}{c}
 \\
 \hline \left\langle n_{1}<n_{2},s\right\rangle \rightarrow_{b}\left\langle \mathtt{true},s\right\rangle 
-\end{array}$ ($n_{1}<n_{2}$).
-\item {\scriptsize{}{}(W-BOOL.GEQ)} $\begin{array}{c}
+\end{array}$ ($n_{1}<n_{2}$). 
+\item {\scriptsize{}{}{}(W-BOOL.GEQ)} $\begin{array}{c}
 \\
 \hline \left\langle n_{1}<n_{2},s\right\rangle \rightarrow_{b}\left\langle \mathtt{false},s\right\rangle 
-\end{array}$ ($n_{1}\geq n_{2}$).
+\end{array}$ ($n_{1}\geq n_{2}$). 
 \end{itemize}
 
 \paragraph{Commands}
 \begin{itemize}
-\item {\scriptsize{}{}(W-ASS.EXP)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-ASS.EXP)} $\begin{array}{c}
 \left\langle E,s\right\rangle \rightarrow_{e}\left\langle E',s'\right\rangle \\
 \hline \left\langle x:=E,s\right\rangle \rightarrow_{c}\left\langle x:=E',s'\right\rangle 
-\end{array}$.
-\item {\scriptsize{}{}(W-ASS.NUM)} $\begin{array}{c}
+\end{array}$. 
+\item {\scriptsize{}{}{}(W-ASS.NUM)} $\begin{array}{c}
 \\
 \hline \left\langle x:=n,s\right\rangle \rightarrow_{c}\left\langle \texttt{skip},s\left[x\mapsto n\right]\right\rangle 
 \end{array}$. 
-\item {\scriptsize{}{}(W-SEQ.LEFT)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-SEQ.LEFT)} $\begin{array}{c}
 \left\langle C_{1},S\right\rangle \rightarrow_{c}\left\langle C_{1}',s'\right\rangle \\
 \hline \left\langle C_{1};C_{2},S\right\rangle \rightarrow_{c}\left\langle C_{1}';C_{2},s'\right\rangle 
 \end{array}$. 
-\item {\scriptsize{}{}(W-SEQ.SKIP)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-SEQ.SKIP)} $\begin{array}{c}
 \\
 \hline \left\langle \texttt{skip};C_{2},S\right\rangle \rightarrow_{c}\left\langle C_{2},s'\right\rangle 
 \end{array}$. 
-\item {\scriptsize{}{}(W-COND.TRUE)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-COND.TRUE)} $\begin{array}{c}
 \\
 \hline \left\langle \texttt{if true then }C_{1}\texttt{ else }C_{2},s\right\rangle \rightarrow_{c}\left\langle C_{1},s\right\rangle 
 \end{array}$. 
-\item {\scriptsize{}{}(W-COND.FALSE)} $\begin{array}{c}
+\item {\scriptsize{}{}{}(W-COND.FALSE)} $\begin{array}{c}
 \\
 \hline \left\langle \texttt{if false then }C_{1}\texttt{ else }C_{2},s\right\rangle \rightarrow_{c}\left\langle C_{2},s\right\rangle 
 \end{array}$. 
-\item {\scriptsize{}{}(W-COND.BEXP)} 
+\item {\scriptsize{}{}{}(W-COND.BEXP)} 
 \begin{multline*}
 \begin{array}{c}
 \left\langle B,s\right\rangle \rightarrow_{b}\left\langle B',s'\right\rangle \\
@@ -289,8 +311,9 @@ $E$ w.r.t. state $s$.
 \left\langle \texttt{if }B'\texttt{ then }C_{1}\texttt{ else }C_{2},s'\right\rangle 
 \end{array}
 \end{multline*}
-\item {\scriptsize{}{}(W-WHILE)} All this rule does is `unfold' the loop
-once: 
+
+\item {\scriptsize{}{}{}(W-WHILE)} All this rule does is `unfold' the
+loop once: 
 \begin{multline*}
 \begin{array}{c}
 \\
@@ -298,6 +321,7 @@ once:
 \left\langle \texttt{if }B\texttt{ then }(C;\texttt{while }B\texttt{ do }C)\texttt{ else skip},s\right\rangle 
 \end{array}
 \end{multline*}
+
 \end{itemize}
 
 \paragraph{Properties}
@@ -309,19 +333,23 @@ step, as a computation may be non-terminating.
 
 \subsubsection{Configurations}
 
+
 \paragraph{Answer Configuration}
 
 Normal form where no execution is possible. E.g. $\left\langle \texttt{skip},s\right\rangle $.
 
+
 \paragraph{Stuck Configuration}
 
 Normal form where evaluation is not possible. E.g. $\left\langle y,(x\mapsto3)\right\rangle $.
+
 
 \paragraph{Normalisation}
 \begin{itemize}
 \item The evaluation relations $\rightarrow_{e}$ and $\rightarrow_{b}$
 are normalising. 
 \item The execution relation $\rightarrow_{c}$ is not: 
+
 \begin{itemize}
 \item Consider $\left\langle \texttt{while true do skip},s\right\rangle $. 
 \item Assume it takes $n$ steps to evaluate to $\left\langle \texttt{skip},s'\right\rangle $.
@@ -332,6 +360,7 @@ $n$ is well-defined since the semantics is deterministic.
 \end{itemize}
 
 \subsubsection{Other Properties}
+
 
 \paragraph{Side Effects and Evaluation Order}
 
@@ -372,16 +401,29 @@ remember the result for subsequent uses.
 \forall C,s,s'.\left\langle C,s\right\rangle \Downarrow_{e}\left\langle s'\right\rangle \iff\left\langle C,s\right\rangle \rightarrow_{e}^{*}\left\langle \texttt{skip},s'\right\rangle 
 \]
 
+
+
 \subsection{Structural Induction}
 
 Technique for reasoning with \emph{structured} and \emph{finite} collections
 of objects.
 
+
+\paragraph{Common Themes}
+\begin{itemize}
+\item ``Consider the rules that could have produced this expression...''.
+\item Split up proof into cases (for $\lor$) or directions (for $\iff$).
+\item You've probably gone wrong if you don't use the I.H. (and all of the
+given information) in your inductive step!
+\end{itemize}
+
 \subsubsection{Simple Expressions}
+
 
 \paragraph{Base Case}
 
 Prove that $P(n)$ holds for every number $n$.
+
 
 \paragraph{Inductive Case 1}
 
@@ -389,56 +431,70 @@ Prove that, for all $E_{1}$and $E_{2}$, $P\left(E_{1}+E_{2}\right)$
 holds assuming the inductive hypotheses that $P\left(E_{1}\right)$
 and $P\left(E_{2}\right)$ hold.
 
+
 \paragraph{Inductive Case 2}
 
 Prove $P\left(E_{1}\times E_{2}\right)$ similarly.
+
 
 \subsubsection{Multi-step Reductions}
 
 Simple induction on numbers. If $P\left(r\right)$ is that $E\rightarrow^{r}E'$:
 
+
 \paragraph{Base Case}
 
 Prove that $P\left(0\right)$ holds.
+
 
 \paragraph{Inductive Case}
 
 Prove that, for all $k$, $P\left(k+1\right)$ holds, assuming $P\left(k\right)$.
 
+
 \subsubsection{Commands}
+
 
 \paragraph{Base Case 1}
 
 Prove that $P(\texttt{skip})$ holds.
 
+
 \paragraph{Base Case 2}
 
 Prove that, for all $x$ and $E$, $P\left(x:=E\right)$ holds.
+
 
 \paragraph{Inductive Case 1}
 
 Prove that, for all $B,C_{a},C_{b}$, $P\left(\texttt{if }B\texttt{ then }C_{a}\texttt{ else }C_{b}\right)$
 holds, assuming $P(C_{a})$ and $P(C_{b})$.
 
+
 \paragraph{Inductive Case 2}
 
 Prove that, for all $C_{a}$and $C_{b}$, $P\left(C_{a};C_{b}\right)$
 holds, assuming, assuming $P(C_{a})$ and $P(C_{b})$.
+
 
 \paragraph{Inductive Case 3}
 
 Prove that, for all $B$ and $C$, $P\left(\texttt{while }B\texttt{ do }C\right)$
 holds, assuming, assuming $P(C)$.
 
+
 \section{Register Machines}
 
+
 \subsection{Definitions}
+
 
 \paragraph{Register Machine}
 \begin{itemize}
 \item Finitely many \emph{registers} $R_{0},\dots,R_{n}$. 
 \item A \emph{program} which is a finite list of instructions $L_{k}:\text{body}$.
 The body can be: 
+
 \begin{itemize}
 \item $R^{+}\rightarrow L_{i}$. Add 1 to $R$ and jump to $L_{i}$. 
 \item $R^{-}\rightarrow L_{i},L_{j}$. If $R>0$, subtract 1 and jump to
@@ -446,14 +502,22 @@ $L_{i}$, else to $L_{j}$.
 \item $HALT$. Stop executing instructions. 
 \end{itemize}
 \end{itemize}
+
+\paragraph{Graphical Representation}
+
+Dont forget $START$!
+
 \begin{table}[H]
 \centering{}\includegraphics[width=0.45\columnwidth]{img/rm-representation} 
 \end{table}
+
+
 
 \paragraph{Configuration}
 
 $\left(l,r_{0},\dots,r_{n}\right)$, where $l$ is the current label
 and $r_{k}$ is the contents of $R_{k}$.
+
 
 \paragraph{Computation}
 
@@ -461,21 +525,24 @@ Sequence of configurations.
 \begin{itemize}
 \item \emph{Halting computation}: Computation where the last configuration
 $c_{m}=\left(l,\dots\right)$ is halting configuration: 
+
 \begin{itemize}
 \item \emph{Proper halt}: $L_{l}$ is $HALT$. 
 \item \emph{Erroneous halt}: Jumps to an instruction that doesn't exist. 
 \end{itemize}
 \item Computation is \emph{deterministic}: relation between initial and
-final register contents is a \emph{partial function}. 
+final register contents is a \emph{partial function} (should loop
+forever if undefined for given input). 
 \end{itemize}
 
 \subsection{Computable Functions}
 
+
 \paragraph{Definition}
 
-$f\in\mathbb{N}^{n}\rightharpoonup\mathbb{N}$ is computable if there
-is a register machine $M$ such that for all $\left(x_{1},\dots,x_{n}\right)\in\mathbb{N}^{n}$
-and all $y\in\mathbb{N}$: 
+$f\in\mathbb{N}^{n}\rightharpoonup\mathbb{N}$ (partial function)
+is computable if there is a register machine $M$ such that for all
+$\left(x_{1},\dots,x_{n}\right)\in\mathbb{N}^{n}$ and all $y\in\mathbb{N}$: 
 \begin{quotation}
 The computation of $M$ starting with $R_{0}=0,R_{1}=x_{1},\dots,R_{n}=x_{n}$
 and all other registers set to 0, halts with $R_{0}=y$ if and only
@@ -497,6 +564,8 @@ H\left(A,D\right)=\begin{cases}
 0 & \text{otherwise}
 \end{cases}
 \]
+
+
 
 \paragraph{Gödel Numberings}
 
@@ -522,6 +591,10 @@ where instruction bodies are coded:
 \end{itemize}
 
 \subsection{Gadgets}
+\begin{itemize}
+\item Check your gadgets carefully.
+\item Don't forget to zero any scratch registers!
+\end{itemize}
 
 \subsubsection*{Zero $R_{0}$}
 
@@ -529,11 +602,15 @@ where instruction bodies are coded:
 \centering{}\includegraphics[width=0.3\columnwidth]{img/zero} 
 \end{figure}
 
+
+
 \subsubsection*{Add $R_{1}$ to $R_{2}$}
 
 \begin{figure}[H]
 \centering{}\includegraphics[width=0.4\columnwidth]{img/add} 
 \end{figure}
+
+
 
 \subsubsection*{Multiply $R_{1}$ by $R_{2}$ to $R_{0}$}
 
@@ -541,11 +618,14 @@ where instruction bodies are coded:
 \centering{}\includegraphics[width=0.6\columnwidth]{img/mult} 
 \end{figure}
 
+
+
 \subsubsection{Reasoning about Gadgets}
 \begin{itemize}
 \item Test it on various inputs and look for patterns. 
 \item Break up into bits we understand. 
 \item Use invariants. 
+
 \begin{itemize}
 \item Write out \emph{verification conditions}: conditions, in terms of
 invariants and changes, for which an invariant must hold. 
@@ -559,11 +639,15 @@ invariants and changes, for which an invariant must hold.
 \centering{}\includegraphics[width=0.65\columnwidth]{img/push} 
 \end{figure}
 
+
+
 \subsubsection*{Pop $L$ to $X$}
 
 \begin{figure}[H]
 \centering{}\includegraphics[width=0.675\columnwidth]{img/pop} 
 \end{figure}
+
+
 
 \subsection{Universal Register Machine}
 
@@ -589,6 +673,7 @@ $H$ always halts with $R_{0}$ equal to 0 or 1. $R_{0}=1$ iff the
 program represented by $e$ eventually halts when started with $R_{0}=0,\dots,R_{n}=a_{n}$
 and all other registers zeroed.
 
+
 \paragraph{Proof that $H$ Cannot Exist}
 \begin{itemize}
 \item Consider $H'=H$ with $R_{1}$ pushed onto $R_{2}$. 
@@ -604,17 +689,22 @@ C\text{ started with }R_{1}=c\text{ halts}\\
 \iff C\text{ started with }R_{1}=c\text{ does not halt}
 \end{multline*}
 
+
 Contradiction!
+
 
 \section{Lambda Calculus}
 
+
 \subsection{Syntax of the $\lambda$-Calculus}
+
 
 \paragraph{$\lambda$-Terms}
 
 \[
 M::=x\mid\lambda x.M\mid MM
 \]
+
 \begin{itemize}
 \item $\lambda x.M$ is a \emph{$\lambda$-abstraction}. 
 \item $MM$ is an \emph{application}. 
@@ -637,7 +727,10 @@ The set of free variables $FV\left(M\right)$ is calculated by:
 \end{itemize}
 If $FV\left(M\right)=\emptyset$, $M$ is a \emph{closed term} / \emph{combinator}.
 
+
 \paragraph{Substitution}
+
+Only replaces \emph{free} occurrences!
 \begin{itemize}
 \item $x\left[M/y\right]=\begin{cases}
 M & x=y\\
@@ -667,6 +760,7 @@ M=_{\alpha}M'\qquad N=_{\alpha}N'\\
 \end{itemize}
 
 \subsection{Semantics of the $\lambda$-Calculus}
+
 
 \paragraph{$\beta$-reduction}
 \begin{itemize}
@@ -719,6 +813,7 @@ $M_{1}\rightarrow_{\beta}^{*}M'$ and $M_{2}\rightarrow_{\beta}^{*}M'$.
 $M_{1}=_{\beta}M_{2}$ iff there exists $M$ such that $M_{1}\rightarrow_{\beta}^{*}M$
 and $M_{2}\rightarrow_{\beta}^{*}M$.
 
+
 \paragraph{$\beta$-Normal Form}
 
 A $\lambda$-term with no $\beta$-redexes. 
@@ -729,11 +824,23 @@ A $\lambda$-term with no $\beta$-redexes.
 of reudction. E.g. $\left(\lambda x.y\right)\left(\lambda x.xx\right)\left(\lambda x.xx\right)$. 
 \end{itemize}
 
+\paragraph{Reduction Strategies}
+\begin{enumerate}
+\item \textbf{Normal order.} Redice leftmost-outermost redex first.
+\item \textbf{Call by name.} Reduce leftmost-outermost redex first, but
+do not reduce inside $\lambda$-abstractions. (Evaluates arguments
+later).
+\item \textbf{Call by value.} Reduce leftmost-innermost redex first, but
+do not reduce inside $\lambda$-abstractions. (Evaluates arguments
+first).
+\end{enumerate}
+
 \paragraph{$\lambda$-Definable Functions}
 \begin{itemize}
 \item $f\in\mathbb{N}^{n}\rightharpoonup\mathbb{N}$ is $\lambda$-definable
 if there is a closed $\lambda$-term $F$ that represents it, such
 that: 
+
 \begin{itemize}
 \item If $f\left(x_{1},\dots,x_{n}\right)=y$ then $Fx_{1}\dots x_{n}=_{\beta}y$. 
 \item If $f\left(x_{1},\dots,x_{n}\right)\uparrow$ then $Fx_{1}\dots x_{n}$
@@ -741,5 +848,17 @@ has no $\beta$-normal form.
 \end{itemize}
 \item A function is computable iff it is $\lambda$-definable. 
 \end{itemize}
+
+\paragraph{Church Numerals}
+
+\[
+\underline{n}\triangleq f^{n}x
+\]
+\[
+\text{plus}=\lambda mnfx.m\:f\:\left(n\:f\:x\right)
+\]
+\[
+\text{mult}=\lambda mnfx.m\:\left(n\:f\right)\:x
+\]
 
 \end{document}
