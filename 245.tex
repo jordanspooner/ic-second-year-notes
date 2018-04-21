@@ -1,12 +1,15 @@
 \documentclass[twocolumn,english]{article}
+\renewcommand{\familydefault}{\sfdefault}
 \usepackage[latin9]{inputenc}
 \usepackage[landscape]{geometry}
 \geometry{verbose,tmargin=0.5in,bmargin=0.75in,lmargin=0.5in,rmargin=0.5in}
 \setlength{\parskip}{0bp}
 \setlength{\parindent}{0pt}
+\usepackage{color}
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{esint}
 
 \makeatletter
 
@@ -15,9 +18,18 @@
 
 
 
+
+
+
+
+\providecommand{\tabularnewline}{\\}
+
+
+
+
 \usepackage{array}
 \usepackage{multirow}
-\usepackage{amsbsy}
+
 
 
 
@@ -44,7 +56,7 @@
 \titleformat*{\section}{\color{blue!60!green!40!black} \vspace{8pt}\titlerule\vspace{4pt}\Large\bfseries\sffamily}
 \titleformat*{\subsection}{\color{blue!60!green} \vspace{2pt}\large\bfseries\sffamily}
 
-\renewcommand{\familydefault}{\sfdefault}
+
 
 \usepackage{enumitem}
 \setlist{itemsep=0pt}
@@ -53,89 +65,108 @@
 \let\emph\relax
 \DeclareTextFontCommand{\emph}{\bfseries}
 
+\definecolor{red}{rgb}{0.5,0.5,0.5}
+
+\usepackage{babel}
+
 \makeatother
 
 \usepackage{babel}
 \begin{document}
 
-\title{\vspace{-4ex}Reference Sheet for CO245 Probability and Statistics\vspace{-4ex}}
+\title{\vspace{-4ex}
+Revision Notes for CO245 Probability and Statistics\vspace{-4ex}
+}
 
-\date{Spring 2018\vspace{-2ex}}
+
+\date{Spring 2018\vspace{-2ex}
+}
+
 \maketitle
+
+\paragraph{Results in \textcolor{red}{grey} are included in the formula sheet.}
+
 
 \section{Probability}
 
+
 \paragraph{Sample Spaces and Events}
 \begin{itemize}
-\item \emph{Sample space} $S$: Range of possible outcomes of a random experiment.
-\item \emph{Event}: Subset of sample space.
+\item \emph{Sample space} $S$: Range of possible outcomes of a random experiment. 
+\item \emph{Event}: Subset of sample space. 
+
 \begin{itemize}
-\item \emph{Null event}: $\emptyset$.
+\item \emph{Null event}: $\emptyset$. 
 \end{itemize}
-\item Events are \emph{mutually exclusive} if $\forall i,j.E_{i}\cap E_{j}=\emptyset$.
+\item Events are \emph{mutually exclusive} if $\forall i,j.E_{i}\cap E_{j}=\emptyset$. 
 \end{itemize}
 
 \paragraph{The $\sigma$-algebra}
 
 A collection $\mathfrak{S}$ of subsets of $S$ is a $\sigma$-field
-or $\sigma$-algebra if it satisfies:
+or $\sigma$-algebra if it satisfies: 
 \begin{enumerate}
-\item Nonempty: $S\in\mathfrak{S}$.
-\item Closed under complements: if $E\in\mathfrak{S}$ then $\overline{E}\in\mathfrak{S}$.
+\item Nonempty: $S\in\mathfrak{S}$. 
+\item Closed under complements: if $E\in\mathfrak{S}$ then $\overline{E}\in\mathfrak{S}$. 
 \item Closed under countable union: if $E_{1},E_{2},\dots\in\mathfrak{S}$
-then $\cup_{i=1}^{\infty}E_{i}\in\mathfrak{S}$.
+then $\cup_{i=1}^{\infty}E_{i}\in\mathfrak{S}$. 
 \end{enumerate}
-\emph{Axioms}:
+\emph{Axioms}: 
 \begin{enumerate}
-\item For any $E$ in $\mathfrak{S}$, $0\leq P\left(E\right)\leq1$.
-\item $P\left(S\right)=1$.
-\item Countably additive: $P\left(\cup_{i}E_{i}\right)=\sum_{i}P\left(E_{i}\right)$.
+\item For any $E$ in $\mathfrak{S}$, $0\leq P\left(E\right)\leq1$. 
+\item $P\left(S\right)=1$. 
+\item Countably additive: $P\left(\cup_{i}E_{i}\right)=\sum_{i}P\left(E_{i}\right)$. 
 \end{enumerate}
-\emph{Properties}:
+\emph{Properties}: 
 \begin{enumerate}
-\item $P\left(\overline{E}\right)=1-P\left(E\right)$.
-\item $P\left(\emptyset\right)=0$.
-\item For any events $E$ and $F$, $P\left(E\cup F\right)=P\left(E\right)+P\left(F\right)-P\left(E\cap F\right)$.
+\item $P\left(\overline{E}\right)=1-P\left(E\right)$. 
+\item $P\left(\emptyset\right)=0$. 
+\item \textcolor{red}{For any events $E$ and $F$, $P\left(E\cup F\right)=P\left(E\right)+P\left(F\right)-P\left(E\cap F\right)$. }
 \end{enumerate}
 
 \paragraph{Independence}
 \begin{itemize}
-\item Events $E$ and $F$ are independent iff $P\left(E\cap F\right)=P\left(E\right)P\left(F\right)$.
+\item \textcolor{red}{Events $E$ and $F$ are independent iff $P\left(E\cap F\right)=P\left(E\right)P\left(F\right)$. }
 \item If $E$ and $F$ are independent, $\overline{E}$ and $F$ are also
-independent.
+independent. 
 \end{itemize}
 
 \paragraph{Conditional Probability}
 \begin{enumerate}
-\item $P\left(E\mid F\right)$ is called a \emph{conditional} probability.
-\item $P\left(E\cap F\right)$ is called a \emph{joint} probability.
-\item $P\left(E\right)$ is called a \emph{marginal} probability.
+\item $P\left(E\mid F\right)$ is called a \emph{conditional} probability. 
+\item $P\left(E\cap F\right)$ is called a \emph{joint} probability. 
+\item $P\left(E\right)$ is called a \emph{marginal} probability. 
 \end{enumerate}
+\textrm{\textcolor{red}{
 \[
 P\left(E\mid F\right)=\frac{P\left(E\cap F\right)}{P\left(F\right)}
 \]
+}}
 \begin{itemize}
 \item Events $E_{1}$ and $E_{2}$ are \emph{conditionally independent}
-given $F$ iff $P\left(E_{1}\cap E_{2}\mid F\right)=P\left(E_{1}\mid F\right)P\left(E_{2}\mid F\right)$.
+given $F$ iff $P\left(E_{1}\cap E_{2}\mid F\right)=P\left(E_{1}\mid F\right)P\left(E_{2}\mid F\right)$. 
 \item \emph{Bayes theorem} (easily derived from definition above) states:
 \[
 P\left(E\mid F\right)=\frac{P\left(E\right)P(F\mid E)}{P\left(F\right)}
 \]
+\emph{Read the question} and \emph{check carefully}. Make sure you
+know the difference between $P\left(A\cap B\right)$ and $P\left(A\mid B\right)$!
 \item For a set of events $\left\{ F_{1},F_{2},\dots\right\} $ which form
 a partition of $S$, the \emph{partition rule} (derived from $E=E\cap S$)
-states:
+states: 
 \[
 P\left(E\right)=\sum_{i}P\left(E\mid F_{i}\right)P\left(F_{i}\right)
 \]
+
 \end{itemize}
 
 \paragraph{Likelihood and Posterior Probability}
 
-For parameters $\theta$ and evidence $X$:
+For parameters $\theta$ and evidence $X$: 
 \begin{enumerate}
-\item \emph{Likelihood function} is $P\left(X\mid\theta\right)$.
-\item \emph{Posterior probability} is $P\left(\theta\mid X\right)$.
-\item \emph{Prior probability} is $P\left(\theta\right)$.
+\item \emph{Likelihood function} is $P\left(X\mid\theta\right)$. 
+\item \emph{Posterior probability} is $P\left(\theta\mid X\right)$. 
+\item \emph{Prior probability} is $P\left(\theta\right)$. 
 \end{enumerate}
 By Bayes theorem:
 
@@ -143,74 +174,103 @@ By Bayes theorem:
 P\left(\theta\mid X\right)=\frac{P\left(X\mid\theta\right)P\left(\theta\right)}{P\left(X\right)}
 \]
 
+
+
 \section{Random Variables}
 
-Mapping from sample space to $\mathbb{R}$ (e.g. $X:S\rightarrow\mathbb{R}$).
+Mapping from sample space to $\mathbb{R}$ (e.g. $X:S\rightarrow\mathbb{R}$). 
 \begin{itemize}
-\item \emph{Probability distribution function} $P_{X}\left(x\right)=P\left(X^{-1}\left(x\right)\right)$.
+\item \emph{Probability distribution function} $P_{X}\left(x\right)=P\left(X^{-1}\left(x\right)\right)$. 
+
 \begin{itemize}
-\item Probabilities are between 0 and 1.
-\item Sum to 1.
+\item Probabilities are between 0 and 1. 
+\item Sum to 1. 
 \end{itemize}
-\item \emph{Cumulative distribution function} $F_{X}\left(x\right)=P_{X}\left(X\leq x\right)$.
+\item \emph{Cumulative distribution function} $F_{X}\left(x\right)=P_{X}\left(X\leq x\right)$. 
+
 \begin{itemize}
-\item For every real number $x$, $0\leq F_{X}\left(x\right)\leq1$.
-\item $F_{X}$ is monotonic.
-\item $F_{X}\left(-\infty\right)=0$ and $F_{X}\left(\infty\right)=1$.
+\item For every real number $x$, $0\leq F_{X}\left(x\right)\leq1$. 
+\item $F_{X}$ is monotonic. 
+\item $F_{X}\left(-\infty\right)=0$ and $F_{X}\left(\infty\right)=1$. 
 \end{itemize}
 \item A random variable is \emph{simple} iff it can only take a finite number
-of possible values.
+of possible values. 
 \end{itemize}
 
 \subsection{Discrete Random Variables}
 
+
 \subsubsection{Definition}
 
-$X$ is discrete iff $\text{range}\left(X\right)$ is countable.
+$X$ is discrete iff $\text{range}\left(X\right)$ is countable. 
 \[
 p\left(x_{i}\right)=F\left(x_{i}\right)-F\left(x_{i-1}\right)
 \]
 \[
 F\left(x_{i}\right)=\sum_{j=1}^{i}p\left(x_{j}\right)
 \]
+
 \begin{itemize}
-\item $p_{X}$ is the \emph{probability mass function}.
-\item $F_{x}$ is the \emph{cumulative distribution function}.
+\item $p_{X}$ is the \emph{probability mass function}. 
+\item $F_{x}$ is the \emph{cumulative distribution function}. 
 \end{itemize}
 
 \subsubsection{Expectation and Probability Generating Function}
 
+
 \paragraph{Mean $E\left(X\right)$}
 
+\textrm{\textcolor{red}{
 \[
-E_{X}\left(X\right)=\sum_{x}xp_{x}\left(x\right)
+E_{X}\left(X\right)=\sum_{x}xp_{X}\left(x\right)
 \]
+}}
+
+\textrm{\textcolor{red}{
+\[
+E_{X}\left(g\left(X\right)\right)=\sum_{x}g\left(x\right)p_{X}\left(x\right)
+\]
+}}
 
 \[
 E_{X}\left(aX+b\right)=aE_{X}\left(X\right)+b
 \]
 
+
+
 \paragraph{Variance $\text{Var}\left(X\right)$}
 
+\textrm{\textcolor{red}{
 \[
 \text{Var}_{X}\left(X\right)=E_{X}\left[\left(X-E_{X}\left(X\right)\right)^{2}\right]=E\left(X^{2}\right)-\left(E\left(X\right)\right)^{2}
 \]
+}}
 
 \[
 \text{Var}\left(aX+b\right)=a^{2}\text{Var}\left(X\right)
 \]
 
-\paragraph{Standard Deviation $\sigma_{X}\left(X\right)$}
 
+
+\paragraph{Standard Deviation $\text{sd}_{X}\left(X\right)$}
+
+\textrm{\textcolor{red}{
 \[
-\sigma_{X}\left(X\right)=\sqrt{\text{Var}_{X}\left(X\right)}
+\text{sd}_{X}\left(X\right)=\sqrt{\text{Var}_{X}\left(X\right)}
 \]
+}}
+
+\emph{Don't forget the square root!}
+
 
 \paragraph{Skewness $\gamma_{1}$}
 
+\textrm{\textcolor{red}{
 \[
-\gamma_{1}=\frac{E_{X}\left[\left(X-E_{X}\left(X\right)\right)^{3}\right]}{\sigma_{X}\left(X\right)^{3}}
+\gamma_{1}=\frac{E_{X}\left[\left(X-E_{X}\left(X\right)\right)^{3}\right]}{\text{sd}_{X}\left(X\right)^{3}}
 \]
+}}
+
 
 \paragraph{Probability Generating Function $G_{X}\left(z\right)$}
 
@@ -218,13 +278,27 @@ E_{X}\left(aX+b\right)=aE_{X}\left(X\right)+b
 G_{X}\left(z\right)=E_{X}\left(z^{X}\right)=\sum_{x}p_{X}\left(x\right)z^{x}
 \]
 
+
+Look out for well-known series results (e.g. Maclaurin series / geometric
+series).
+
+
 \paragraph{Moments $M_{n}$}
 \begin{itemize}
-\item The $n$th moment of a random variable $X$ is $M_{n}=E\left(X^{n}\right)$.
-\item The $n$th factorial moment is $M_{n}^{f}=E\left(X\left(X-1\right)\dots\left(X-n+1\right)\right)=G^{(n)}\left(1\right)$.
+\item The $n$th \emph{moment} of a random variable $X$ is $M_{n}=E\left(X^{n}\right)$. 
+\item The $n$th \emph{factorial moment} is $M_{n}^{f}=E\left(X\left(X-1\right)...\left(X-n+1\right)\right)=G^{(n)}\left(1\right)$.
+\begin{align*}
+M_{0} & = & M_{0}^{f} & = & G\left(1\right)=1\\
+M_{1} & = & M_{1}^{f} & = & G'\left(1\right)\\
+M_{2} & = & M_{2}^{f}+M_{1}^{f} & = & G''\left(1\right)+G'\left(1\right)
+\end{align*}
+
 \end{itemize}
 
 \paragraph{Sums of Random Variables}
+
+Where $S_{n}=\sum_{i=1}^{n}X_{i}$ is a sum of random variables, and
+$S_{n}/n$ is their average:
 
 \begin{align*}
 E\left(S_{n}\right)=\sum_{i=1}^{n}E\left(X_{i}\right) &  & E\left(\frac{S_{n}}{n}\right)=\frac{\sum_{i=1}^{n}E\left(X_{i}\right)}{n}\\
@@ -232,117 +306,134 @@ E\left(S_{n}\right)=\sum_{i=1}^{n}E\left(X_{i}\right) &  & E\left(\frac{S_{n}}{n
 G_{S_{n}}\left(z\right)=\prod_{i=1}^{n}G_{X_{i}}\left(z\right) &  &  &  & \left(X_{i}\text{ are independent}\right)
 \end{align*}
 
+
+
 \subsubsection{Discrete Distributions}
+
 
 \paragraph{Bernoulli $\text{Bernoulli}\left(p\right)$}
 \begin{itemize}
-\item $p\left(x\right)=p^{x}\left(1-p\right)^{1-x}$ for $x=0,1$.
-\item $\mu=p$.
-\item $\sigma^{2}=p\left(1-p\right)$.
+\item $p\left(x\right)=p^{x}\left(1-p\right)^{1-x}$ for $x=0,1$. 
+\item $\mu=p$. 
+\item $\sigma^{2}=p\left(1-p\right)$. 
 \end{itemize}
 
 \paragraph{Binomial $\text{Binomial}\left(n,p\right)$}
 \begin{itemize}
 \item $n$ identical \emph{independent} $\text{Bernoulli}\left(p\right)$
-trials.
-\item $p\left(x\right)=\left(\begin{array}{c}
+trials. 
+\item \textrm{\textcolor{red}{$p\left(x\right)=\left(\begin{array}{c}
 n\\
 x
-\end{array}\right)p^{x}\left(1-p\right)^{n-x}$ for $x=1,2,\dots,n$.
-\item $\mu=np$.
-\item $\sigma^{2}=np\left(1-p\right)$.
-\item $\gamma_{1}=\frac{1-2p}{\sqrt{np\left(1-p\right)}}$.
+\end{array}\right)p^{x}\left(1-p\right)^{n-x}$ for $x=1,2,\dots,n$.}} (Remember $\left(\begin{array}{c}
+n\\
+x
+\end{array}\right)=\frac{n!}{x!\left(n-x\right)!}$).
+\item \textrm{\textcolor{red}{$\mu=np$. }}
+\item \textrm{\textcolor{red}{$\sigma^{2}=np\left(1-p\right)$.}}\textrm{\textcolor{green}{{} }}
+\item $\gamma_{1}=\frac{1-2p}{\sqrt{np\left(1-p\right)}}$. 
 \end{itemize}
 
 \paragraph{Geometric $\text{Geometric}\left(p\right)$}
 \begin{itemize}
 \item Potentially infinite sequence of \emph{independent} $\text{Bernoulli}\left(p\right)$
-trials.
-\item $p\left(x\right)=p\left(1-p\right)^{x-1}$ for $x=1,2,\dots$.
-\item $\mu=\frac{1}{p}$.
-\item $\sigma^{2}=np\left(1-p\right)$.
-\item $\gamma_{1}=\frac{1-2p}{\sqrt{1-p}}$.
+trials. 
+\item \textrm{\textcolor{red}{$p\left(x\right)=p\left(1-p\right)^{x-1}$
+for $x=1,2,\dots$. }}
+\item \textrm{\textcolor{red}{$\mu=\frac{1}{p}$. }}
+\item \textrm{\textcolor{red}{$\sigma^{2}=\frac{1-p}{p^{2}}$. }}
+\item $\gamma_{1}=\frac{2-p}{\sqrt{1-p}}$. 
 \end{itemize}
 
 \paragraph{Poisson $\text{Poi}\left(\lambda\right)$}
 \begin{itemize}
-\item $p\left(x\right)=\frac{e^{-\lambda}\lambda^{x}}{x!}$ for $x=0,1,2,\dots$.
-\item $\mu=\sigma^{2}=\lambda$.
-\item $\gamma_{1}=\frac{1}{\sqrt{\lambda}}$.
-\item $G\left(z\right)=e^{-\lambda\left(1-z\right)}$.
+\item \textrm{\textcolor{red}{$p\left(x\right)=\frac{e^{-\lambda}\lambda^{x}}{x!}$
+for $x=0,1,2,\dots$. }}
+\item \textrm{\textcolor{red}{$\mu=\sigma^{2}=\lambda$. }}
+\item $\gamma_{1}=\frac{1}{\sqrt{\lambda}}$. 
+\item $G\left(z\right)=e^{-\lambda\left(1-z\right)}$. 
 \item When $p$ is small and $n$ is large, $\text{Binomial}\left(n,p\right)$
-is approximated by $\text{Poi}\left(n,p\right)$.
+is approximated by $\text{Poi}\left(n,p\right)$. 
 \end{itemize}
 
 \paragraph{Uniform $\text{U}\left(\left\{ 1,2,\dots,n\right\} \right)$}
 \begin{itemize}
-\item $p\left(x\right)=\frac{1}{n}$ for $x=1,2,\dots,n$.
-\item $\mu=\frac{n+1}{2}$.
-\item $\sigma^{2}=\frac{n^{2}-1}{12}$.
-\item $\gamma_{1}=0$.
+\item \textrm{\textcolor{red}{$p\left(x\right)=\frac{1}{n}$ for $x=1,2,\dots,n$. }}
+\item \textrm{\textcolor{red}{$\mu=\frac{n+1}{2}$. }}
+\item \textrm{\textcolor{red}{$\sigma^{2}=\frac{n^{2}-1}{12}$. }}
+\item $\gamma_{1}=0$. 
 \end{itemize}
 
 \subsection{Continuous Random Variables}
 
+
 \subsubsection{Definition}
 
 $X$ is a \emph{continuous random variable} if $\exists f_{X}:\mathbb{R}\rightarrow\mathbb{R}$
-s.t.
+s.t. 
 \[
 P_{X}\left(B\right)=\int_{x\in B}f_{X}\left(x\right)\text{d}x
 \]
+
 \begin{itemize}
-\item $f_{X}$ is the \emph{probability density function}.
-\item The \emph{cumulative distribution function} is
+\item $f_{X}$ is the \emph{probability density function}. 
+\item The \emph{cumulative distribution function} is \textrm{\textcolor{red}{
 \[
-F_{X}\left(x\right)=\int_{-\infty}^{x}f_{X}\left(t\right)\text{d}t
+F_{X}\left(x\right)=P\left(X\leq x\right)=\int_{-\infty}^{x}f_{X}\left(t\right)\text{d}t
 \]
-\item Note that $f_{X}\left(x\right)=F_{X}^{\prime}\left(x\right)$.
+}}
+\item Note that \textcolor{red}{$f_{X}\left(x\right)=F_{X}^{\prime}\left(x\right)$}. 
 \end{itemize}
 
 \paragraph{Properties of a pdf}
 \begin{enumerate}
-\item For all $x\in\mathbb{R},$ $f_{X}\left(x\right)\geq0$.
-\item $\int_{-\infty}^{\infty}f_{X}\left(x\right)\text{d}x=1$.
+\item For all $x\in\mathbb{R},$ $f_{X}\left(x\right)\geq0$. 
+\item $\int_{-\infty}^{\infty}f_{X}\left(x\right)\text{d}x=1$. 
 \end{enumerate}
 
 \paragraph{Transformed Random Variables}
 
 E.g. $Y=g\left(X\right)$ for some $g:\mathbb{R}\rightarrow\mathbb{R}$
 where $g$ is \emph{continuous} and \emph{strictly monotonic} (so
-it has an inverse).
+it has an inverse). 
 \begin{itemize}
-\item By the chain rule, we get $f_{Y}\left(y\right)=F_{Y}^{\prime}\left(y\right)=f_{X}\left(g^{-1}\left(y\right)\right)\left|g^{-1'}\left(y\right)\right|$.
+\item $F_{Y}\left(y\right)=P\left(Y\leq y\right)=P\left(g\left(X\right)\leq Y\right)=P\left(X\leq g^{-1}\left(Y\right)\right)=F_{X}\left(g^{-1}\left(y\right)\right)$.
+\item By the chain rule, we get $f_{Y}\left(y\right)=F_{Y}^{\prime}\left(y\right)=f_{X}\left(g^{-1}\left(y\right)\right)\left|g^{-1'}\left(y\right)\right|$. 
 \end{itemize}
 
 \subsubsection{Mean, Variance and Quantiles}
 
+
 \paragraph{Mean $E\left(X\right)$}
 
+\textrm{\textcolor{red}{
 \[
 E_{X}\left(X\right)=\int_{-\infty}^{\infty}xf_{X}\left(x\right)\text{d}x
 \]
+}}
 
 \[
 E_{X}\left(g\left(X\right)\right)=\int_{-\infty}^{\infty}g\left(x\right)f_{X}\left(x\right)\text{d}x
 \]
 
-Properties:
+
+Properties: 
 \begin{enumerate}
-\item \emph{Linearity}: $E\left(aX+b\right)=aE\left(X\right)+b$.
-\item \emph{Additivity}: $E\left(g\left(X\right)+h\left(X\right)\right)=E\left(g\left(X\right)\right)+E\left(h\left(X\right)\right)$.
+\item \emph{Linearity}: $E\left(aX+b\right)=aE\left(X\right)+b$. 
+\item \emph{Additivity}: $E\left(g\left(X\right)+h\left(X\right)\right)=E\left(g\left(X\right)\right)+E\left(h\left(X\right)\right)$. 
 \end{enumerate}
 
 \paragraph{Variance $\text{Var}\left(X\right)$}
 
 \begin{multline*}
-\text{Var}_{X}\left(X\right)=E\left(\left(X-\mu_{X}\right)^{2}\right)\\
+{\color{red}\text{Var}_{X}\left(X\right)}=E\left(\left(X-\mu_{X}\right)^{2}\right)\\
 =\int_{-\infty}^{\infty}\left(x-\mu_{X}\right)^{2}f_{X}\left(x\right)\text{d}x\\
 =\int_{-\infty}^{\infty}x^{2}f_{X}\left(x\right)\text{d}x-\mu_{X}^{2}\\
-=E\left(X^{2}\right)-\left(E\left(X\right)\right)^{2}
+{\color{red}=E\left(X^{2}\right)-\left(E\left(X\right)\right)^{2}}
 \end{multline*}
+
 \begin{itemize}
-\item $\text{Var}\left(aX+b\right)=a^{2}\text{Var}\left(X\right)$.
+\item $\text{Var}\left(aX+b\right)=a^{2}\text{Var}\left(X\right)$. 
 \end{itemize}
 
 \paragraph{Moment Generating Function $M_{X}\left(t\right)$}
@@ -350,9 +441,10 @@ Properties:
 \[
 M_{X}\left(t\right)=E\left(e^{tX}\right)=\int_{-\infty}^{\infty}e^{tx}f_{X}\left(x\right)\text{d}x
 \]
+
 \begin{itemize}
-\item Might not exist.
-\item The $n$th moment is $\left.M_{n}=\frac{\text{d}^{n}M_{X}\left(t\right)}{\text{d}t^{n}}\right\vert _{t=0}$.
+\item Might not exist (for some $t$). 
+\item The $n$th moment is $\left.M_{n}=\frac{\text{d}^{n}M_{X}\left(t\right)}{\text{d}t^{n}}\right\vert _{t=0}$. 
 \end{itemize}
 
 \paragraph{Characteristic Function $\phi_{X}\left(t\right)$}
@@ -360,9 +452,10 @@ M_{X}\left(t\right)=E\left(e^{tX}\right)=\int_{-\infty}^{\infty}e^{tx}f_{X}\left
 \[
 \phi_{X}\left(t\right)=E\left(e^{itX}\right)=\int_{-\infty}^{\infty}e^{itx}f_{X}\left(x\right)\text{d}x
 \]
+
 \begin{itemize}
-\item Always exists (Fourier transform of pdf).
-\item The $n$th moment is $\left.M_{n}=\left(-i\right)^{n}\frac{\text{d}^{n}\phi_{X}\left(t\right)}{\text{d}t^{n}}\right\vert _{t=0}$.
+\item Always exists (Fourier transform of pdf). 
+\item The $n$th moment is $\left.M_{n}=\left(-i\right)^{n}\frac{\text{d}^{n}\phi_{X}\left(t\right)}{\text{d}t^{n}}\right\vert _{t=0}$. 
 \end{itemize}
 
 \paragraph{Probability Generating Functions}
@@ -371,12 +464,16 @@ M_{X}\left(t\right)=E\left(e^{tX}\right)=\int_{-\infty}^{\infty}e^{tx}f_{X}\left
 M\left(t\right)=G\left(e^{t}\right)\text{ and }\phi\left(t\right)=G\left(e^{it}\right)
 \]
 
-\paragraph{Sum of Independent Random Variables}
+
+
+\paragraph{Sum of Random Variables}
 
 For independent random variables $X_{1},X_{2},\dots,X_{n}$, and $S_{n}=\sum_{j=1}^{n}X_{j}$:
 \[
 \phi_{S_{n}}\left(t\right)=\prod_{j=1}^{n}\phi_{X_{j}}\left(t\right)\text{ and }M_{S_{n}}\left(t\right)=\prod_{j=1}^{n}M_{X_{j}}\left(t\right)
 \]
+
+
 
 \paragraph{Quantiles}
 
@@ -384,82 +481,89 @@ For independent random variables $X_{1},X_{2},\dots,X_{n}$, and $S_{n}=\sum_{j=1
 Q_{X}\left(\alpha\right)=F_{X}^{-1}\left(\alpha\right)
 \]
 
+
 E.g. \emph{median} is $F_{X}^{-1}\left(\frac{1}{2}\right)$. I.e.
 the solution to $F_{X}\left(x\right)=\frac{1}{2}$.
 
+
 \subsubsection{Continuous Distributions}
+
 
 \paragraph{Uniform $\text{U}\left(a,b\right)$}
 \begin{itemize}
-\item $f\left(x\right)=\begin{cases}
+\item \textrm{\textcolor{red}{$f\left(x\right)=\begin{cases}
 \frac{1}{b-a} & a<x<b\\
 0 & \text{otherwise}
-\end{cases}$.
+\end{cases}$. }}
 \item $F\left(x\right)=\begin{cases}
 0 & x\leq a\\
 \frac{x-a}{b-a} & a<x<b\\
 0 & x\geq b
-\end{cases}$.
-\item $\mu=\frac{a+b}{2}$.
-\item $\sigma^{2}=\frac{\left(b-a\right)^{2}}{12}$.
+\end{cases}$. 
+\item \textrm{\textcolor{red}{$\mu=\frac{a+b}{2}$. }}
+\item \textrm{\textcolor{red}{$\sigma^{2}=\frac{\left(b-a\right)^{2}}{12}$. }}
 \end{itemize}
 
 \paragraph{Exponential $\text{Exp}\left(\lambda\right)$}
 \begin{itemize}
-\item $f\left(x\right)=\lambda e^{-\lambda x}$ for $x\geq0$.
-\item $F\left(x\right)=1-e^{-\lambda x}$ for $x\geq0$.
-\item $\mu=\frac{1}{\lambda}$.
-\item $\sigma^{2}=\frac{1}{\lambda^{2}}$.
-\item \emph{Memoryless}: $P\left(X>x\right)=e^{-\lambda x}$ and $P\left(X>x+s\mid X>s\right)=e^{-\lambda x}$.
+\item \textrm{\textcolor{red}{$f\left(x\right)=\lambda e^{-\lambda x}$
+for $x\geq0$. }}
+\item $F\left(x\right)=1-e^{-\lambda x}$ for $x\geq0$. 
+\item \textrm{\textcolor{red}{$\mu=\frac{1}{\lambda}$. }}
+\item \textrm{\textcolor{red}{$\sigma^{2}=\frac{1}{\lambda^{2}}$. }}
+\item \emph{Memoryless}: $P\left(X>x\right)=e^{-\lambda x}$ and $P\left(X>x+s\mid X>s\right)=e^{-\lambda x}$. 
 \item If the number of events is distributed by $N\sim\text{Poi}\left(\lambda\right)$
-then the time between consecutive events is distributed by $T\sim\text{Exp}\left(\lambda\right)$.
+then the time between consecutive events is distributed by $T\sim\text{Exp}\left(\lambda\right)$. 
 \end{itemize}
 
 \paragraph{Normal $\text{N}\left(\mu,\sigma^{2}\right)$}
 \begin{itemize}
-\item $f\left(x\right)=\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}$.
-\item $F\left(x\right)=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^{x}e^{-\frac{\left(t-\mu\right)^{2}}{2\sigma^{2}}}dt$.
+\item \textrm{\textcolor{red}{$f\left(x\right)=\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}$. }}
+\item $F\left(x\right)=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^{x}e^{-\frac{\left(t-\mu\right)^{2}}{2\sigma^{2}}}dt$. 
 \end{itemize}
-\emph{Standard Normal}:
+\emph{Standard Normal}: 
 \begin{itemize}
-\item $Z\sim\text{N}\left(0,1\right)$.
+\item $Z\sim\text{N}\left(0,1\right)$. 
 \item $f\left(z\right)$ is written as $\phi\left(z\right)$ and $F\left(z\right)$
-as $\Phi\left(z\right)$.
-\item $\phi\left(-z\right)=\phi\left(z\right)$ and $\Phi\left(z\right)=1-\Phi\left(-z\right)$.
+as $\Phi\left(z\right)$. 
+\item $\phi\left(-z\right)=\phi\left(z\right)$ and $\Phi\left(z\right)=1-\Phi\left(-z\right)$. 
 \end{itemize}
-\emph{Standardising Normal RVs}:
+\emph{Standardising Normal RVs}: 
 \begin{itemize}
-\item $X\sim\text{N}\left(\mu,\sigma^{2}\right)\implies\frac{X-\mu}{\sigma}\sim\text{N}\left(0,1\right)$.
+\item \textrm{\textcolor{red}{$X\sim\text{N}\left(\mu,\sigma^{2}\right)\implies\frac{X-\mu}{\sigma}\sim\text{N}\left(0,1\right)$. }}
 \end{itemize}
-\emph{Central Limit Theorem}:
+\emph{Central Limit Theorem}: 
 \begin{itemize}
 \item For $\overline{X}=\frac{\sum_{i=1}^{n}X_{i}}{n}$ where $X_{1},X_{2},\dots,X_{n}$
-are independent and identically distributed random variables, $\lim_{n\rightarrow\infty}\frac{\overline{X}-\mu}{\sigma/\sqrt{n}}\sim\text{N}\left(0,1\right)$.
-\item I.e. for large $n$, $\overline{X}\sim N\left(\mu,\frac{\sigma^{2}}{n}\right)$.
-\item For large $n$, $\text{Binomial}\left(n,p\right)\approx\text{N}\left(np,np\left(1-p\right)\right)$
+are independent and identically distributed random variables, $\lim_{n\rightarrow\infty}\frac{\overline{X}-\mu}{\sigma/\sqrt{n}}\sim\text{N}\left(0,1\right)$. 
+\item I.e. for large $n$, $\overline{X}\sim N\left(\mu,\frac{\sigma^{2}}{n}\right)$. 
+\item For large $n$, $\text{Binomial}\left(n,p\right)\approx\text{N}\left(np,np\left(1-p\right)\right)$ 
 \end{itemize}
-\emph{Log-Normal Distribution}:
+\emph{Log-Normal Distribution}: 
 \begin{itemize}
 \item $Y$ is said to follow a log-normal distribution if $Y=e^{X}$ and
-$X\sim\text{N}\left(\mu,\sigma^{2}\right)$.
+$X\sim\text{N}\left(\mu,\sigma^{2}\right)$. 
 \end{itemize}
 
 \subsection{Joint Random Variables}
 
+
 \paragraph{Definitions}
 
-Has joint cdf:
+Has joint cdf: 
 \[
 F_{XY}\left(x,y\right)=P_{XY}\left(\left(-\infty,x\right],\left(-\infty,y\right]\right)
 \]
 
-We can recover marginal cdfs:
+
+We can recover marginal cdfs: 
 \[
 F_{X}\left(x\right)=F_{XY}\left(x,\infty\right)
 \]
 \[
 F_{Y}\left(y\right)=F_{XY}\left(\infty,y\right)
 \]
+
 
 Has joint pmf:
 
@@ -468,48 +572,69 @@ p_{XY}\left(x,y\right)=P_{XY}\left(X=x,Y=y\right)
 \]
 We can recover marginal pmfs:
 
+\textrm{\textcolor{red}{
 \[
 p_{X}\left(x\right)=\sum_{y}p_{XY}\left(x,y\right)
 \]
+}}
 
+\textrm{\textcolor{red}{
 \[
 p_{Y}\left(y\right)=\sum_{x}p_{XY}\left(x,y\right)
 \]
+}}
+
 
 \paragraph{Definitions for Jointly Continuous Variables}
 
 Has joint cdf:
 
+\textrm{\textcolor{red}{
 \[
 F_{XY}\left(x,y\right)=\int_{t=-\infty}^{y}\int_{s=-\infty}^{x}f_{XY}\left(s,t\right)\text{d}s\text{d}t
 \]
+}}
 
 Has joint pdf:
 
+\textrm{\textcolor{red}{
 \[
 f_{XY}\left(x,y\right)=\frac{\partial^{2}}{\partial x\partial y}F_{XY}\left(x,y\right)
 \]
-We can recover marginal pdfs:
+}}We can recover marginal pdfs:
 
+\textrm{\textcolor{red}{
 \[
-f_{X}\left(x\right)=\int_{y=-\infty}^{\infty}f_{XY}\left(s,y\right)\text{d}s\text{d}y
+f_{X}\left(x\right)=\int_{y=-\infty}^{\infty}f_{XY}\left(x,y\right)\text{d}y
 \]
+}}
 
+\textrm{\textcolor{red}{
 \[
-f_{Y}\left(y\right)=\int_{x=-\infty}^{\infty}f_{XY}\left(x,s\right)\text{d}s\text{d}x
+f_{Y}\left(y\right)=\int_{x=-\infty}^{\infty}f_{XY}\left(x,y\right)\text{d}x
 \]
+}}
+
+\emph{Take care with integration}. E.g. don't ignore constants!
+
 
 \paragraph{Conditional Distributions}
 
+\textrm{\textcolor{red}{
 \[
 p_{Y\mid X}\left(y\mid x\right)=\frac{p_{XY}\left(x,y\right)}{p_{X}\left(x\right)}
 \]
+}}
 
-\paragraph{$X<Y$}
 
-\[
-P\left(X<Y\right)=\int_{y=-\infty}^{\infty}\int_{x=-\infty}^{y}f_{XY}\left(x,y\right)\text{d}x\text{d}y
-\]
+\paragraph{Finding Probability of $X<Y$}
+
+\begin{multline*}
+P\left(X<Y\right)=\int_{y=-\infty}^{\infty}F_{X|Y}\left(y\mid y\right)f_{Y}\left(y\right)\mbox{d}y\\
+=\int_{y=-\infty}^{\infty}\int_{x=-\infty}^{y}f_{XY}\left(x,y\right)\text{d}x\text{d}y
+\end{multline*}
+
+
 
 \paragraph{Expectation}
 
@@ -517,9 +642,12 @@ P\left(X<Y\right)=\int_{y=-\infty}^{\infty}\int_{x=-\infty}^{y}f_{XY}\left(x,y\r
 E_{XY}\left(g\left(x,y\right)\right)=\sum_{y}\sum_{x}g\left(x,y\right)p_{XY}\left(x,y\right)
 \]
 
+
 \[
 E_{XY}\left(g\left(x,y\right)\right)=\int_{y=-\infty}^{\infty}\int_{x=-\infty}^{\infty}g\left(x,y\right)p_{XY}\left(x,y\right)\text{d}x\text{d}y
 \]
+
+
 
 \paragraph{Conditional Expectation}
 
@@ -527,9 +655,12 @@ E_{XY}\left(g\left(x,y\right)\right)=\int_{y=-\infty}^{\infty}\int_{x=-\infty}^{
 E_{Y\mid X}\left(Y|X=x\right)=\sum_{y}y\:p_{Y|X}\left(y|x\right)
 \]
 
+
 \[
 E_{Y\mid X}\left(Y|X=x\right)=\int_{y=-\infty}^{\infty}y\:f_{Y|X}\left(y|x\right)\text{d}y
 \]
+
+
 
 \paragraph{Tower Rule}
 
@@ -537,27 +668,36 @@ E_{Y\mid X}\left(Y|X=x\right)=\int_{y=-\infty}^{\infty}y\:f_{Y|X}\left(y|x\right
 E_{Y}\left(Y\right)=E_{X}\left(E_{Y\mid X}\left(Y\mid X\right)\right)
 \]
 
+
+
 \paragraph{Covariance}
 
 Measures how two RVs change in tandem with one another.
 
+\textrm{\textcolor{red}{
 \[
 \sigma_{XY}=E_{XY}\left(\left(X-\mu_{X}\right)\left(Y-\mu_{Y}\right)\right)
 \]
+}}
+
 
 \paragraph{Correlation}
 
 Invariant to scale of the RVs $X$ and $Y$.
 
+\textrm{\textcolor{red}{
 \[
 \rho_{XY}=\frac{\sigma_{XY}}{\sigma_{X}\sigma_{Y}}
 \]
+}}
+
 
 \section{Estimation}
 
 For $\underline{X}=\left(X_{1},\dots,X_{n}\right)$ representing $n$
 iid data samples from a population with distribution $P_{X}$, we
 observe $\underline{x}=\left(x_{1},\dots,x_{n}\right)$.
+
 
 \paragraph{Statistic}
 
@@ -567,7 +707,9 @@ A random variable:
 T=T\left(X_{1},\dots,X_{n}\right)=T\left(\underline{X}\right)
 \]
 
+
 Observed statistic is $t=t\left(\underline{x}\right)$.
+
 
 \paragraph{Estimator}
 
@@ -576,103 +718,119 @@ parameters of the distribution $P_{X\mid\theta}\left(x\mid\theta\right)$.
 An \emph{estimate} is the realised value for the estimator for a particular
 sample $t\left(\underline{x}\right)$.
 
+
 \paragraph{Bias}
 
 Of an estimator $T$ for a parameter $\theta$:
 
+\textrm{\textcolor{red}{
 \[
 \text{bias}\left(T\right)=E\left(T\mid\theta\right)-\theta
 \]
+}}
 \begin{itemize}
-\item \emph{Unbiased} if bias is 0.
+\item \emph{Unbiased} if bias is 0. 
 \item Sample mean $\overline{x}$ is an unbiased estimate for population
-mean $\mu$.
+mean $\mu$. 
 \item Biased-corrected sample variance $S_{n-1}^{2}=\frac{n}{n-1}S^{2}$
-is an unbiased estimate for $\sigma^{2}$.
+is an unbiased estimate for $\sigma^{2}$. 
 \end{itemize}
 
 \paragraph{Efficiency}
 
 For two unbiased estimators, $\hat{T}$ and $\tilde{T}$, $\hat{T}$
-is more efficient than $\tilde{T}$ if:
+is \emph{more efficient} than $\tilde{T}$ if: 
 \begin{enumerate}
 \item For all $\theta$, $\text{Var}_{\hat{T}\mid\theta}\left(\hat{T}\mid\theta\right)\leq\text{Var}_{\tilde{T}\mid\theta}\left(\tilde{T}\mid\theta\right)$,
-and
-\item There is some $\theta$ with $\text{Var}_{\hat{T}\mid\theta}\left(\hat{T}\mid\theta\right)<\text{Var}_{\tilde{T}\mid\theta}\left(\tilde{T}\mid\theta\right)$.
+and 
+\item There is some $\theta$ with $\text{Var}_{\hat{T}\mid\theta}\left(\hat{T}\mid\theta\right)<\text{Var}_{\tilde{T}\mid\theta}\left(\tilde{T}\mid\theta\right)$. 
 \end{enumerate}
-$\hat{T}$ is efficient if it is more efficient that any other possible
-estimator.
+$\hat{T}$ is \emph{efficient} if it is more efficient that any other
+possible estimator.
+
 
 \paragraph{Consistency}
 
-An estimator $T$ is consistent if
+An estimator $T$ is \emph{consistent} if 
 \[
 \forall\epsilon>0\qquad P\left(\left|T-\theta\right|>\epsilon\right)\rightarrow0\text{ as }n\rightarrow\infty
 \]
 
+
 If $T$ is unbiased and $\lim_{n\rightarrow\infty}\text{Var}\left(T\right)=0$
 then $T$ is consistent.
 
+
 \subsection{Maximum Likelihood Estimation}
 \begin{enumerate}
-\item Find the likelihood function $L\left(\theta\right)$ where:
+\item Find the likelihood function $L\left(\theta\right)$ where: \textrm{\textcolor{red}{
 \[
 L\left(\theta\mid\underline{x}\right)=\prod_{i=1}^{n}p_{X\mid\theta}\left(x_{i}\right)\text{ or }\prod_{i=1}^{n}f_{X\mid\theta}\left(x_{i}\right)
 \]
+}}
 \item Take the natural log of the likelihood $l\left(\theta\mid\underline{x}\right)$,
-and collect terms involving $\theta$:
+and collect terms involving $\theta$: 
 \[
 l\left(\theta\mid\underline{x}\right)=\sum_{i=1}^{n}\log\left(p_{X\mid\theta}\left(x_{i}\right)\right)\text{ or }\sum_{i=1}^{n}\log\left(f_{X\mid\theta}\left(x_{i}\right)\right)
 \]
+
 \item Find the value of $\theta$ for which log-likelihood is maximised:
-usually find the $\hat{\theta}$ that solves
+usually find the $\hat{\theta}$ that solves 
 \[
 \frac{\delta}{\delta\theta}l\left(\hat{\theta}\right)=\frac{\delta}{\delta\theta}\log\left(L\left(\hat{\theta}\right)\right)=0
 \]
+
 \item Ensure that the estimate $\hat{\theta}$ corresponds to a maximum
-by checking that the second derivative satisfies
+by checking that the second derivative satisfies 
 \[
 \frac{\partial^{2}}{\partial\theta^{2}}l\left(\hat{\theta}\right)<0
 \]
+
 \end{enumerate}
 The MLE is not necessarily unbiased, but it is consistent and efficient,
 if an efficient estimator exists.
 
+
 \paragraph{Confidence Intervals}
 
 The $100\left(1-\alpha\right)\%$ confidence interval for $\mu$ is
-given by:
+given by: \textrm{\textcolor{red}{
 \[
 \left[\overline{x}-z_{1-\frac{\alpha}{2}}\frac{\sigma}{\sqrt{n}},\overline{x}+z_{1-\frac{\alpha}{2}}\frac{\sigma}{\sqrt{n}}\right]
 \]
+}}
 \begin{itemize}
 \item \emph{Normal distribution with known variance}: confidence interval
-above is exact.
+above is exact. 
 \item \emph{Other distributions}: confidence interval above is an approximate,
-by CLT.
+by CLT. 
 \item \emph{Normal distribution with unknown variance}: need to use bias-corrected
-variance: exact CI is given by $\left[\overline{x}-t_{n-1,1-\frac{\alpha}{2}}\frac{S}{\sqrt{n-1}},\overline{x}+t_{n-1,1-\frac{\alpha}{2}}\frac{S}{\sqrt{n-1}}\right]$.
+variance: exact CI is given by ${\color{red}\left[\overline{x}-t_{n-1,1-\frac{\alpha}{2}}\frac{S}{\sqrt{n-1}},\overline{x}+t_{n-1,1-\frac{\alpha}{2}}\frac{S}{\sqrt{n-1}}\right]}$. 
 \end{itemize}
 
 \subsection{Bayesian Estimation}
 
+
 \paragraph{Maximum Likelihood Estimator}
 \begin{itemize}
-\item Doesn't take into account any prior information about the MLE.
-\item Only returns a single and specific value of $\theta$.
+\item Doesn't take into account any prior information about the MLE. 
+\item Only returns a single and specific value of $\theta$. 
 \end{itemize}
 
 \paragraph{Using Prior Information}
 
-Use Bayes theorem
+Use Bayes theorem 
 \[
 \underbrace{P\left(\theta\mid X\right)}_{\text{posterior}}=\underbrace{P\left(X\mid\theta\right)}_{\text{likelihood}}\times\underbrace{P\left(\theta\right)}_{\text{prior}}\times\underbrace{\frac{1}{P\left(X\right)}}_{\text{evidence}}
 \]
+
+
 
 \paragraph{Maximum a Posteriori Estimator}
 
 Instead of maximising $\prod_{i=1}^{n}P\left(X=x_{i}|\theta\right)$,
 maximise $\prod_{i=1}^{n}P\left(\theta\mid X=x_{i}\right)=\prod_{i=1}^{n}P\left(X=x_{i}\mid\theta\right)\times P\left(\theta\right)$.
+
 
 \paragraph{Prior Distributions}
 
@@ -680,77 +838,85 @@ Often we use the \emph{beta distribution}: $\text{Beta}\left(\theta;\alpha,\beta
 with $B\left(\alpha,\beta\right)=\frac{\Gamma\left(\alpha\right)\Gamma\left(\beta\right)}{\Gamma\left(\alpha+\beta\right)}$
 and $\Gamma\left(z\right)=\int_{0}^{\infty}x^{z-1}e^{-x}\text{d}x$
 
+
 \section{Hypothesis Testing}
 
+
 \subsection{Testing Population Mean}
+
 
 \paragraph{Hypotheses}
 \begin{itemize}
 \item $H_{0}:\theta=\theta_{0}$ vs. $H_{1}:\theta\neq\theta_{0}$ is a
-\emph{two-sided} test.
+\emph{two-sided} test. 
 \item $H_{0}:\theta>\theta_{0}$ vs. $H_{1}:\theta<\theta_{0}$ is a \emph{one-sided}
-test.
+test. 
 \end{itemize}
 
 \paragraph{Tests Statistics and Rejection Regions}
 \begin{itemize}
 \item Choose a test statistic $T\left(\underline{X}\right)$ for which we
-can find the distribution under $H_{0}$.
+can find the distribution under $H_{0}$. 
 \item Calculate the rejection region $R$ such that $P\left(T\in R\mid H_{0}\right)=\alpha$
-for some small probability $\alpha$.
-\item Compute the realised value of the test statistic and conclude appropriately.
+for some small probability $\alpha$. 
+\item Compute the realised value of the test statistic and conclude appropriately. 
 \end{itemize}
 
 \paragraph{Errors and Power}
 \begin{enumerate}
-\item \emph{Type I}: Reject $H_{0}$ when it was true.
-\item \emph{Type II}: Not rejecting $H_{0}$ when $H_{1}$ is true.
-\item \emph{Power}: Probability of rejecting $H_{0}$ when $H_{1}$ is true.
+\item \emph{Type I Error}: Reject $H_{0}$ when it was true. 
+\item \emph{Type II Error}: Not rejecting $H_{0}$ when $H_{1}$ is true. 
+\item \emph{Power}: Probability of rejecting $H_{0}$ when $H_{1}$ is true. 
 \end{enumerate}
 
 \paragraph{Samples from Two Populations}
 
-Use \emph{bias-corrected pooled sample variance}:
+Use \emph{bias-corrected pooled sample variance}: {\small{}
 \[
 S_{n_{1}+n_{2}-2}^{2}=\frac{\sum_{i=1}^{n_{1}}\left(X_{i}-\overline{X}\right)^{2}+\sum_{i=1}^{n_{2}}\left(Y_{i}-\overline{Y}\right)^{2}}{n_{1}+n_{2}-2}=\frac{n_{1}-1}{n_{1}+n_{2}-2}S_{n_{1}}^{2}+\frac{n_{2}-1}{n_{1}+n_{2}-2}S_{n_{2}}^{2}
 \]
+}{\small \par}
+
 
 \subsection{Goodness of Fit}
 
+
 \paragraph{Chi-Square Statistic}
 
+\textrm{\textcolor{red}{
 \[
 \chi^{2}=\sum_{i=1}^{k}\frac{\left(O_{i}-E_{i}\right)^{2}}{E_{i}}
 \]
+}}
 \begin{itemize}
-\item Approximation is valid only if $\forall jE_{j}\geq5$.
+\item \textcolor{red}{Approximation is valid only if $\forall jE_{j}\geq5$. }
 \item The \emph{rejection region} at the $100\alpha\%$ level is given by
 \[
 R=\left\{ x^{2}\mid x^{2}>\chi_{k-p-1,1-\alpha}^{2}\right\} 
 \]
 where $k$ is the number of terms summed and $p$ is the number of
-parameters being estimated.
+parameters being estimated. 
 \end{itemize}
 
 \subsection{Independence Testing}
 \begin{enumerate}
-\item Write up a contingency table.
+\item Write up a contingency table. 
 \begin{table}[H]
 \centering{}%
 \begin{tabular}{c|ccc|c}
- & $y_{1}$ & $\dots$ & $y_{l}$ & \tabularnewline
+ & $y_{1}$  & $\dots$  & $y_{l}$  & \tabularnewline
 \hline 
-$x_{1}$ & $n_{11}$ &  & $n_{1l}$ & $n_{1\bullet}$\tabularnewline
-$\vdots$ &  &  &  & \tabularnewline
-$x_{k}$ & $n_{k1}$ &  & $n_{kl}$ & $n_{k\bullet}$\tabularnewline
+$x_{1}$  & $n_{11}$  &  & $n_{1l}$  & $n_{1\bullet}$\tabularnewline
+$\vdots$  &  &  &  & \tabularnewline
+$x_{k}$  & $n_{k1}$  &  & $n_{kl}$  & $n_{k\bullet}$\tabularnewline
 \hline 
- & $n_{\bullet1}$ &  & $n_{\bullet l}$ & $n$\tabularnewline
+ & $n_{\bullet1}$  &  & $n_{\bullet l}$  & $n$\tabularnewline
 \end{tabular}
 \end{table}
-\item The expected value in each cell is $\hat{n}_{ij}=\frac{n_{i\bullet}\times n_{\bullet j}}{n}$.
-\item Compute the $x^{2}$ statistic.
+
+\item The expected value in each cell is $\hat{n}_{ij}=\frac{n_{i\bullet}\times n_{\bullet j}}{n}$. 
+\item Compute the $x^{2}$ statistic. 
 \item Compare against $\chi^{2}$ dist. with $kl-\left(k-1\right)-\left(l-1\right)-1=\left(k-1\right)\left(l-1\right)$
-degrees of freedom.
-\end{enumerate}
+degrees of freedom. \end{enumerate}
 
 \end{document}
