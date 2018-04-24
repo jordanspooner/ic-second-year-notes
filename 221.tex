@@ -8,6 +8,7 @@
 \usepackage{float}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{mathtools}
 \usepackage{graphicx}
 \PassOptionsToPackage{normalem}{ulem}
 \usepackage{ulem}
@@ -746,7 +747,7 @@ pointer.
 \begin{enumerate}
 \item Allocate blocks from the From-Space. 
 \item When the From-Space is exhausted, copy reachable blocks from the From-Space
-to the two space. 
+to the To-Space. 
 \end{enumerate}
 \begin{itemize}
 \item \emph{Fast}: no pointers manipulations, copying automatically compacts
@@ -1056,11 +1057,13 @@ arrive from outside the loop.
 \end{itemize}
 \item Detection of \emph{induction variables}: variables which increase
 / decrease by a constant each iteration. 
+\begin{itemize}
 \item \emph{Strength reduction}: calculate induction variable by incrementing
 instead of multiplying by other induction variables. 
+\end{itemize}
 \item \emph{Control variable selection}: replace control variable with induction
 variable. 
-\item \emph{Loop rotation}: to get rid of an unconditional jump.
+\item \emph{Loop rotation}: to get rid of an unconditional jump on every iteration.
 \item \emph{Loop unrolling}.
 \end{itemize}
 
@@ -1184,10 +1187,10 @@ goes through $d$.
 \item Node $n$ is dominated by any node that dominates \emph{all} of its
 predecessors. 
 \[
-\text{Doms}\left(n\right)=\begin{cases}
+\text{Doms}\left(n\right)=\begin{dcases}
 \left\{ n\right\}  & \text{\ensuremath{n} is the start node}\\
 \left\{ n\right\} \cup\left(\bigcap_{p\in\text{preds}\left(n\right)}\text{Doms}\left(p\right)\right) & \text{otherwise}
-\end{cases}
+\end{dcases}
 \]
 \end{itemize}
 \item Iterate forwards \emph{on nodes} (not points). This start with all
