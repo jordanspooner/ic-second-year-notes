@@ -158,28 +158,27 @@ to goal and goal to start.
 \centering{}%
 \begin{tabular}{>{\centering}m{0.12\columnwidth}>{\centering}m{0.18\columnwidth}>{\centering}m{0.18\columnwidth}>{\centering}m{0.18\columnwidth}>{\centering}m{0.18\columnwidth}}
 \toprule 
- & \textbf{\footnotesize{}{}Completeness}{\footnotesize{} } & \textbf{\footnotesize{}{}Time Complexity}{\footnotesize{} } & \textbf{\footnotesize{}{}Space Complexity}{\footnotesize{} } & \textbf{\footnotesize{}{}Optimality}\tabularnewline
-\midrule 
-\emph{\footnotesize{}{}BFS}{\footnotesize{} } & {\footnotesize{}{}Yes if $b$ is finite}  & {\footnotesize{}{}$O\left(b^{d}\right)$}  & {\footnotesize{}{}$O\left(b^{d}\right)$}  & {\footnotesize{}{}Yes if costs are constant}\tabularnewline
-\addlinespace
-{[}0.25cm{]} \emph{\footnotesize{}{}Uniform-cost}{\footnotesize{} } & {\footnotesize{}{}Yes if $b$ is finite and all costs are positive}  & {\footnotesize{}{}$O\left(b^{d+1}\right)$ if costs are constant}  & {\footnotesize{}{}$O\left(b^{d+1}\right)$ if costs are constant}  & {\footnotesize{}{}Yes}\tabularnewline
-\addlinespace
-{[}0.25cm{]} \emph{\footnotesize{}{}DFS}{\footnotesize{} } & {\footnotesize{}{}Yes if $s$ is finite} &  &  & \tabularnewline
-{\scriptsize{}{}(No without loop checking)}  & {\footnotesize{}{}$s$} &  &  & \tabularnewline
-{\scriptsize{}{}($O(b^{m})$ without loop checking)}  & {\footnotesize{}{}$O\left(bm\right)$}  & {\footnotesize{}{}No} &  & \tabularnewline
-\addlinespace
-{[}0.25cm{]} \emph{\footnotesize{}{}Back-tracking DFS}{\footnotesize{} } & \multicolumn{4}{c}{{\footnotesize{}{}As for DFS but with $O\left(m\right)$ space complexity.}}\tabularnewline
-\addlinespace
-{[}0.25cm{]} \emph{\footnotesize{}{}Depth-limited DFS}{\footnotesize{} } & {\footnotesize{}{}No}  & {\footnotesize{}{}$s\left(l\right)$} &  & \tabularnewline
-{\scriptsize{}{}($O(b^{l})$ without loop checking)}  & {\footnotesize{}{}$O\left(bl\right)$}  & {\footnotesize{}{}No} &  & \tabularnewline
-\addlinespace
-{[}0.25cm{]} \emph{\footnotesize{}{}Iterative deepening DFS}{\footnotesize{} } & \multicolumn{4}{c}{{\footnotesize{}{}As for BFS but with $O\left(bd\right)$ space complexity.}}\tabularnewline
-\addlinespace
-{[}0.25cm{]} \emph{\footnotesize{}{}Bidirectional BFS}{\footnotesize{} } & \multicolumn{4}{c}{{\footnotesize{}{}As for BFS but with $O\left(b^{d/2}\right)$ time
+ & \textbf{\footnotesize{}Completeness} & \textbf{\footnotesize{}Time Complexity} & \textbf{\footnotesize{}Space Complexity} & \textbf{\footnotesize{}Optimality}\tabularnewline
+\midrule
+\emph{\footnotesize{}BFS} & {\footnotesize{}Yes if $b$ is finite} & {\footnotesize{}$O\left(b^{d}\right)$} & {\footnotesize{}$O\left(b^{d}\right)$} & {\footnotesize{}Yes if costs are constant}\tabularnewline
+\addlinespace[0.25cm]
+\emph{\footnotesize{}Uniform-cost} & {\footnotesize{}Yes if $b$ is finite and all costs are positive} & {\footnotesize{}$O\left(b^{d+1}\right)$ if costs are constant} & {\footnotesize{}$O\left(b^{d+1}\right)$ if costs are constant} & {\footnotesize{}Yes}\tabularnewline
+\addlinespace[0.25cm]
+\emph{\footnotesize{}DFS} & {\footnotesize{}Yes if $s$ is finite}\\
+{\scriptsize{}(No without loop checking)} & {\footnotesize{}$s$}\\
+{\scriptsize{}($O(b^{m})$ without loop checking)} & {\footnotesize{}$O\left(bm\right)$} & {\footnotesize{}No}\tabularnewline
+\addlinespace[0.25cm]
+\emph{\footnotesize{}Back-tracking DFS} & \multicolumn{4}{c}{{\footnotesize{}As for DFS but with $O\left(m\right)$ space complexity.}}\tabularnewline
+\addlinespace[0.25cm]
+\emph{\footnotesize{}Depth-limited DFS} & {\footnotesize{}No} & {\footnotesize{}$s\left(l\right)$}\\
+{\scriptsize{}($O(b^{l})$ without loop checking)} & {\footnotesize{}$O\left(bl\right)$} & {\footnotesize{}No}\tabularnewline
+\addlinespace[0.25cm]
+\emph{\footnotesize{}Iterative deepening DFS} & \multicolumn{4}{c}{{\footnotesize{}As for BFS but with $O\left(bd\right)$ space complexity.}}\tabularnewline
+\addlinespace[0.25cm]
+\emph{\footnotesize{}Bidirectional BFS} & \multicolumn{4}{c}{{\footnotesize{}As for BFS but with $O\left(b^{d/2}\right)$ time
 and space complexity.}}\tabularnewline
-\midrule 
-\addlinespace
-{[}0.25cm{]}  &  &  &  & \tabularnewline
+\bottomrule
+\addlinespace[0.25cm]
 \end{tabular}
 \end{table}
 
@@ -324,15 +323,14 @@ shouldn't consider it.
 \centering{}%
 \begin{tabular}{>{\centering}m{0.12\columnwidth}>{\centering}m{0.18\columnwidth}>{\centering}m{0.18\columnwidth}>{\centering}m{0.18\columnwidth}>{\centering}m{0.18\columnwidth}}
 \toprule 
- & \textbf{\footnotesize{}{}Completeness}{\footnotesize{} } & \textbf{\footnotesize{}{}Time Complexity}{\footnotesize{} } & \textbf{\footnotesize{}{}Space Complexity}{\footnotesize{} } & \textbf{\footnotesize{}{}Optimality}\tabularnewline
-\midrule 
-\emph{\footnotesize{}{}Minimax}{\footnotesize{} } & {\footnotesize{}{}Yes if search tree is finite}  & {\footnotesize{}{}$O\left(b^{m}\right)$}  & {\footnotesize{}{}$O\left(bm\right)$}  & {\footnotesize{}{}Yes}\tabularnewline
-\addlinespace
-{[}0.25cm{]} \emph{\footnotesize{}{}$a$-$\beta$ pruning}{\footnotesize{} } & \multicolumn{4}{c}{{\footnotesize{}{}As for minimax but with $O\left(b^{m/2}\right)$
-time complexity.}}\tabularnewline
-\midrule 
-\addlinespace
-{[}0.25cm{]}  &  &  &  & \tabularnewline
+ & \textbf{\footnotesize{}Completeness} & \textbf{\footnotesize{}Time Complexity} & \textbf{\footnotesize{}Space Complexity} & \textbf{\footnotesize{}Optimality}\tabularnewline
+\midrule
+\emph{\footnotesize{}Minimax} & {\footnotesize{}Yes if search tree is finite} & {\footnotesize{}$O\left(b^{m}\right)$} & {\footnotesize{}$O\left(bm\right)$} & {\footnotesize{}Yes}\tabularnewline
+\addlinespace[0.25cm]
+\emph{\footnotesize{}$a$-$\beta$ pruning} & \multicolumn{4}{c}{{\footnotesize{}As for minimax but with $O\left(b^{m/2}\right)$ time
+complexity.}}\tabularnewline
+\bottomrule
+\addlinespace[0.25cm]
 \end{tabular}
 \end{table}
 
