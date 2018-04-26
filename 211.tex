@@ -444,7 +444,7 @@ Run process until it blocks or time quantum (usually 10-200ms) exceeded.
 \item $+$ Fair: ready jobs get equal share of the CPU. 
 \item $+$ Good response time for small number of jobs. 
 \item $+$ Average turnaround time is low when run-times differ. 
-\item $+$ Average turnaround time is poor for similar run-times. 
+\item $-$ Average turnaround time is poor for similar run-times. 
 \end{itemize}
 As quantum increases: 
 \begin{itemize}
@@ -453,7 +453,7 @@ As quantum increases:
 \end{itemize}
 Quantum value should be: 
 \begin{itemize}
-\item Much large than cost of a context switch, 
+\item Much larger than cost of a context switch, 
 \item But provide decent response time. 
 \end{itemize}
 
