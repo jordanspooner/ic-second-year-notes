@@ -556,7 +556,7 @@ and $D$ is some datum on which it operates.
 \item $A\left(D\right)\downarrow$ holds for $\left(A,D\right)\in S$ if
 algorithm $A$ applied to $D$ halts. 
 \end{itemize}
-The Church-Truing thesis shows that there is no algorithm $H$ s.t.
+The Church-Turing thesis shows that there is no algorithm $H$ s.t.
 for all $\left(A,D\right)\in S$: 
 \[
 H\left(A,D\right)=\begin{cases}
@@ -567,7 +567,7 @@ H\left(A,D\right)=\begin{cases}
 
 
 
-\paragraph{Gödel Numberings}
+\paragraph{GÃ¶del Numberings}
 
 We code pairs numerically: 
 \begin{itemize}
@@ -826,7 +826,7 @@ of reudction. E.g. $\left(\lambda x.y\right)\left(\lambda x.xx\right)\left(\lamb
 
 \paragraph{Reduction Strategies}
 \begin{enumerate}
-\item \textbf{Normal order.} Redice leftmost-outermost redex first.
+\item \textbf{Normal order.} Reduce leftmost-outermost redex first.
 \item \textbf{Call by name.} Reduce leftmost-outermost redex first, but
 do not reduce inside $\lambda$-abstractions. (Evaluates arguments
 later).
